@@ -1,0 +1,1073 @@
+{
+  "id": "tiny-toy-sprint-v1-no-jump",
+  "title": "Tiny Toy Sprint",
+  "audioFile": "Tiny Toy Sprint.mp3",
+  "generatedBy": "ChatGPT audio analysis draft revised: left/right only, no jump action",
+  "duration": 43.88,
+  "bpm": 107.666,
+  "beatInterval": 0.557279,
+  "timeUnit": "seconds",
+  "lanes": 3,
+  "approachTime": 1.6,
+  "judgement": {
+    "perfectWindowMs": 90,
+    "goodWindowMs": 150,
+    "missWindowMs": 230
+  },
+  "controls": {
+    "mobile": "swipe left/right to change lane only; no jump",
+    "pc": "arrow keys/A-D to change lane only; no jump"
+  },
+  "sections": [
+    {
+      "name": "intro",
+      "start": 0.0,
+      "end": 10.0,
+      "density": "low",
+      "worldIntensity": 0.25
+    },
+    {
+      "name": "groove",
+      "start": 10.0,
+      "end": 25.0,
+      "density": "medium",
+      "worldIntensity": 0.55
+    },
+    {
+      "name": "break",
+      "start": 25.0,
+      "end": 30.0,
+      "density": "low",
+      "worldIntensity": 0.35
+    },
+    {
+      "name": "fever",
+      "start": 30.0,
+      "end": 40.0,
+      "density": "high",
+      "worldIntensity": 0.85
+    },
+    {
+      "name": "final",
+      "start": 40.0,
+      "end": 43.88,
+      "density": "high",
+      "worldIntensity": 1.0
+    }
+  ],
+  "obstacles": [
+    {
+      "time": 2.252,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.255,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 3.344,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.338,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 4.458,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.282,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 5.55,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.253,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 6.618,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.68,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 7.732,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.537,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 8.824,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.341,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 9.938,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.367,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 10.472,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.43,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 11.029,
+      "lane": 0,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.455,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 11.029,
+      "lane": 1,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.455,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 11.587,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.293,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 12.121,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.587,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 13.212,
+      "lane": 0,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.363,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 13.212,
+      "lane": 1,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.363,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 13.769,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.587,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 14.303,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.534,
+      "soundOnDodge": "wood_tap",
+      "formerType": "jump_block",
+      "note": "converted from jump obstacle for left/right-only gameplay"
+    },
+    {
+      "time": 14.861,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.549,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 15.418,
+      "lane": 0,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.458,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 15.418,
+      "lane": 1,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.458,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 15.952,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.465,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 16.509,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.121,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 17.624,
+      "lane": 0,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.445,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 17.624,
+      "lane": 1,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.445,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 18.158,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.505,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 18.715,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.452,
+      "soundOnDodge": "wood_tap",
+      "formerType": "jump_block",
+      "note": "converted from jump obstacle for left/right-only gameplay"
+    },
+    {
+      "time": 19.249,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.409,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 19.807,
+      "lane": 1,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.623,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 19.807,
+      "lane": 2,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.623,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 20.364,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.389,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 20.898,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.669,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 21.989,
+      "lane": 0,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.243,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 21.989,
+      "lane": 2,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.243,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 22.547,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.35,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 23.104,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.441,
+      "soundOnDodge": "wood_tap",
+      "formerType": "jump_block",
+      "note": "converted from jump obstacle for left/right-only gameplay"
+    },
+    {
+      "time": 23.754,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.187,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 24.358,
+      "lane": 0,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.496,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 24.358,
+      "lane": 2,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.496,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 24.915,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.852,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 25.472,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.632,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 26.61,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.229,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 27.841,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.359,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 28.955,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.361,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 30.047,
+      "lane": 1,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.735,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 30.047,
+      "lane": 2,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.735,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 30.604,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.473,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 31.138,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.71,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 31.695,
+      "lane": 1,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.664,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 31.695,
+      "lane": 2,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.664,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 32.253,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.57,
+      "soundOnDodge": "wood_tap",
+      "formerType": "jump_block",
+      "note": "converted from jump obstacle for left/right-only gameplay"
+    },
+    {
+      "time": 32.787,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.468,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 33.344,
+      "lane": 1,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.62,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 33.344,
+      "lane": 2,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.62,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 33.878,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.716,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 34.435,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.554,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 35.527,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.516,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 36.084,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.475,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 36.618,
+      "lane": 1,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.5,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 36.618,
+      "lane": 2,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.5,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 37.175,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.592,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 37.732,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.376,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 38.266,
+      "lane": 0,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.277,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 38.266,
+      "lane": 2,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.277,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 38.824,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.721,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 39.381,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.327,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 39.938,
+      "lane": 0,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.418,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 39.938,
+      "lane": 2,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.418,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 40.496,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.269,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 41.03,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.597,
+      "soundOnDodge": "wood_tap",
+      "formerType": "jump_block",
+      "note": "converted from jump obstacle for left/right-only gameplay"
+    },
+    {
+      "time": 41.564,
+      "lane": 0,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.636,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 41.564,
+      "lane": 2,
+      "type": "block",
+      "pattern": "gate",
+      "energy": 0.636,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 42.121,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.653,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 42.655,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.783,
+      "soundOnDodge": "wood_tap"
+    }
+  ],
+  "items": [
+    {
+      "time": 6.084,
+      "lane": 1,
+      "type": "coin",
+      "sound": "sparkle",
+      "score": 100
+    },
+    {
+      "time": 9.381,
+      "lane": 1,
+      "type": "fever_star",
+      "sound": "powerup",
+      "score": 300
+    },
+    {
+      "time": 18.181,
+      "lane": 2,
+      "type": "fever_star",
+      "sound": "powerup",
+      "score": 300
+    },
+    {
+      "time": 27.167,
+      "lane": 0,
+      "type": "fever_star",
+      "sound": "powerup",
+      "score": 300
+    },
+    {
+      "time": 28.398,
+      "lane": 0,
+      "type": "coin",
+      "sound": "sparkle",
+      "score": 100
+    },
+    {
+      "time": 36.084,
+      "lane": 0,
+      "type": "fever_star",
+      "sound": "powerup",
+      "score": 300
+    }
+  ],
+  "rhythmEvents": [
+    {
+      "time": 2.252,
+      "safeLane": 0,
+      "section": "intro",
+      "beatIndex": 4
+    },
+    {
+      "time": 3.344,
+      "safeLane": 0,
+      "section": "intro",
+      "beatIndex": 6
+    },
+    {
+      "time": 4.458,
+      "safeLane": 1,
+      "section": "intro",
+      "beatIndex": 8
+    },
+    {
+      "time": 5.55,
+      "safeLane": 1,
+      "section": "intro",
+      "beatIndex": 10
+    },
+    {
+      "time": 6.618,
+      "safeLane": 0,
+      "section": "intro",
+      "beatIndex": 12
+    },
+    {
+      "time": 7.732,
+      "safeLane": 0,
+      "section": "intro",
+      "beatIndex": 14
+    },
+    {
+      "time": 8.824,
+      "safeLane": 1,
+      "section": "intro",
+      "beatIndex": 16
+    },
+    {
+      "time": 9.938,
+      "safeLane": 1,
+      "section": "intro",
+      "beatIndex": 18
+    },
+    {
+      "time": 10.472,
+      "safeLane": 0,
+      "section": "groove",
+      "beatIndex": 19
+    },
+    {
+      "time": 11.029,
+      "safeLane": 2,
+      "section": "groove",
+      "beatIndex": 20
+    },
+    {
+      "time": 11.587,
+      "safeLane": 1,
+      "section": "groove",
+      "beatIndex": 21
+    },
+    {
+      "time": 12.121,
+      "safeLane": 0,
+      "section": "groove",
+      "beatIndex": 22
+    },
+    {
+      "time": 13.212,
+      "safeLane": 2,
+      "section": "groove",
+      "beatIndex": 24
+    },
+    {
+      "time": 13.769,
+      "safeLane": 2,
+      "section": "groove",
+      "beatIndex": 25
+    },
+    {
+      "time": 14.303,
+      "safeLane": 1,
+      "section": "groove",
+      "beatIndex": 26
+    },
+    {
+      "time": 14.861,
+      "safeLane": 0,
+      "section": "groove",
+      "beatIndex": 27
+    },
+    {
+      "time": 15.418,
+      "safeLane": 2,
+      "section": "groove",
+      "beatIndex": 28
+    },
+    {
+      "time": 15.952,
+      "safeLane": 2,
+      "section": "groove",
+      "beatIndex": 29
+    },
+    {
+      "time": 16.509,
+      "safeLane": 1,
+      "section": "groove",
+      "beatIndex": 30
+    },
+    {
+      "time": 17.624,
+      "safeLane": 2,
+      "section": "groove",
+      "beatIndex": 32
+    },
+    {
+      "time": 18.158,
+      "safeLane": 1,
+      "section": "groove",
+      "beatIndex": 33
+    },
+    {
+      "time": 18.715,
+      "safeLane": 0,
+      "section": "groove",
+      "beatIndex": 34
+    },
+    {
+      "time": 19.249,
+      "safeLane": 1,
+      "section": "groove",
+      "beatIndex": 35
+    },
+    {
+      "time": 19.807,
+      "safeLane": 0,
+      "section": "groove",
+      "beatIndex": 36
+    },
+    {
+      "time": 20.364,
+      "safeLane": 0,
+      "section": "groove",
+      "beatIndex": 37
+    },
+    {
+      "time": 20.898,
+      "safeLane": 2,
+      "section": "groove",
+      "beatIndex": 38
+    },
+    {
+      "time": 21.989,
+      "safeLane": 1,
+      "section": "groove",
+      "beatIndex": 40
+    },
+    {
+      "time": 22.547,
+      "safeLane": 1,
+      "section": "groove",
+      "beatIndex": 41
+    },
+    {
+      "time": 23.104,
+      "safeLane": 0,
+      "section": "groove",
+      "beatIndex": 42
+    },
+    {
+      "time": 23.754,
+      "safeLane": 0,
+      "section": "groove",
+      "beatIndex": 43
+    },
+    {
+      "time": 24.358,
+      "safeLane": 1,
+      "section": "groove",
+      "beatIndex": 44
+    },
+    {
+      "time": 24.915,
+      "safeLane": 1,
+      "section": "groove",
+      "beatIndex": 45
+    },
+    {
+      "time": 25.472,
+      "safeLane": 1,
+      "section": "break",
+      "beatIndex": 46
+    },
+    {
+      "time": 26.61,
+      "safeLane": 0,
+      "section": "break",
+      "beatIndex": 48
+    },
+    {
+      "time": 27.841,
+      "safeLane": 0,
+      "section": "break",
+      "beatIndex": 50
+    },
+    {
+      "time": 28.955,
+      "safeLane": 2,
+      "section": "break",
+      "beatIndex": 52
+    },
+    {
+      "time": 30.047,
+      "safeLane": 0,
+      "section": "fever",
+      "beatIndex": 54
+    },
+    {
+      "time": 30.604,
+      "safeLane": 1,
+      "section": "fever",
+      "beatIndex": 55
+    },
+    {
+      "time": 31.138,
+      "safeLane": 0,
+      "section": "fever",
+      "beatIndex": 56
+    },
+    {
+      "time": 31.695,
+      "safeLane": 0,
+      "section": "fever",
+      "beatIndex": 57
+    },
+    {
+      "time": 32.253,
+      "safeLane": 2,
+      "section": "fever",
+      "beatIndex": 58
+    },
+    {
+      "time": 32.787,
+      "safeLane": 1,
+      "section": "fever",
+      "beatIndex": 59
+    },
+    {
+      "time": 33.344,
+      "safeLane": 0,
+      "section": "fever",
+      "beatIndex": 60
+    },
+    {
+      "time": 33.878,
+      "safeLane": 2,
+      "section": "fever",
+      "beatIndex": 61
+    },
+    {
+      "time": 34.435,
+      "safeLane": 2,
+      "section": "fever",
+      "beatIndex": 62
+    },
+    {
+      "time": 35.527,
+      "safeLane": 0,
+      "section": "fever",
+      "beatIndex": 64
+    },
+    {
+      "time": 36.084,
+      "safeLane": 1,
+      "section": "fever",
+      "beatIndex": 65
+    },
+    {
+      "time": 36.618,
+      "safeLane": 0,
+      "section": "fever",
+      "beatIndex": 66
+    },
+    {
+      "time": 37.175,
+      "safeLane": 0,
+      "section": "fever",
+      "beatIndex": 67
+    },
+    {
+      "time": 37.732,
+      "safeLane": 2,
+      "section": "fever",
+      "beatIndex": 68
+    },
+    {
+      "time": 38.266,
+      "safeLane": 1,
+      "section": "fever",
+      "beatIndex": 69
+    },
+    {
+      "time": 38.824,
+      "safeLane": 0,
+      "section": "fever",
+      "beatIndex": 70
+    },
+    {
+      "time": 39.381,
+      "safeLane": 2,
+      "section": "fever",
+      "beatIndex": 71
+    },
+    {
+      "time": 39.938,
+      "safeLane": 1,
+      "section": "fever",
+      "beatIndex": 72
+    },
+    {
+      "time": 40.496,
+      "safeLane": 0,
+      "section": "final",
+      "beatIndex": 73
+    },
+    {
+      "time": 41.03,
+      "safeLane": 0,
+      "section": "final",
+      "beatIndex": 74
+    },
+    {
+      "time": 41.564,
+      "safeLane": 1,
+      "section": "final",
+      "beatIndex": 75
+    },
+    {
+      "time": 42.121,
+      "safeLane": 1,
+      "section": "final",
+      "beatIndex": 76
+    },
+    {
+      "time": 42.655,
+      "safeLane": 1,
+      "section": "final",
+      "beatIndex": 77
+    }
+  ],
+  "notes": [
+    {
+      "designIntent": "2.5D vertical rhythm runner. Obstacles are arranged on detected beats. Safe lane changes create a natural musical dodge pattern.",
+      "mvpAdvice": "Use this as a first draft. Tune by shifting global offset and adjusting obstacle density after playtest.",
+      "globalOffsetSeconds": 0.0
+    },
+    "Revision v1: Jump action removed. All obstacles are avoidable by left/right lane changes only; former jump_block entries were converted to standard block obstacles."
+  ],
+  "movement": {
+    "type": "lane-shift-only",
+    "lanes": 3,
+    "actions": [
+      "move_left",
+      "move_right"
+    ],
+    "disabledActions": [
+      "jump"
+    ]
+  }
+}

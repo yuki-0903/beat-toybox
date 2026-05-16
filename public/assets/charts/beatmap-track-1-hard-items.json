@@ -1,0 +1,3361 @@
+{
+  "id": "track-1-hard-items",
+  "title": "Track 1",
+  "sourceSong": "1.mp3",
+  "bpm": 128,
+  "difficulty": "hard",
+  "lanes": 3,
+  "duration": 79.907,
+  "approachTime": 1.6,
+  "obstacles": [
+    {
+      "time": 0.979,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 1.487,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 1.703,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 1.922,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 2.408,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 2.867,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 3.373,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 3.84,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 4.31,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 4.769,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 5.191,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 5.453,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 5.713,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 6.142,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 6.391,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 6.607,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 7.117,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 7.328,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 7.582,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 8.057,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 8.476,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 8.951,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 9.441,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 9.918,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 10.141,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 10.357,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 10.868,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 11.322,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 11.811,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 12.274,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 12.704,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 13.176,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 13.422,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 13.634,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 13.891,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 14.117,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 14.571,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 15.071,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 15.297,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 15.539,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 16.023,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 16.234,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 16.476,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 16.943,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 17.421,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 17.847,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 18.316,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 18.578,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 18.791,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 19.294,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 19.743,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 19.984,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 20.203,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 20.246,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 20.66,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 20.689,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 21.141,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 21.161,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 21.599,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 21.618,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 22.094,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 22.103,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 22.547,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 22.582,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 22.797,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 22.797,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 23.024,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 23.054,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 23.266,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 23.488,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 23.491,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 23.734,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 23.963,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 23.981,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 24.413,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 24.439,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 24.672,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 24.886,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 24.92,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 25.141,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 25.37,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 25.395,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 25.836,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 25.843,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 26.078,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 26.288,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 26.299,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 26.768,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 26.794,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 27.016,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 27.222,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 27.231,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 27.484,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 27.708,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 27.728,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 27.953,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 28.189,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 28.206,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 28.65,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 28.659,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 28.891,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 29.127,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 29.13,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 29.359,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 29.572,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 29.609,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 29.828,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 30.088,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 30.089,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 30.533,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 30.558,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 30.999,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 31.01,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 31.234,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 31.439,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 31.47,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 31.703,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 31.703,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 31.923,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 31.926,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 32.172,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 32.394,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 32.417,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 32.641,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 32.863,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 32.871,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 33.351,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 33.369,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 33.8,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 33.839,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 34.047,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 34.26,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 34.279,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 34.753,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 34.753,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 35.201,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 35.237,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 35.658,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 35.675,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 35.922,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 36.137,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 36.173,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 36.606,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 36.623,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 37.084,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 37.094,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 37.573,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 37.588,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 37.797,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 38.036,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 38.044,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 38.508,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 38.522,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 38.969,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 38.998,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 39.203,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 39.412,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 39.428,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 39.929,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 39.936,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 40.345,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 40.369,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 40.404,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 40.609,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 40.843,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 40.864,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 40.871,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 41.297,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 41.307,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 41.329,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 41.764,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 41.802,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 41.806,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 42.016,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 42.234,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 42.237,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 42.273,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 42.484,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 42.695,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 42.702,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 42.704,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 42.953,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 43.159,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 43.164,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 43.166,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 43.422,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 43.668,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 43.67,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 43.682,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 43.891,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 44.133,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 44.138,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 44.152,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 44.359,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 44.359,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 44.579,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 44.584,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 44.602,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 44.828,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 45.048,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 45.079,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 45.091,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 45.53,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 45.537,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 45.558,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 45.766,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 45.994,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 46.004,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 46.02,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 46.234,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 46.234,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 46.471,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 46.48,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 46.486,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 46.914,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 46.92,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 46.965,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 47.172,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 47.397,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 47.408,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 47.423,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 47.848,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 47.867,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 47.873,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 48.317,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 48.343,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 48.356,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 48.578,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 48.578,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 48.809,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 48.814,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 48.83,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 49.047,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 49.28,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 49.297,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 49.308,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 49.516,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 49.516,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 49.746,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 49.769,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 49.775,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 49.984,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 50.203,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 50.209,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 50.229,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 50.66,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 50.665,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 50.686,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 51.143,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 51.147,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 51.171,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 51.391,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 51.391,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 51.605,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 51.611,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 51.648,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 51.859,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 52.07,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 52.103,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 52.114,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 52.328,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 52.328,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 52.556,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 52.556,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 52.57,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 52.797,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 53.016,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 53.044,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 53.054,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 53.477,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 53.477,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 53.518,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 53.734,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 53.95,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 53.989,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 53.994,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 54.203,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 54.414,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 54.45,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 54.454,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 54.898,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 54.903,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 54.926,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 55.141,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 55.354,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 55.389,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 55.389,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 55.609,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 55.609,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 55.816,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 55.826,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 55.87,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 56.313,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 56.329,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 56.335,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 56.547,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 56.547,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 56.792,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 56.793,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 56.795,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 57.016,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 57.016,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 57.259,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 57.263,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 57.27,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 57.694,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 57.706,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 57.707,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 57.953,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 57.953,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 58.179,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 58.181,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 58.182,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 58.639,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 58.669,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 58.681,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 59.132,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 59.144,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 59.149,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 59.588,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 59.599,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 59.619,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 60.035,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 60.041,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 60.061,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 60.519,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 60.531,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 60.543,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 61.003,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 61.021,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 61.03,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 61.448,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 61.463,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 61.479,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 61.703,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 61.916,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 61.938,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 61.95,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 62.172,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 62.38,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 62.388,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 62.409,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 62.641,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 62.857,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 62.872,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 62.904,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 63.109,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 63.109,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 63.331,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 63.345,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 63.356,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 63.578,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 63.787,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 63.788,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 63.837,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 64.047,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 64.047,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 64.047,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 64.264,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 64.28,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 64.306,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 64.516,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 64.731,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 64.742,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 64.746,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 64.984,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 64.984,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 65.222,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 65.677,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 65.922,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 66.174,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 66.596,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 67.07,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 67.584,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 68.04,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 68.266,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 68.508,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 68.958,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 69.415,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 69.885,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 70.354,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 70.824,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 71.078,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 71.332,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 71.757,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 72.236,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 72.694,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 73.167,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 73.669,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 74.109,
+      "lane": 0,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 74.576,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 74.828,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 75.07,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 75.504,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 76.029,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 76.441,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 76.703,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.58,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 76.946,
+      "lane": 1,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.66,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 77.172,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.74,
+      "soundOnDodge": "wood_tap"
+    },
+    {
+      "time": 77.407,
+      "lane": 2,
+      "type": "block",
+      "pattern": "authored-hard",
+      "energy": 0.82,
+      "soundOnDodge": "wood_tap"
+    }
+  ],
+  "items": [
+    {
+      "time": 1,
+      "lane": 1,
+      "type": "fx_chip",
+      "sound": "toy_perc",
+      "score": 250
+    },
+    {
+      "time": 6.156,
+      "lane": 1,
+      "type": "fx_chip",
+      "sound": "toy_perc",
+      "score": 250
+    },
+    {
+      "time": 11.781,
+      "lane": 1,
+      "type": "fx_chip",
+      "sound": "toy_perc",
+      "score": 250
+    },
+    {
+      "time": 14.594,
+      "lane": 1,
+      "type": "fx_chip",
+      "sound": "toy_perc",
+      "score": 250
+    },
+    {
+      "time": 15.062,
+      "lane": 1,
+      "type": "fx_chip",
+      "sound": "toy_perc",
+      "score": 250
+    },
+    {
+      "time": 17.875,
+      "lane": 2,
+      "type": "fx_chip",
+      "sound": "toy_perc",
+      "score": 250
+    },
+    {
+      "time": 23.5,
+      "lane": 0,
+      "type": "fx_chip",
+      "sound": "toy_perc",
+      "score": 250
+    },
+    {
+      "time": 23.969,
+      "lane": 2,
+      "type": "fx_chip",
+      "sound": "toy_perc",
+      "score": 250
+    },
+    {
+      "time": 26.781,
+      "lane": 1,
+      "type": "fx_chip",
+      "sound": "toy_perc",
+      "score": 250
+    },
+    {
+      "time": 38.031,
+      "lane": 1,
+      "type": "fx_chip",
+      "sound": "toy_perc",
+      "score": 250
+    },
+    {
+      "time": 38.5,
+      "lane": 1,
+      "type": "fx_chip",
+      "sound": "toy_perc",
+      "score": 250
+    },
+    {
+      "time": 41.781,
+      "lane": 1,
+      "type": "fx_chip",
+      "sound": "toy_perc",
+      "score": 250
+    },
+    {
+      "time": 42.25,
+      "lane": 1,
+      "type": "fx_chip",
+      "sound": "toy_perc",
+      "score": 250
+    },
+    {
+      "time": 43.188,
+      "lane": 2,
+      "type": "fx_chip",
+      "sound": "toy_perc",
+      "score": 250
+    },
+    {
+      "time": 55.375,
+      "lane": 1,
+      "type": "fx_chip",
+      "sound": "toy_perc",
+      "score": 250
+    },
+    {
+      "time": 58.656,
+      "lane": 1,
+      "type": "fx_chip",
+      "sound": "toy_perc",
+      "score": 250
+    },
+    {
+      "time": 60.531,
+      "lane": 2,
+      "type": "fx_chip",
+      "sound": "toy_perc",
+      "score": 250
+    },
+    {
+      "time": 61.469,
+      "lane": 2,
+      "type": "fx_chip",
+      "sound": "toy_perc",
+      "score": 250
+    },
+    {
+      "time": 62.406,
+      "lane": 1,
+      "type": "fx_chip",
+      "sound": "toy_perc",
+      "score": 250
+    },
+    {
+      "time": 66.156,
+      "lane": 0,
+      "type": "fx_chip",
+      "sound": "toy_perc",
+      "score": 250
+    },
+    {
+      "time": 68.5,
+      "lane": 0,
+      "type": "fx_chip",
+      "sound": "toy_perc",
+      "score": 250
+    }
+  ]
+}

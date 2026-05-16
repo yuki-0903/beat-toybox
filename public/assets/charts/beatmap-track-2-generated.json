@@ -1,0 +1,62 @@
+{
+  "id": "track-2-generated-from-report",
+  "title": "Track 2",
+  "sourceSong": "2.mp3",
+  "bpm": 123.05,
+  "difficulty": "generated-hard-placeholder",
+  "lanes": 3,
+  "duration": 87.72,
+  "approachTime": 1.6,
+  "obstacles": [],
+  "items": [
+    {
+      "time": 8.4,
+      "lane": 1,
+      "type": "beat_chip",
+      "sound": "toy_chime",
+      "score": 250
+    },
+    {
+      "time": 19.6,
+      "lane": 0,
+      "type": "beat_chip",
+      "sound": "toy_chime",
+      "score": 250
+    },
+    {
+      "time": 31.3,
+      "lane": 2,
+      "type": "beat_chip",
+      "sound": "toy_chime",
+      "score": 250
+    },
+    {
+      "time": 43.1,
+      "lane": 1,
+      "type": "beat_chip",
+      "sound": "toy_chime",
+      "score": 250
+    },
+    {
+      "time": 55,
+      "lane": 2,
+      "type": "beat_chip",
+      "sound": "toy_chime",
+      "score": 250
+    },
+    {
+      "time": 68.2,
+      "lane": 0,
+      "type": "beat_chip",
+      "sound": "toy_chime",
+      "score": 250
+    },
+    {
+      "time": 80.4,
+      "lane": 1,
+      "type": "beat_chip",
+      "sound": "toy_chime",
+      "score": 250
+    }
+  ]
+}

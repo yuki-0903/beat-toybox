@@ -1,4 +1,6 @@
 import * as Phaser from "phaser";
+import { AUDIO_ASSET_BASE, CHART_ASSET_BASE } from "@/game/config/assets";
+import { SONGS } from "@/game/config/songs";
 import { gameEvents } from "@/game/systems/GameEvents";
 
 export class PreloadScene extends Phaser.Scene {
@@ -19,6 +21,13 @@ export class PreloadScene extends Phaser.Scene {
     this.load.on(Phaser.Loader.Events.PROGRESS, (progress: number) => {
       loadingText.setText(`LOADING ${Math.round(progress * 100)}%`);
     });
+
+    SONGS.forEach((song) => {
+      this.load.audio(song.audioKey, [`${AUDIO_ASSET_BASE}/${song.audioFile}`]);
+      this.load.json(song.chartKey, `${CHART_ASSET_BASE}/${song.chartFile}`);
+    });
+    this.load.audio("se_move_beat", [`${AUDIO_ASSET_BASE}/se_move_beat.wav`]);
+    this.load.audio("se_item_collect", [`${AUDIO_ASSET_BASE}/se_item_collect.wav`]);
   }
 
   create() {

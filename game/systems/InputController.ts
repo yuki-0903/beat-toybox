@@ -12,6 +12,8 @@ export interface InputState {
     left: boolean;
     right: boolean;
     space: boolean;
+    a: boolean;
+    d: boolean;
   };
 }
 
@@ -27,12 +29,16 @@ export class InputController {
       down: false,
       left: false,
       right: false,
-      space: false
+      space: false,
+      a: false,
+      d: false
     }
   };
 
   private readonly cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
   private readonly spaceKey?: Phaser.Input.Keyboard.Key;
+  private readonly aKey?: Phaser.Input.Keyboard.Key;
+  private readonly dKey?: Phaser.Input.Keyboard.Key;
   private readonly handlePointerDown = (pointer: Phaser.Input.Pointer) => {
     this.state.pointerDown = true;
     this.state.justPressed = true;
@@ -50,6 +56,8 @@ export class InputController {
   constructor(private readonly scene: Phaser.Scene) {
     this.cursors = scene.input.keyboard?.createCursorKeys();
     this.spaceKey = scene.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    this.aKey = scene.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+    this.dKey = scene.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.D);
 
     scene.input.on("pointerdown", this.handlePointerDown);
     scene.input.on("pointermove", this.handlePointerMove);
@@ -63,6 +71,8 @@ export class InputController {
     this.state.keys.left = Boolean(this.cursors?.left?.isDown);
     this.state.keys.right = Boolean(this.cursors?.right?.isDown);
     this.state.keys.space = Boolean(this.spaceKey?.isDown);
+    this.state.keys.a = Boolean(this.aKey?.isDown);
+    this.state.keys.d = Boolean(this.dKey?.isDown);
 
     this.scene.events.once(Phaser.Scenes.Events.POST_UPDATE, () => {
       this.state.justPressed = false;

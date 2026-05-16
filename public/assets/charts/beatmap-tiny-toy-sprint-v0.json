@@ -1,0 +1,843 @@
+{
+  "id": "tiny-toy-sprint-v1-no-jump-steady-1",
+  "title": "Tiny Toy Sprint",
+  "audioFile": "Tiny Toy Sprint.mp3",
+  "generatedBy": [
+    "C",
+    "h",
+    "a",
+    "t",
+    "G",
+    "P",
+    "T",
+    " ",
+    "u",
+    "d",
+    "i",
+    "o",
+    "n",
+    "l",
+    "y",
+    "s",
+    "r",
+    "f",
+    "e",
+    "v",
+    ":",
+    "/",
+    "g",
+    ",",
+    "j",
+    "m",
+    "p",
+    "c",
+    "Codex steady difficulty pass"
+  ],
+  "duration": 43.88,
+  "bpm": 107.666,
+  "beatInterval": 0.557279,
+  "timeUnit": "seconds",
+  "lanes": 3,
+  "approachTime": 1.6,
+  "judgement": {
+    "perfectWindowMs": 90,
+    "goodWindowMs": 150,
+    "missWindowMs": 230
+  },
+  "controls": {
+    "mobile": "swipe left/right to change lane only; no jump",
+    "pc": "arrow keys/A-D to change lane only; no jump"
+  },
+  "sections": [
+    {
+      "name": "intro",
+      "start": 0,
+      "end": 10,
+      "density": "low",
+      "worldIntensity": 0.25
+    },
+    {
+      "name": "groove",
+      "start": 10,
+      "end": 25,
+      "density": "medium",
+      "worldIntensity": 0.55
+    },
+    {
+      "name": "break",
+      "start": 25,
+      "end": 30,
+      "density": "low",
+      "worldIntensity": 0.35
+    },
+    {
+      "name": "fever",
+      "start": 30,
+      "end": 40,
+      "density": "high",
+      "worldIntensity": 0.85
+    },
+    {
+      "name": "final",
+      "start": 40,
+      "end": 43.88,
+      "density": "high",
+      "worldIntensity": 1
+    }
+  ],
+  "obstacles": [
+    {
+      "time": 2.25,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.48,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 3.36,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.56,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 4.47,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.64,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 5.58,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.72,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 6.69,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.48,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 7.8,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.56,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 8.91,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.64,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 10.02,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.72,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 11.13,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.48,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 12.24,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.56,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 13.35,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.64,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 14.46,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.72,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 15.57,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.48,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 16.68,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.56,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 17.79,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.64,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 18.9,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.72,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 20.01,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.48,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 21.12,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.56,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 22.23,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.64,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 23.34,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.72,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 24.45,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.48,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 25.56,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.56,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 26.67,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.64,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 27.78,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.72,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 28.89,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.48,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 30,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.56,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 31.11,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.64,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 32.22,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.72,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 33.33,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.48,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 34.44,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.56,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 35.55,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.64,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 36.66,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.72,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 37.77,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.48,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 38.88,
+      "lane": 2,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.56,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 39.99,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.64,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 41.1,
+      "lane": 0,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.72,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    },
+    {
+      "time": 42.21,
+      "lane": 1,
+      "type": "block",
+      "pattern": "single",
+      "energy": 0.48,
+      "soundOnDodge": "wood_tap",
+      "generatedDifficulty": "steady-1"
+    }
+  ],
+  "items": [
+    {
+      "time": 6.084,
+      "lane": 1,
+      "type": "coin",
+      "sound": "sparkle",
+      "score": 100
+    },
+    {
+      "time": 9.381,
+      "lane": 1,
+      "type": "fever_star",
+      "sound": "powerup",
+      "score": 300
+    },
+    {
+      "time": 18.181,
+      "lane": 2,
+      "type": "fever_star",
+      "sound": "powerup",
+      "score": 300
+    },
+    {
+      "time": 27.167,
+      "lane": 0,
+      "type": "fever_star",
+      "sound": "powerup",
+      "score": 300
+    },
+    {
+      "time": 28.398,
+      "lane": 0,
+      "type": "coin",
+      "sound": "sparkle",
+      "score": 100
+    },
+    {
+      "time": 36.084,
+      "lane": 0,
+      "type": "fever_star",
+      "sound": "powerup",
+      "score": 300
+    }
+  ],
+  "rhythmEvents": [
+    {
+      "time": 2.252,
+      "safeLane": 0,
+      "section": "intro",
+      "beatIndex": 4
+    },
+    {
+      "time": 3.344,
+      "safeLane": 0,
+      "section": "intro",
+      "beatIndex": 6
+    },
+    {
+      "time": 4.458,
+      "safeLane": 1,
+      "section": "intro",
+      "beatIndex": 8
+    },
+    {
+      "time": 5.55,
+      "safeLane": 1,
+      "section": "intro",
+      "beatIndex": 10
+    },
+    {
+      "time": 6.618,
+      "safeLane": 0,
+      "section": "intro",
+      "beatIndex": 12
+    },
+    {
+      "time": 7.732,
+      "safeLane": 0,
+      "section": "intro",
+      "beatIndex": 14
+    },
+    {
+      "time": 8.824,
+      "safeLane": 1,
+      "section": "intro",
+      "beatIndex": 16
+    },
+    {
+      "time": 9.938,
+      "safeLane": 1,
+      "section": "intro",
+      "beatIndex": 18
+    },
+    {
+      "time": 10.472,
+      "safeLane": 0,
+      "section": "groove",
+      "beatIndex": 19
+    },
+    {
+      "time": 11.029,
+      "safeLane": 2,
+      "section": "groove",
+      "beatIndex": 20
+    },
+    {
+      "time": 11.587,
+      "safeLane": 1,
+      "section": "groove",
+      "beatIndex": 21
+    },
+    {
+      "time": 12.121,
+      "safeLane": 0,
+      "section": "groove",
+      "beatIndex": 22
+    },
+    {
+      "time": 13.212,
+      "safeLane": 2,
+      "section": "groove",
+      "beatIndex": 24
+    },
+    {
+      "time": 13.769,
+      "safeLane": 2,
+      "section": "groove",
+      "beatIndex": 25
+    },
+    {
+      "time": 14.303,
+      "safeLane": 1,
+      "section": "groove",
+      "beatIndex": 26
+    },
+    {
+      "time": 14.861,
+      "safeLane": 0,
+      "section": "groove",
+      "beatIndex": 27
+    },
+    {
+      "time": 15.418,
+      "safeLane": 2,
+      "section": "groove",
+      "beatIndex": 28
+    },
+    {
+      "time": 15.952,
+      "safeLane": 2,
+      "section": "groove",
+      "beatIndex": 29
+    },
+    {
+      "time": 16.509,
+      "safeLane": 1,
+      "section": "groove",
+      "beatIndex": 30
+    },
+    {
+      "time": 17.624,
+      "safeLane": 2,
+      "section": "groove",
+      "beatIndex": 32
+    },
+    {
+      "time": 18.158,
+      "safeLane": 1,
+      "section": "groove",
+      "beatIndex": 33
+    },
+    {
+      "time": 18.715,
+      "safeLane": 0,
+      "section": "groove",
+      "beatIndex": 34
+    },
+    {
+      "time": 19.249,
+      "safeLane": 1,
+      "section": "groove",
+      "beatIndex": 35
+    },
+    {
+      "time": 19.807,
+      "safeLane": 0,
+      "section": "groove",
+      "beatIndex": 36
+    },
+    {
+      "time": 20.364,
+      "safeLane": 0,
+      "section": "groove",
+      "beatIndex": 37
+    },
+    {
+      "time": 20.898,
+      "safeLane": 2,
+      "section": "groove",
+      "beatIndex": 38
+    },
+    {
+      "time": 21.989,
+      "safeLane": 1,
+      "section": "groove",
+      "beatIndex": 40
+    },
+    {
+      "time": 22.547,
+      "safeLane": 1,
+      "section": "groove",
+      "beatIndex": 41
+    },
+    {
+      "time": 23.104,
+      "safeLane": 0,
+      "section": "groove",
+      "beatIndex": 42
+    },
+    {
+      "time": 23.754,
+      "safeLane": 0,
+      "section": "groove",
+      "beatIndex": 43
+    },
+    {
+      "time": 24.358,
+      "safeLane": 1,
+      "section": "groove",
+      "beatIndex": 44
+    },
+    {
+      "time": 24.915,
+      "safeLane": 1,
+      "section": "groove",
+      "beatIndex": 45
+    },
+    {
+      "time": 25.472,
+      "safeLane": 1,
+      "section": "break",
+      "beatIndex": 46
+    },
+    {
+      "time": 26.61,
+      "safeLane": 0,
+      "section": "break",
+      "beatIndex": 48
+    },
+    {
+      "time": 27.841,
+      "safeLane": 0,
+      "section": "break",
+      "beatIndex": 50
+    },
+    {
+      "time": 28.955,
+      "safeLane": 2,
+      "section": "break",
+      "beatIndex": 52
+    },
+    {
+      "time": 30.047,
+      "safeLane": 0,
+      "section": "fever",
+      "beatIndex": 54
+    },
+    {
+      "time": 30.604,
+      "safeLane": 1,
+      "section": "fever",
+      "beatIndex": 55
+    },
+    {
+      "time": 31.138,
+      "safeLane": 0,
+      "section": "fever",
+      "beatIndex": 56
+    },
+    {
+      "time": 31.695,
+      "safeLane": 0,
+      "section": "fever",
+      "beatIndex": 57
+    },
+    {
+      "time": 32.253,
+      "safeLane": 2,
+      "section": "fever",
+      "beatIndex": 58
+    },
+    {
+      "time": 32.787,
+      "safeLane": 1,
+      "section": "fever",
+      "beatIndex": 59
+    },
+    {
+      "time": 33.344,
+      "safeLane": 0,
+      "section": "fever",
+      "beatIndex": 60
+    },
+    {
+      "time": 33.878,
+      "safeLane": 2,
+      "section": "fever",
+      "beatIndex": 61
+    },
+    {
+      "time": 34.435,
+      "safeLane": 2,
+      "section": "fever",
+      "beatIndex": 62
+    },
+    {
+      "time": 35.527,
+      "safeLane": 0,
+      "section": "fever",
+      "beatIndex": 64
+    },
+    {
+      "time": 36.084,
+      "safeLane": 1,
+      "section": "fever",
+      "beatIndex": 65
+    },
+    {
+      "time": 36.618,
+      "safeLane": 0,
+      "section": "fever",
+      "beatIndex": 66
+    },
+    {
+      "time": 37.175,
+      "safeLane": 0,
+      "section": "fever",
+      "beatIndex": 67
+    },
+    {
+      "time": 37.732,
+      "safeLane": 2,
+      "section": "fever",
+      "beatIndex": 68
+    },
+    {
+      "time": 38.266,
+      "safeLane": 1,
+      "section": "fever",
+      "beatIndex": 69
+    },
+    {
+      "time": 38.824,
+      "safeLane": 0,
+      "section": "fever",
+      "beatIndex": 70
+    },
+    {
+      "time": 39.381,
+      "safeLane": 2,
+      "section": "fever",
+      "beatIndex": 71
+    },
+    {
+      "time": 39.938,
+      "safeLane": 1,
+      "section": "fever",
+      "beatIndex": 72
+    },
+    {
+      "time": 40.496,
+      "safeLane": 0,
+      "section": "final",
+      "beatIndex": 73
+    },
+    {
+      "time": 41.03,
+      "safeLane": 0,
+      "section": "final",
+      "beatIndex": 74
+    },
+    {
+      "time": 41.564,
+      "safeLane": 1,
+      "section": "final",
+      "beatIndex": 75
+    },
+    {
+      "time": 42.121,
+      "safeLane": 1,
+      "section": "final",
+      "beatIndex": 76
+    },
+    {
+      "time": 42.655,
+      "safeLane": 1,
+      "section": "final",
+      "beatIndex": 77
+    }
+  ],
+  "notes": [
+    {
+      "designIntent": "2.5D vertical rhythm runner. Obstacles are arranged on detected beats. Safe lane changes create a natural musical dodge pattern.",
+      "mvpAdvice": "Use this as a first draft. Tune by shifting global offset and adjusting obstacle density after playtest.",
+      "globalOffsetSeconds": 0
+    },
+    "Revision v1: Jump action removed. All obstacles are avoidable by left/right lane changes only; former jump_block entries were converted to standard block obstacles."
+  ],
+  "movement": {
+    "type": "lane-shift-only",
+    "lanes": 3,
+    "actions": [
+      "move_left",
+      "move_right"
+    ],
+    "disabledActions": [
+      "jump"
+    ]
+  },
+  "difficulty": "steady-1"
+}
