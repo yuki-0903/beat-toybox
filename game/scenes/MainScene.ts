@@ -103,19 +103,19 @@ const DIFFICULTY_SETTINGS: Record<
     label: "EASY",
     intervalSeconds: 0.92,
     scoreMultiplier: 1,
-    authoredStep: 3
+    authoredStep: 4
   },
   normal: {
     label: "NORMAL",
     intervalSeconds: 0.72,
     scoreMultiplier: 1.15,
-    authoredStep: 2
+    authoredStep: 3
   },
   hard: {
     label: "HARD",
     intervalSeconds: 0.54,
     scoreMultiplier: 1.35,
-    authoredStep: 1
+    authoredStep: 2
   }
 };
 
@@ -167,6 +167,8 @@ export class MainScene extends Phaser.Scene {
   private selectedDifficulty: DifficultyId = "normal";
   private debugDensityLevel = 0;
   private debugSpeedLevel = 0;
+  private lastMissEffectAt = 0;
+  private lastLayoutRefreshAt = 0;
   private currentLane = 1;
   private visualLane = 1;
   private readonly handlePointerDown = (pointer: Phaser.Input.Pointer) => {
@@ -782,6 +784,8 @@ export class MainScene extends Phaser.Scene {
     this.combo = 0;
     this.missCount = 0;
     this.maxCombo = 0;
+    this.lastMissEffectAt = 0;
+    this.lastLayoutRefreshAt = 0;
     this.setFeverActive(false);
     this.clearObstacles();
     this.clearItems();
@@ -931,6 +935,8 @@ export class MainScene extends Phaser.Scene {
     this.combo = 0;
     this.missCount = 0;
     this.maxCombo = 0;
+    this.lastMissEffectAt = 0;
+    this.lastLayoutRefreshAt = 0;
     this.setFeverActive(false);
     this.clearObstacles();
     this.clearItems();
@@ -989,7 +995,7 @@ export class MainScene extends Phaser.Scene {
 
   private createAuthoredDifficultyObstacles(chart: BeatmapChart) {
     const baseRatio = 1 / DIFFICULTY_SETTINGS[this.selectedDifficulty].authoredStep;
-    const targetRatio = Phaser.Math.Clamp(baseRatio * this.debugDensityFactor, 0.08, 1);
+    const targetRatio = Phaser.Math.Clamp(baseRatio * this.debugDensityFactor, 0.08, 0.75);
     let accumulator = 0;
 
     return chart.obstacles
@@ -1314,7 +1320,7 @@ export class MainScene extends Phaser.Scene {
     } else {
       this.popFeedback(`+${scoreGain}`, "#64f5c8");
     }
-    this.layout();
+    this.refreshHudLayout();
   }
 
   private registerMiss(obstacles: Obstacle[]) {
@@ -1326,9 +1332,21 @@ export class MainScene extends Phaser.Scene {
       obstacle.shine.setFillStyle(0xfff1a8, 0.95);
       this.fadeOutPanel(obstacle);
     });
-    this.cameras.main.shake(120, 0.006);
-    this.flashPlayer();
-    this.popFeedback("MISS", "#ff8fa3");
+    if (this.time.now - this.lastMissEffectAt > 180) {
+      this.lastMissEffectAt = this.time.now;
+      this.cameras.main.shake(90, 0.004);
+      this.flashPlayer();
+      this.popFeedback("MISS", "#ff8fa3");
+    }
+    this.refreshHudLayout();
+  }
+
+  private refreshHudLayout() {
+    if (this.time.now - this.lastLayoutRefreshAt < 50) {
+      return;
+    }
+
+    this.lastLayoutRefreshAt = this.time.now;
     this.layout();
   }
 
