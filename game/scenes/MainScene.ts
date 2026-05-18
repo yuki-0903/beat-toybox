@@ -35,6 +35,21 @@ interface CollectibleItem {
   glow: Phaser.GameObjects.Ellipse;
 }
 
+interface Runner {
+  lane: number;
+  isJumping: boolean;
+  container: Phaser.GameObjects.Container;
+  shadow: Phaser.GameObjects.Ellipse;
+  body: Phaser.GameObjects.Ellipse;
+  face: Phaser.GameObjects.Ellipse;
+}
+
+interface JumpButton {
+  lane: number;
+  background: Phaser.GameObjects.Rectangle;
+  label: Phaser.GameObjects.Text;
+}
+
 interface ScheduledObstacle {
   time: number;
   lane: number;
@@ -123,10 +138,8 @@ export class MainScene extends Phaser.Scene {
   private inputController?: InputController;
   private background?: Phaser.GameObjects.Rectangle;
   private trackGraphics?: Phaser.GameObjects.Graphics;
-  private player?: Phaser.GameObjects.Container;
-  private playerShadow?: Phaser.GameObjects.Ellipse;
-  private playerBody?: Phaser.GameObjects.Ellipse;
-  private playerFace?: Phaser.GameObjects.Ellipse;
+  private runners: Runner[] = [];
+  private jumpButtons: JumpButton[] = [];
   private titleLabel?: Phaser.GameObjects.Text;
   private sizeLabel?: Phaser.GameObjects.Text;
   private laneLabel?: Phaser.GameObjects.Text;
@@ -169,8 +182,6 @@ export class MainScene extends Phaser.Scene {
   private debugSpeedLevel = 0;
   private lastMissEffectAt = 0;
   private lastLayoutRefreshAt = 0;
-  private currentLane = 1;
-  private visualLane = 1;
   private readonly handlePointerDown = (pointer: Phaser.Input.Pointer) => {
     if (!this.gameStarted) {
       if (this.gameEnded) {
@@ -195,7 +206,7 @@ export class MainScene extends Phaser.Scene {
     }
 
     const pointerPosition = this.getPointerWorldPoint(pointer);
-    this.moveLane(pointerPosition.x < this.scale.width / 2 ? -1 : 1);
+    this.tryJumpFromPointer(pointerPosition.x, pointerPosition.y);
   };
   private readonly handleKeyDown = (event: KeyboardEvent) => {
     if (event.repeat) {
@@ -212,7 +223,21 @@ export class MainScene extends Phaser.Scene {
         }
         return;
       }
-      this.moveLane(-1);
+      this.jumpRunner(0);
+      return;
+    }
+
+    if (event.code === "ArrowDown" || event.code === "KeyS") {
+      event.preventDefault();
+      if (!this.gameStarted) {
+        if (this.gameEnded) {
+          this.showSongSelect();
+        } else if (this.menuStep === "song") {
+          this.selectSongByOffset(1);
+        }
+        return;
+      }
+      this.jumpRunner(1);
       return;
     }
 
@@ -226,7 +251,14 @@ export class MainScene extends Phaser.Scene {
         }
         return;
       }
-      this.moveLane(1);
+      this.jumpRunner(2);
+      return;
+    }
+
+    if (this.gameStarted && (event.code === "Digit1" || event.code === "Digit2" || event.code === "Digit3")) {
+      event.preventDefault();
+      const lane = event.code === "Digit1" ? 0 : event.code === "Digit2" ? 1 : 2;
+      this.jumpRunner(lane);
       return;
     }
 
@@ -304,10 +336,21 @@ export class MainScene extends Phaser.Scene {
     this.background = this.add.rectangle(0, 0, 1, 1, 0x05070f).setOrigin(0);
     this.trackGraphics = this.add.graphics();
 
-    this.playerShadow = this.add.ellipse(0, 18, 54, 16, 0x05070f, 0.45);
-    this.playerBody = this.add.ellipse(0, 0, 44, 54, 0xffd15c);
-    this.playerFace = this.add.ellipse(0, -8, 24, 20, 0xfff4d1);
-    this.player = this.add.container(0, 0, [this.playerShadow, this.playerBody, this.playerFace]).setDepth(160);
+    this.runners = Array.from({ length: GAME_BALANCE.laneCount }, (_, lane) => {
+      const shadow = this.add.ellipse(0, 18, 54, 16, 0x05070f, 0.45);
+      const body = this.add.ellipse(0, 0, 44, 54, [0x7ee7ff, 0xffd15c, 0xff8fa3][lane]);
+      const face = this.add.ellipse(0, -8, 24, 20, 0xfff4d1);
+      const container = this.add.container(0, 0, [shadow, body, face]).setDepth(160 + lane);
+
+      return {
+        lane,
+        isJumping: false,
+        container,
+        shadow,
+        body,
+        face
+      };
+    });
 
     this.titleLabel = this.add
       .text(0, 0, "BEAT RUNNER", {
@@ -482,6 +525,23 @@ export class MainScene extends Phaser.Scene {
 
       return { action, background, label };
     });
+
+    this.jumpButtons = Array.from({ length: GAME_BALANCE.laneCount }, (_, lane) => {
+      const background = this.add.rectangle(0, 0, 1, 1, 0x102742, 0.95).setDepth(340);
+      const label = this.add
+        .text(0, 0, ["LEFT", "CENTER", "RIGHT"][lane], {
+          fontFamily: "Arial, Helvetica, sans-serif",
+          fontStyle: "900",
+          color: "#f7fbff",
+          align: "center"
+        })
+        .setOrigin(0.5)
+        .setDepth(341);
+
+      background.setStrokeStyle(2, 0x8fd7ff, 0.75);
+
+      return { lane, background, label };
+    });
   }
 
   private layout() {
@@ -494,9 +554,10 @@ export class MainScene extends Phaser.Scene {
 
     this.background?.setPosition(0, 0).setSize(width, height);
     this.drawTrack(track);
-    this.layoutPlayer(track);
+    this.layoutPlayers(track);
     this.layoutObstacles(track);
     this.layoutItems(track);
+    this.layoutJumpButtons();
 
     this.titleLabel
       ?.setPosition(width / 2, 32 * screenScale)
@@ -547,7 +608,8 @@ export class MainScene extends Phaser.Scene {
     this.sizeLabel
       ?.setPosition(width / 2, height - 24 * screenScale)
       .setFontSize(Math.round(18 * screenScale))
-      .setText(`${width} x ${height}`);
+      .setText(`${width} x ${height}`)
+      .setAlpha(this.gameStarted ? 0 : 1);
   }
 
   private layoutDifficultyButtons() {
@@ -695,6 +757,33 @@ export class MainScene extends Phaser.Scene {
       .setAlpha(isVisible ? 1 : 0);
   }
 
+  private layoutJumpButtons() {
+    const { width, height } = this.scale;
+    const screenScale = this.screenScale;
+    const totalWidth = Math.min(width * 0.92, 520 * screenScale);
+    const gap = 10 * screenScale;
+    const buttonWidth = (totalWidth - gap * 2) / 3;
+    const buttonHeight = 58 * screenScale;
+    const centerY = height - 54 * screenScale;
+    const startX = width / 2 - totalWidth / 2 + buttonWidth / 2;
+    const isVisible = this.gameStarted;
+
+    this.jumpButtons.forEach((button, index) => {
+      const x = startX + index * (buttonWidth + gap);
+
+      button.background
+        .setPosition(x, centerY)
+        .setSize(buttonWidth, buttonHeight)
+        .setFillStyle(0x102742, 0.94)
+        .setStrokeStyle(2 * screenScale, 0x8fd7ff, 0.78)
+        .setAlpha(isVisible ? 1 : 0);
+      button.label
+        .setPosition(x, centerY)
+        .setFontSize(Math.round(Phaser.Math.Clamp(16 * screenScale, 13, 24)))
+        .setAlpha(isVisible ? 1 : 0);
+    });
+  }
+
   private handleResize(gameSize: Phaser.Structs.Size) {
     this.cameras.main.setViewport(0, 0, gameSize.width, gameSize.height);
     this.layout();
@@ -784,6 +873,10 @@ export class MainScene extends Phaser.Scene {
     this.combo = 0;
     this.missCount = 0;
     this.maxCombo = 0;
+    this.runners.forEach((runner) => {
+      runner.isJumping = false;
+      runner.container.y = 0;
+    });
     this.lastMissEffectAt = 0;
     this.lastLayoutRefreshAt = 0;
     this.setFeverActive(false);
@@ -911,11 +1004,14 @@ export class MainScene extends Phaser.Scene {
     }
   }
 
-  private layoutPlayer(track: TrackLayout) {
-    const playerPoint = this.getLaneCenterPoint(track, this.visualLane, GAME_BALANCE.playerZ);
-    const playerScale = Phaser.Math.Linear(0.45, 1.25, GAME_BALANCE.playerZ) * this.screenScale;
+  private layoutPlayers(track: TrackLayout) {
+    const playerScale = Phaser.Math.Linear(0.45, 1.16, GAME_BALANCE.playerZ) * this.screenScale;
 
-    this.player?.setPosition(playerPoint.x, playerPoint.y).setScale(playerScale);
+    this.runners.forEach((runner) => {
+      const playerPoint = this.getLaneCenterPoint(track, runner.lane, GAME_BALANCE.playerZ);
+      runner.container.setPosition(playerPoint.x, playerPoint.y).setScale(playerScale);
+      runner.shadow.setScale(runner.isJumping ? 0.72 : 1, runner.isJumping ? 0.7 : 1);
+    });
   }
 
   private startRun() {
@@ -935,6 +1031,9 @@ export class MainScene extends Phaser.Scene {
     this.combo = 0;
     this.missCount = 0;
     this.maxCombo = 0;
+    this.runners.forEach((runner) => {
+      runner.isJumping = false;
+    });
     this.lastMissEffectAt = 0;
     this.lastLayoutRefreshAt = 0;
     this.setFeverActive(false);
@@ -990,7 +1089,7 @@ export class MainScene extends Phaser.Scene {
       return;
     }
 
-    this.chartObstacles = this.createGuidedChart(this.createSteadyDifficultyObstacles(chart));
+    this.chartObstacles = this.createAuthoredScheduledChart(this.createSteadyDifficultyObstacles(chart));
   }
 
   private createAuthoredDifficultyObstacles(chart: BeatmapChart) {
@@ -1058,7 +1157,7 @@ export class MainScene extends Phaser.Scene {
       grouped.set(key, group);
     });
 
-    let previousSafeLane = this.currentLane;
+    let previousSafeLane = 1;
 
     return Array.from(grouped.entries()).flatMap(([timeKey, group], groupIndex) => {
       const time = Number(timeKey);
@@ -1271,7 +1370,7 @@ export class MainScene extends Phaser.Scene {
       return;
     }
 
-    if (item.lane !== this.currentLane) {
+    if (!this.isRunnerJumping(item.lane)) {
       return;
     }
 
@@ -1294,12 +1393,12 @@ export class MainScene extends Phaser.Scene {
     });
     this.judgedGroupIds.add(obstacle.groupId);
 
-    if (obstacle.blockedLanes.includes(this.currentLane)) {
-      this.registerMiss(groupObstacles);
+    if (this.isRunnerJumping(obstacle.lane)) {
+      this.registerAvoid(groupObstacles);
       return;
     }
 
-    this.registerAvoid(groupObstacles);
+    this.registerMiss(groupObstacles);
   }
 
   private registerAvoid(obstacles: Obstacle[]) {
@@ -1335,7 +1434,7 @@ export class MainScene extends Phaser.Scene {
     if (this.time.now - this.lastMissEffectAt > 180) {
       this.lastMissEffectAt = this.time.now;
       this.cameras.main.shake(90, 0.004);
-      this.flashPlayer();
+      this.flashRunner(obstacles[0]?.lane ?? 1);
       this.popFeedback("MISS", "#ff8fa3");
     }
     this.refreshHudLayout();
@@ -1347,7 +1446,9 @@ export class MainScene extends Phaser.Scene {
     }
 
     this.lastLayoutRefreshAt = this.time.now;
-    this.layout();
+    this.comboLabel?.setText(`COMBO ${this.combo}`);
+    this.scoreLabel?.setText(`SCORE ${this.score.toString().padStart(5, "0")}`);
+    this.missLabel?.setText(`MISS ${this.missCount}`);
   }
 
   private fadeOutPanel(obstacle: Obstacle) {
@@ -1412,21 +1513,22 @@ export class MainScene extends Phaser.Scene {
     });
   }
 
-  private flashPlayer() {
-    if (!this.playerBody) {
+  private flashRunner(lane: number) {
+    const runner = this.runners[lane];
+    if (!runner) {
       return;
     }
 
-    this.tweens.killTweensOf(this.playerBody);
-    this.playerBody.setFillStyle(0xff5c83, 1);
+    this.tweens.killTweensOf(runner.body);
+    runner.body.setFillStyle(0xff5c83, 1);
     this.tweens.add({
-      targets: this.playerBody,
+      targets: runner.body,
       duration: 160,
       yoyo: true,
       repeat: 1,
       alpha: 0.55,
       onComplete: () => {
-        this.playerBody?.setAlpha(1).setFillStyle(0xffd15c, 1);
+        runner.body.setAlpha(1).setFillStyle([0x7ee7ff, 0xffd15c, 0xff8fa3][lane], 1);
       }
     });
   }
@@ -1526,21 +1628,57 @@ export class MainScene extends Phaser.Scene {
     return (Math.sin(this.time.now / 120) + 1) / 2;
   }
 
-  private moveLane(direction: -1 | 1) {
-    const nextLane = Phaser.Math.Clamp(this.currentLane + direction, 0, GAME_BALANCE.laneCount - 1);
-    if (nextLane === this.currentLane) {
+  private tryJumpFromPointer(x: number, y: number) {
+    const targetButton = this.jumpButtons.find((button) => button.background.getBounds().contains(x, y));
+    if (targetButton) {
+      this.jumpRunner(targetButton.lane);
       return;
     }
 
-    this.currentLane = nextLane;
+    const laneWidth = this.scale.width / GAME_BALANCE.laneCount;
+    const lane = Phaser.Math.Clamp(Math.floor(x / laneWidth), 0, GAME_BALANCE.laneCount - 1);
+    this.jumpRunner(lane);
+  }
+
+  private jumpRunner(lane: number) {
+    const runner = this.runners[lane];
+    if (!runner || runner.isJumping) {
+      return;
+    }
+
+    runner.isJumping = true;
     this.playMoveSe();
+    this.tweens.killTweensOf(runner.container);
+    this.tweens.killTweensOf(runner.shadow);
     this.tweens.add({
-      targets: this,
-      visualLane: nextLane,
-      duration: GAME_BALANCE.playerLaneMoveMs,
-      ease: "Back.Out",
-      onUpdate: () => this.layout()
+      targets: runner.container,
+      y: runner.container.y - 72 * this.screenScale,
+      duration: 150,
+      ease: "Sine.Out",
+      yoyo: true,
+      hold: 70,
+      onComplete: () => {
+        runner.isJumping = false;
+        this.layoutPlayers(this.getTrackLayout());
+      }
     });
+    this.tweens.add({
+      targets: runner.shadow,
+      scaleX: 0.72,
+      scaleY: 0.7,
+      alpha: 0.28,
+      duration: 150,
+      ease: "Sine.Out",
+      yoyo: true,
+      hold: 70,
+      onComplete: () => {
+        runner.shadow.setAlpha(0.45).setScale(1);
+      }
+    });
+  }
+
+  private isRunnerJumping(lane: number) {
+    return this.runners[lane]?.isJumping ?? false;
   }
 
   private playMoveSe() {
