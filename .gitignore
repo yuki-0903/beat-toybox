@@ -4,3 +4,6 @@ out
 *.tsbuildinfo
 .DS_Store
 .env*.local
+__pycache__/
+*.pyc
+*.backup.png

@@ -2,7 +2,7 @@ export const GAME_BALANCE = {
   laneCount: 3,
   trackTopYRatio: {
     landscape: 0.22,
-    portrait: 0.16
+    portrait: 0.3
   },
   trackBottomYRatio: {
     landscape: 0.92,
@@ -10,20 +10,20 @@ export const GAME_BALANCE = {
   },
   trackTopWidthRatio: {
     landscape: 0.22,
-    portrait: 0.26
+    portrait: 0.16
   },
   trackBottomWidthRatio: {
     landscape: 0.78,
     portrait: 0.92
   },
-  playerZ: 0.88,
+  playerZ: 0.58,
   playerLaneMoveMs: 150,
   bpm: 118,
   chartApproachTimeScale: 0.82,
   obstacleTravelBeats: 8,
   obstacleSpawnZ: 0,
   obstacleDespawnZ: 1.06,
-  obstacleJudgeZ: 0.88,
+  obstacleJudgeZ: 0.58,
   obstacleBaseWidth: 46,
   obstacleBaseHeight: 32,
   feverComboThreshold: 4

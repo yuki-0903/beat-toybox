@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "validate:assets": "node scripts/validate-theme-assets.mjs",
+    "report:assets": "node scripts/validate-theme-assets.mjs --markdown"
   },
   "dependencies": {
     "@types/node": "^20.14.10",
