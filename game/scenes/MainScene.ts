@@ -51,6 +51,7 @@ interface Runner {
   body: Phaser.GameObjects.Ellipse;
   face: Phaser.GameObjects.Ellipse;
   assetImage?: Phaser.GameObjects.Image;
+  idleTween?: Phaser.Tweens.Tween;
 }
 
 interface JumpButton {
@@ -58,6 +59,7 @@ interface JumpButton {
   background: Phaser.GameObjects.Rectangle;
   label: Phaser.GameObjects.Text;
   assetImage?: Phaser.GameObjects.Image;
+  pressedAssetImage?: Phaser.GameObjects.Image;
 }
 
 interface ScheduledObstacle {
@@ -123,6 +125,7 @@ interface DifficultyButton {
   background: Phaser.GameObjects.Rectangle;
   label: Phaser.GameObjects.Text;
   assetImage?: Phaser.GameObjects.Image;
+  selectedAssetImage?: Phaser.GameObjects.Image;
 }
 
 interface SongButton {
@@ -130,6 +133,7 @@ interface SongButton {
   background: Phaser.GameObjects.Rectangle;
   thumbnail: Phaser.GameObjects.Rectangle;
   thumbnailAccent: Phaser.GameObjects.Rectangle;
+  thumbnailMaskGraphics: Phaser.GameObjects.Graphics;
   label: Phaser.GameObjects.Text;
   assetImage?: Phaser.GameObjects.Image;
   sideAssetImage?: Phaser.GameObjects.Image;
@@ -142,6 +146,7 @@ interface SongArrowButton {
   direction: -1 | 1;
   background: Phaser.GameObjects.Rectangle;
   assetImage?: Phaser.GameObjects.Image;
+  pressedAssetImage?: Phaser.GameObjects.Image;
 }
 
 interface DebugButton {
@@ -155,6 +160,7 @@ interface MenuActionButton {
   background: Phaser.GameObjects.Rectangle;
   label: Phaser.GameObjects.Text;
   assetImage?: Phaser.GameObjects.Image;
+  pressedAssetImage?: Phaser.GameObjects.Image;
 }
 
 interface RankingEntry {
@@ -198,8 +204,9 @@ const DIFFICULTY_SETTINGS: Record<
 };
 
 const UI_FONT = '"Fredoka", Arial, Helvetica, sans-serif';
-const RUNNER_DISPLAY_WIDTH = 182;
-const RUNNER_DISPLAY_HEIGHT = 214;
+const RUNNER_DISPLAY_WIDTH = 228;
+const RUNNER_DISPLAY_HEIGHT = 228;
+const RUNNER_IDLE_FRAME = 5;
 const RUNNER_MIN_SCREEN_SCALE = 0.9;
 const TRACK_SCROLL_SPEED = 0.36;
 const TRACK_FEVER_SCROLL_SPEED = 0.58;
@@ -244,6 +251,7 @@ export class MainScene extends Phaser.Scene {
   private missStickerImage?: Phaser.GameObjects.Image;
   private feverBadgeImage?: Phaser.GameObjects.Image;
   private rankingPanelImage?: Phaser.GameObjects.Image;
+  private rankingTitleImage?: Phaser.GameObjects.Image;
   private trackGraphics?: Phaser.GameObjects.Graphics;
   private hudGraphics?: Phaser.GameObjects.Graphics;
   private feverGraphics?: Phaser.GameObjects.Graphics;
@@ -264,6 +272,7 @@ export class MainScene extends Phaser.Scene {
   private debugLayoutLabels: Phaser.GameObjects.Text[] = [];
   private songButtons: SongButton[] = [];
   private songSelectTitleImage?: Phaser.GameObjects.Image;
+  private difficultyTitleImage?: Phaser.GameObjects.Image;
   private songSelectPaginationImage?: Phaser.GameObjects.Image;
   private songArrowButtons: SongArrowButton[] = [];
   private difficultyButtons: DifficultyButton[] = [];
@@ -550,6 +559,7 @@ export class MainScene extends Phaser.Scene {
     this.missStickerImage = this.createThemeImage(this.currentThemeAssets.ui.parts.hudMiss, 0, 0, 299.5);
     this.feverBadgeImage = this.createThemeImage(this.currentThemeAssets.ui.parts.hudFever, 0, 0, 299.5);
     this.rankingPanelImage = this.createThemeImage(this.currentThemeAssets.ui.parts.rankingPanel, 0, 0, 314);
+    this.rankingTitleImage = this.createThemeImage(this.currentThemeAssets.ui.parts.rankingTitle, 0, 0, 315);
     this.trackGraphics = this.add.graphics().setDepth(1);
     this.hudGraphics = this.add.graphics().setDepth(299);
     this.feverGraphics = this.add.graphics().setDepth(298);
@@ -607,7 +617,7 @@ export class MainScene extends Phaser.Scene {
       .setDepth(300);
 
     this.comboLabel = this.add
-      .text(0, 0, "COMBO 0", {
+      .text(0, 0, "0", {
         fontFamily: UI_FONT,
         fontStyle: "900",
         color: theme.colors.text,
@@ -617,7 +627,7 @@ export class MainScene extends Phaser.Scene {
       .setDepth(300);
 
     this.scoreLabel = this.add
-      .text(0, 0, "SCORE 00000", {
+      .text(0, 0, "000000", {
         fontFamily: UI_FONT,
         fontStyle: "900",
         color: theme.colors.accent,
@@ -627,7 +637,7 @@ export class MainScene extends Phaser.Scene {
       .setDepth(300);
 
     this.missLabel = this.add
-      .text(0, 0, "MISS 0", {
+      .text(0, 0, "000", {
         fontFamily: UI_FONT,
         fontStyle: "900",
         color: theme.colors.primary,
@@ -713,14 +723,17 @@ export class MainScene extends Phaser.Scene {
     );
 
     this.songSelectTitleImage = this.createThemeImage(this.currentThemeAssets.ui.parts.titleBanner, 0, 0, 315);
+    this.difficultyTitleImage = this.createThemeImage(this.currentThemeAssets.ui.parts.titleLevelBanner, 0, 0, 315);
     this.songSelectPaginationImage = this.createThemeImage(this.currentThemeAssets.ui.parts.paginationDots, 0, 0, 316);
     this.songArrowButtons = [
-      { direction: -1 as const, assetKey: this.currentThemeAssets.ui.parts.arrowLeft },
-      { direction: 1 as const, assetKey: this.currentThemeAssets.ui.parts.arrowRight }
-    ].map(({ direction, assetKey }) => {
+      { direction: -1 as const, assetKey: this.currentThemeAssets.ui.parts.arrowLeft, pressedAssetKey: this.currentThemeAssets.ui.parts.arrowLeftPressed },
+      { direction: 1 as const, assetKey: this.currentThemeAssets.ui.parts.arrowRight, pressedAssetKey: this.currentThemeAssets.ui.parts.arrowRightPressed }
+    ].map(({ direction, assetKey, pressedAssetKey }) => {
       const background = this.add.rectangle(0, 0, 1, 1, this.themeColor("surface"), 0).setDepth(317);
       const assetImage = this.createThemeImage(assetKey, 0, 0, 318);
-      return { direction, background, assetImage };
+      const pressedAssetImage = this.createThemeImage(pressedAssetKey, 0, 0, 318.1);
+      pressedAssetImage?.setAlpha(0);
+      return { direction, background, assetImage, pressedAssetImage };
     });
 
     this.songButtons = SONGS.map((song) => {
@@ -729,6 +742,10 @@ export class MainScene extends Phaser.Scene {
       const sideAssetImage = this.createThemeImage(this.currentThemeAssets.ui.parts.songCardLarge, 0, 0, 314);
       const thumbnail = this.add.rectangle(0, 0, 1, 1, this.themeColor("rightLane"), 0.92).setDepth(315.4);
       const thumbnailAccent = this.add.rectangle(0, 0, 1, 1, this.themeColor("accent"), 0.82).setDepth(315.5);
+      const thumbnailMaskGraphics = this.make.graphics({ x: 0, y: 0 });
+      const thumbnailMask = thumbnailMaskGraphics.createGeometryMask();
+      thumbnail.setMask(thumbnailMask);
+      thumbnailAccent.setMask(thumbnailMask);
       const indexLabel = this.add
         .text(0, 0, "01", {
           fontFamily: UI_FONT,
@@ -768,14 +785,15 @@ export class MainScene extends Phaser.Scene {
 
       background.setStrokeStyle(2, this.themeColor("line"), 0.65);
 
-      return { song, background, thumbnail, thumbnailAccent, label, assetImage, sideAssetImage, metaLabel, indexLabel, starLabel };
+      return { song, background, thumbnail, thumbnailAccent, thumbnailMaskGraphics, label, assetImage, sideAssetImage, metaLabel, indexLabel, starLabel };
     });
 
     this.difficultyButtons = (["easy", "normal", "hard"] as DifficultyId[]).map((id) => {
       const background = this.add.rectangle(0, 0, 1, 1, this.themeColor("trackAlt"), 0.95).setDepth(315);
       const assetImage = this.createThemeImage(this.getDifficultyAssetKey(id), 0, 0, 315);
+      const selectedAssetImage = this.createThemeImage(this.getSelectedDifficultyAssetKey(id), 0, 0, 315.1);
       const label = this.add
-        .text(0, 0, DIFFICULTY_SETTINGS[id].label, {
+        .text(0, 0, "", {
           fontFamily: UI_FONT,
           fontStyle: "900",
           color: theme.colors.text,
@@ -785,8 +803,9 @@ export class MainScene extends Phaser.Scene {
         .setDepth(316);
 
       background.setStrokeStyle(2, this.themeColor("line"), 0.65);
+      selectedAssetImage?.setAlpha(0);
 
-      return { id, background, label, assetImage };
+      return { id, background, label, assetImage, selectedAssetImage };
     });
 
     this.debugButtons = (
@@ -826,14 +845,15 @@ export class MainScene extends Phaser.Scene {
     });
 
     this.menuButtons = [
-      { action: "play" as const, text: "START", assetKey: this.currentThemeAssets.ui.parts.buttonPrimary },
-      { action: "ranking" as const, text: "", assetKey: this.currentThemeAssets.ui.parts.iconTrophy },
-      { action: "setting" as const, text: "", assetKey: this.currentThemeAssets.ui.parts.iconGear },
-      { action: "help" as const, text: "", assetKey: this.currentThemeAssets.ui.parts.iconHelp },
-      { action: "back" as const, text: "", assetKey: this.currentThemeAssets.ui.parts.arrowLeft }
-    ].map(({ action, text, assetKey }) => {
+      { action: "play" as const, text: "START", assetKey: this.currentThemeAssets.ui.parts.buttonPrimary, pressedAssetKey: this.currentThemeAssets.ui.parts.buttonPrimaryPressed },
+      { action: "ranking" as const, text: "", assetKey: this.currentThemeAssets.ui.parts.iconTrophy, pressedAssetKey: this.currentThemeAssets.ui.parts.iconTrophyPressed },
+      { action: "setting" as const, text: "", assetKey: this.currentThemeAssets.ui.parts.iconGear, pressedAssetKey: this.currentThemeAssets.ui.parts.iconGearPressed },
+      { action: "help" as const, text: "", assetKey: this.currentThemeAssets.ui.parts.iconHelp, pressedAssetKey: this.currentThemeAssets.ui.parts.iconHelpPressed },
+      { action: "back" as const, text: "", assetKey: this.currentThemeAssets.ui.parts.arrowLeft, pressedAssetKey: this.currentThemeAssets.ui.parts.arrowLeftPressed }
+    ].map(({ action, text, assetKey, pressedAssetKey }) => {
       const background = this.add.rectangle(0, 0, 1, 1, this.themeColor("track"), 0.95).setDepth(315);
       const assetImage = this.createThemeImage(assetKey, 0, 0, 315);
+      const pressedAssetImage = this.createThemeImage(pressedAssetKey, 0, 0, 315.1);
       const label = this.add
         .text(0, 0, text, {
           fontFamily: UI_FONT,
@@ -845,8 +865,9 @@ export class MainScene extends Phaser.Scene {
         .setDepth(316);
 
       background.setStrokeStyle(2, this.themeColor("line"), 0.75);
+      pressedAssetImage?.setAlpha(0);
 
-      return { action, background, label, assetImage };
+      return { action, background, label, assetImage, pressedAssetImage };
     });
 
     this.rankingLabels = Array.from({ length: 7 }, () =>
@@ -865,6 +886,7 @@ export class MainScene extends Phaser.Scene {
     this.jumpButtons = Array.from({ length: GAME_BALANCE.laneCount }, (_, lane) => {
       const background = this.add.rectangle(0, 0, 1, 1, this.themeColor("track"), 0.95).setDepth(340);
       const assetImage = this.createThemeImage(this.getJumpButtonAssetKey(lane), 0, 0, 340);
+      const pressedAssetImage = this.createThemeImage(this.getJumpButtonPressedAssetKey(lane), 0, 0, 340.1);
       const label = this.add
         .text(0, 0, ["LEFT", "CENTER", "RIGHT"][lane], {
           fontFamily: UI_FONT,
@@ -877,7 +899,9 @@ export class MainScene extends Phaser.Scene {
 
       background.setStrokeStyle(2, this.themeColor("line"), 0.75);
 
-      return { lane, background, label, assetImage };
+      pressedAssetImage?.setAlpha(0);
+
+      return { lane, background, label, assetImage, pressedAssetImage };
     });
   }
 
@@ -914,7 +938,10 @@ export class MainScene extends Phaser.Scene {
     this.drawHudStickers();
     this.layoutHudAssetImages();
 
-    const usesDesignedMenuTitle = !this.gameStarted && !this.gameEnded && (this.menuStep === "start" || this.menuStep === "song" || this.menuStep === "difficulty");
+    const usesDesignedMenuTitle =
+      !this.gameStarted &&
+      !this.gameEnded &&
+      (this.menuStep === "start" || this.menuStep === "song" || this.menuStep === "difficulty" || this.menuStep === "ranking");
 
     this.titleLabel
       ?.setPosition(width / 2, 32 * screenScale)
@@ -931,35 +958,35 @@ export class MainScene extends Phaser.Scene {
 
     this.comboLabel
       ?.setOrigin(0.5)
-      .setPosition(88 * Math.max(screenScale, 0.94), 123 * Math.max(screenScale, 0.94))
+      .setPosition(88 * Math.max(screenScale, 0.94), 129 * Math.max(screenScale, 0.94))
       .setFontSize(Math.round(Phaser.Math.Clamp(29 * Math.max(screenScale, 0.94), 24, 36)))
       .setAlign("center")
       .setColor(theme.colors.text)
       .setStroke(theme.colors.line, Math.round(5 * Math.max(screenScale, 0.94)))
       .setLineSpacing(-5 * Math.max(screenScale, 0.94))
-      .setText(`COMBO\n${this.combo}`)
+      .setText(`${this.combo}`)
       .setAlpha(this.gameStarted || this.gameEnded ? 1 : 0);
 
     this.scoreLabel
       ?.setOrigin(0.5)
-      .setPosition(74 * Math.max(screenScale, 0.94), 50 * Math.max(screenScale, 0.94))
-      .setFontSize(Math.round(Phaser.Math.Clamp(22 * Math.max(screenScale, 0.94), 19, 28)))
+      .setPosition(86 * Math.max(screenScale, 0.94), 64 * Math.max(screenScale, 0.94))
+      .setFontSize(Math.round(Phaser.Math.Clamp(27 * Math.max(screenScale, 0.94), 23, 34)))
       .setAlign("center")
       .setColor(theme.colors.text)
-      .setStroke(theme.colors.line, Math.round(5 * Math.max(screenScale, 0.94)))
+      .setStroke(theme.colors.line, Math.round(6 * Math.max(screenScale, 0.94)))
       .setLineSpacing(-4 * Math.max(screenScale, 0.94))
-      .setText(`SCORE\n${this.score.toString().padStart(6, "0")}`)
+      .setText(this.score.toString().padStart(6, "0"))
       .setAlpha(this.gameStarted || this.gameEnded ? 1 : 0);
 
     this.missLabel
       ?.setOrigin(0.5)
-      .setPosition(width - 70 * Math.max(screenScale, 0.94), 50 * Math.max(screenScale, 0.94))
-      .setFontSize(Math.round(Phaser.Math.Clamp(22 * Math.max(screenScale, 0.94), 19, 28)))
+      .setPosition(width - 82 * Math.max(screenScale, 0.94), 64 * Math.max(screenScale, 0.94))
+      .setFontSize(Math.round(Phaser.Math.Clamp(27 * Math.max(screenScale, 0.94), 23, 34)))
       .setAlign("center")
       .setColor(theme.colors.text)
-      .setStroke(theme.colors.line, Math.round(5 * Math.max(screenScale, 0.94)))
+      .setStroke(theme.colors.line, Math.round(6 * Math.max(screenScale, 0.94)))
       .setLineSpacing(-4 * Math.max(screenScale, 0.94))
-      .setText(`MISS\n${this.missCount.toString().padStart(3, "0")}`)
+      .setText(this.missCount.toString().padStart(3, "0"))
       .setAlpha(this.gameStarted || this.gameEnded ? 1 : 0);
 
     this.feverLabel
@@ -976,8 +1003,8 @@ export class MainScene extends Phaser.Scene {
     this.startLabel
       ?.setPosition(width / 2, usesTopMenuTitle ? topMenuTitleY : height * 0.43)
       .setFontSize(usesTopMenuTitle ? Math.round(Phaser.Math.Clamp(23 * menuTitleScale, 19, 26)) : Math.round(30 * screenScale))
-      .setText(this.menuStep === "difficulty" ? "SELECT LEVEL" : usesTopMenuTitle ? "" : this.getMenuTitle())
-      .setAlpha(!this.gameStarted && !this.gameEnded && (this.menuStep === "difficulty" || (this.menuStep !== "start" && !usesTopMenuTitle)) ? 1 : 0);
+      .setText(usesTopMenuTitle ? "" : this.getMenuTitle())
+      .setAlpha(!this.gameStarted && !this.gameEnded && this.menuStep !== "start" && !usesTopMenuTitle ? 1 : 0);
 
     this.resultLabel
       ?.setPosition(width / 2, height * 0.46)
@@ -1139,15 +1166,17 @@ export class MainScene extends Phaser.Scene {
     const isDifficultyScreen = this.menuStep === "difficulty" && !this.gameStarted && !this.gameEnded;
     const startButtonScale = isStartScreen ? Math.max(screenScale, this.isPortrait ? 1 : 0.9) : screenScale;
     const buttonWidth = isStartScreen
-      ? Math.min(width * (this.isPortrait ? 0.66 : 0.28), 360 * startButtonScale)
+      ? Math.min(width * (this.isPortrait ? 0.78 : 0.34), 420 * startButtonScale)
       : isDifficultyScreen
-        ? Math.min(width * (this.isPortrait ? 0.58 : 0.24), 300 * Math.max(screenScale, 0.9))
+        ? Math.min(width * (this.isPortrait ? 0.68 : 0.3), 350 * Math.max(screenScale, 0.9))
         : Math.min(width * 0.72, 280 * screenScale);
-    const buttonHeight = isStartScreen ? 68 * startButtonScale : isDifficultyScreen ? 58 * Math.max(screenScale, 0.9) : 54 * screenScale;
+    const buttonHeight = isStartScreen ? 82 * startButtonScale : isDifficultyScreen ? 68 * Math.max(screenScale, 0.9) : 54 * screenScale;
+    const difficultyStartButtonWidth = Math.min(width * (this.isPortrait ? 0.78 : 0.34), 420 * Math.max(screenScale, 0.9));
+    const difficultyStartButtonHeight = 82 * Math.max(screenScale, 0.9);
     const iconSize = Math.round(Phaser.Math.Clamp(68 * startButtonScale, 58, this.isPortrait ? 82 : 76));
-    const textSize = Math.round(Phaser.Math.Clamp((isStartScreen || isDifficultyScreen ? 22 : 18) * Math.max(startButtonScale, 0.9), 15, 30));
+    const textSize = Math.round(Phaser.Math.Clamp((isStartScreen ? 27 : isDifficultyScreen ? 25 : 18) * Math.max(startButtonScale, 0.9), 15, 36));
     const centerX = width / 2;
-    const startY = isStartScreen ? height * (this.isPortrait ? 0.73 : 0.75) : isDifficultyScreen ? height * (this.isPortrait ? 0.71 : 0.72) : height * 0.55;
+    const startY = isStartScreen ? height * (this.isPortrait ? 0.73 : 0.75) : isDifficultyScreen ? height * (this.isPortrait ? 0.64 : 0.66) : height * 0.55;
     const iconY = isStartScreen ? height * (this.isPortrait ? 0.86 : 0.88) : startY + 78 * startButtonScale;
     const iconGap = iconSize * (this.isPortrait ? 1.36 : 1.48);
 
@@ -1165,7 +1194,7 @@ export class MainScene extends Phaser.Scene {
       const backButtonSize = Math.round(Phaser.Math.Clamp(58 * Math.max(screenScale, 0.9), 52, 72));
       const songSettingButtonSize = Math.round(Phaser.Math.Clamp(58 * Math.max(screenScale, 0.9), 52, 72));
       const difficultyButtonGap = 12 * Math.max(screenScale, 0.9);
-      const difficultyBackX = centerX - buttonWidth / 2 - difficultyButtonGap - backButtonSize / 2;
+      const difficultyBackX = centerX - difficultyStartButtonWidth / 2 - difficultyButtonGap - backButtonSize / 2;
       const x = isRankingBackButton
         ? width * (this.isPortrait ? 0.23 : 0.12)
         : isDifficultyBackButton
@@ -1189,8 +1218,8 @@ export class MainScene extends Phaser.Scene {
             : height * 0.84;
       const fillColor = button.action === "play" ? this.themeColor("secondary") : this.themeColor("trackAlt");
       const textColor = theme.colors.text;
-      const displayWidth = isRankingBackButton || isDifficultyBackButton ? backButtonSize : isLowerRightSettingButton ? songSettingButtonSize : isStartScreen && isIconAction ? iconSize : buttonWidth;
-      const displayHeight = isRankingBackButton || isDifficultyBackButton ? backButtonSize : isLowerRightSettingButton ? songSettingButtonSize : isStartScreen && isIconAction ? iconSize : buttonHeight;
+      const displayWidth = isRankingBackButton || isDifficultyBackButton ? backButtonSize : isLowerRightSettingButton ? songSettingButtonSize : isStartScreen && isIconAction ? iconSize : isDifficultyStartButton ? difficultyStartButtonWidth : buttonWidth;
+      const displayHeight = isRankingBackButton || isDifficultyBackButton ? backButtonSize : isLowerRightSettingButton ? songSettingButtonSize : isStartScreen && isIconAction ? iconSize : isDifficultyStartButton ? difficultyStartButtonHeight : buttonHeight;
       const imageWidth = isRankingBackButton || isDifficultyBackButton || isLowerRightSettingButton || (isStartScreen && isIconAction) ? displayWidth : displayWidth * 1.08;
       const imageHeight = isRankingBackButton || isDifficultyBackButton || isLowerRightSettingButton || (isStartScreen && isIconAction) ? displayHeight : displayHeight * 1.18;
 
@@ -1204,6 +1233,11 @@ export class MainScene extends Phaser.Scene {
         ?.setPosition(x, y)
         .setAlpha(isVisible ? 0.95 : 0);
       this.fitImageInBox(button.assetImage, imageWidth, imageHeight);
+      button.pressedAssetImage
+        ?.setPosition(x, y)
+        .setAlpha(0)
+        .setVisible(isVisible);
+      this.fitImageInBox(button.pressedAssetImage, imageWidth, imageHeight);
       button.label
         .setPosition(x, y)
         .setFontSize(isRankingBackButton || isDifficultyBackButton || isLowerRightSettingButton ? Math.round(Phaser.Math.Clamp(16 * Math.max(screenScale, 0.9), 13, 20)) : textSize)
@@ -1216,8 +1250,11 @@ export class MainScene extends Phaser.Scene {
     const { width, height } = this.scale;
     const screenScale = this.screenScale;
     const isVisible = !this.gameStarted && !this.gameEnded && this.menuStep === "ranking";
-    const startY = height * (this.isPortrait ? 0.51 : 0.49);
-    const gap = 34 * screenScale;
+    const titleWidth = Math.min(width * 0.74, 430 * Math.max(screenScale, 0.9));
+    const titleHeight = titleWidth * 0.36;
+    const titleY = height * (this.isPortrait ? 0.215 : 0.185);
+    const panelCenterY = height * (this.isPortrait ? 0.5 : 0.47);
+    const rowCenterRatios = [0.218, 0.318, 0.417, 0.518, 0.619, 0.723, 0.825];
     const textSize = Math.round(Phaser.Math.Clamp(15 * screenScale, 12, 22));
     const rows =
       this.rankings.length > 0
@@ -1227,16 +1264,26 @@ export class MainScene extends Phaser.Scene {
           })
         : ["NO SCORES YET"];
 
+    this.rankingTitleImage
+      ?.setPosition(width / 2, titleY)
+      .setAlpha(isVisible ? 1 : 0)
+      .setVisible(isVisible);
+    this.fitImageInBox(this.rankingTitleImage, titleWidth, titleHeight);
+
     this.rankingPanelImage
-      ?.setPosition(width / 2, startY + 2.45 * gap)
+      ?.setPosition(width / 2, panelCenterY)
       .setAlpha(isVisible ? 0.92 : 0)
       .setVisible(isVisible);
-    this.fitImageInBox(this.rankingPanelImage, Math.min(width * 0.9, 520 * screenScale), 255 * screenScale);
+    this.fitImageInBox(this.rankingPanelImage, Math.min(width * 0.9, 520 * screenScale), 350 * screenScale);
 
     this.rankingLabels.forEach((label, index) => {
       const rowText = rows[index] ?? "";
+      const rowY = this.rankingPanelImage
+        ? this.rankingPanelImage.y - this.rankingPanelImage.displayHeight / 2 + this.rankingPanelImage.displayHeight * (rowCenterRatios[index] ?? rowCenterRatios[0])
+        : panelCenterY;
+
       label
-        .setPosition(width / 2, startY + index * gap)
+        .setPosition(width / 2, rowY)
         .setFontSize(textSize)
         .setText(rowText)
         .setAlpha(isVisible && rowText ? 1 : 0);
@@ -1270,12 +1317,12 @@ export class MainScene extends Phaser.Scene {
     const { width } = this.scale;
     const scale = Math.max(this.screenScale, 0.94);
     const isHudVisible = this.gameStarted || this.gameEnded;
-    const scoreWidth = 132 * scale;
-    const scoreHeight = 88 * scale;
+    const scoreWidth = 156 * scale;
+    const scoreHeight = 104 * scale;
     const comboWidth = 152 * scale;
     const comboHeight = 104 * scale;
-    const missWidth = 116 * scale;
-    const missHeight = 88 * scale;
+    const missWidth = 140 * scale;
+    const missHeight = 104 * scale;
 
     this.comboBadgeImage
       ?.setPosition(12 * scale + comboWidth / 2, 68 * scale + comboHeight / 2)
@@ -1339,27 +1386,32 @@ export class MainScene extends Phaser.Scene {
   private layoutDifficultyButtons() {
     const { width, height } = this.scale;
     const screenScale = this.screenScale;
-    const theme = this.currentTheme;
-    const titleWidth = Math.min(width * (this.isPortrait ? 0.72 : 0.36), 330 * Math.max(screenScale, 0.9));
-    const titleHeight = titleWidth * 0.31;
-    const titleY = height * (this.isPortrait ? 0.105 : 0.12);
+    const titleWidth = Math.min(width * 0.75, 470 * Math.max(screenScale, 0.9));
+    const titleHeight = titleWidth * 0.6;
+    const titleLayoutHeight = titleWidth * 0.36;
+    const titleY = height * (this.isPortrait ? 0.19 : 0.17);
     const totalWidth = Math.min(width * 0.9, 390 * Math.max(screenScale, 0.9));
     const gap = 10 * screenScale;
     const buttonWidth = (totalWidth - gap * 2) / 3;
-    const buttonHeight = 56 * Math.max(screenScale, 0.9);
-    const desiredCenterY = height * (this.isPortrait ? 0.49 : 0.52);
-    const minCenterY = titleY + titleHeight * 0.5 + buttonHeight * 1.15;
+    const buttonHeight = 104 * Math.max(screenScale, 0.9);
+    const desiredCenterY = height * (this.isPortrait ? 0.47 : 0.49);
+    const minCenterY = titleY + titleLayoutHeight * 0.5 + buttonHeight * 1.15;
     const maxCenterY = height - buttonHeight * 2.3;
     const centerY = Phaser.Math.Clamp(desiredCenterY, minCenterY, maxCenterY);
     const startX = width / 2 - totalWidth / 2 + buttonWidth / 2;
     const isSelectable = !this.gameStarted && !this.gameEnded && this.menuStep === "difficulty";
+
+    this.difficultyTitleImage
+      ?.setPosition(width / 2, titleY)
+      .setAlpha(isSelectable ? 0.98 : 0)
+      .setVisible(isSelectable);
+    this.fitImageInBox(this.difficultyTitleImage, titleWidth, titleHeight);
 
     this.difficultyButtons.forEach((button, index) => {
       const selected = button.id === this.selectedDifficulty;
       const x = startX + index * (buttonWidth + gap);
       const fillColor = selected ? this.themeColor("accent") : this.themeColor("trackAlt");
       const strokeColor = selected ? this.themeColor("line") : this.themeColor("primary");
-      const textColor = theme.colors.text;
 
       button.background
         .setPosition(x, centerY)
@@ -1370,15 +1422,19 @@ export class MainScene extends Phaser.Scene {
 
       button.assetImage
         ?.setPosition(x, centerY)
-        .setAlpha(isSelectable ? (selected ? 1 : 0.86) : 0)
+        .setAlpha(isSelectable && !selected ? 0.92 : 0)
         .setVisible(isSelectable);
-      this.fitImageInBox(button.assetImage, buttonWidth * 1.28, buttonHeight * 1.98);
+      this.fitImageInBox(button.assetImage, buttonWidth * 1.35, buttonHeight * 2.05);
+      button.selectedAssetImage
+        ?.setPosition(x, centerY)
+        .setAlpha(isSelectable && selected ? 1 : 0)
+        .setVisible(isSelectable);
+      this.fitImageInBox(button.selectedAssetImage, buttonWidth * 1.5, buttonHeight * 2.28);
 
       button.label
         .setPosition(x, centerY)
         .setFontSize(Math.round(Phaser.Math.Clamp(17 * screenScale, 14, 24)))
-        .setColor(textColor)
-        .setAlpha(isSelectable ? 1 : 0);
+        .setAlpha(0);
     });
   }
 
@@ -1387,24 +1443,25 @@ export class MainScene extends Phaser.Scene {
     const screenScale = this.screenScale;
     const theme = this.currentTheme;
     const isSelectable = !this.gameStarted && !this.gameEnded && this.menuStep === "song";
-    const isTitleVisible = !this.gameStarted && !this.gameEnded && (this.menuStep === "song" || this.menuStep === "difficulty");
+    const isTitleVisible = !this.gameStarted && !this.gameEnded && this.menuStep === "song";
     const centerX = width / 2;
-    const titleWidth = Math.min(width * (this.isPortrait ? 0.72 : 0.36), 330 * Math.max(screenScale, 0.9));
-    const titleHeight = titleWidth * 0.31;
-    const titleY = height * (this.isPortrait ? 0.105 : 0.12);
-    const cardWidth = this.isPortrait ? Math.min(width * 0.48, 220) : Math.min(width * 0.22, 240);
+    const titleWidth = Math.min(width * 0.75, 470 * Math.max(screenScale, 0.9));
+    const titleHeight = titleWidth * 0.6;
+    const titleLayoutHeight = titleWidth * 0.36;
+    const titleY = height * (this.isPortrait ? 0.18 : 0.16);
+    const cardWidth = this.isPortrait ? Math.min(width * 0.56, 250) : Math.min(width * 0.26, 270);
     const cardHeight = cardWidth * (806 / 450);
     const sideWidth = cardWidth * 0.58;
     const sideHeight = sideWidth * (806 / 450);
-    const desiredCardY = height * (this.isPortrait ? 0.51 : 0.54);
-    const minCardY = titleY + titleHeight * 0.5 + cardHeight * 0.52 + 18 * screenScale;
+    const desiredCardY = height * (this.isPortrait ? 0.53 : 0.53);
+    const minCardY = titleY + titleLayoutHeight * 0.5 + cardHeight * 0.52 + 18 * screenScale;
     const maxCardY = height - cardHeight * 0.58 - 58 * screenScale;
     const cardY = Phaser.Math.Clamp(desiredCardY, minCardY, maxCardY);
-    const sideOffsetX = Math.min(width * 0.35, cardWidth * 1.05);
+    const sideOffsetX = Math.min(width * 0.28, cardWidth * 0.72);
     const sideY = cardY + cardHeight * 0.02;
-    const arrowSize = Math.round(Phaser.Math.Clamp(62 * Math.max(screenScale, 0.86), 54, 74));
-    const arrowY = cardY + cardHeight * 0.25;
-    const arrowOffsetX = Math.min(width * 0.43, cardWidth * 1.12);
+    const arrowSize = Math.round(Phaser.Math.Clamp(72 * Math.max(screenScale, 0.86), 62, 86));
+    const arrowY = cardY;
+    const arrowOffsetX = Math.min(width * 0.43, cardWidth * 0.98);
     const currentIndex = this.selectedSongIndex;
     const previousIndex = (currentIndex - 1 + SONGS.length) % SONGS.length;
     const nextIndex = (currentIndex + 1) % SONGS.length;
@@ -1416,10 +1473,10 @@ export class MainScene extends Phaser.Scene {
     this.fitImageInBox(this.songSelectTitleImage, titleWidth, titleHeight);
 
     this.songSelectPaginationImage
-      ?.setPosition(centerX, cardY + cardHeight * 0.58)
+      ?.setPosition(centerX, cardY + cardHeight * 0.53)
       .setAlpha(isSelectable ? 0.78 : 0)
       .setVisible(isSelectable);
-    this.fitImageInBox(this.songSelectPaginationImage, Math.min(width * 0.38, 170 * Math.max(screenScale, 0.85)), 32 * Math.max(screenScale, 0.85));
+    this.fitImageInBox(this.songSelectPaginationImage, Math.min(width * 0.46, 210 * Math.max(screenScale, 0.85)), 40 * Math.max(screenScale, 0.85));
 
     this.songArrowButtons.forEach((arrow) => {
       const x = centerX + arrow.direction * arrowOffsetX;
@@ -1433,6 +1490,11 @@ export class MainScene extends Phaser.Scene {
         .setAlpha(isSelectable ? 0.98 : 0)
         .setVisible(isSelectable);
       this.fitImageInBox(arrow.assetImage, arrowSize, arrowSize);
+      arrow.pressedAssetImage
+        ?.setPosition(x, arrowY)
+        .setAlpha(0)
+        .setVisible(isSelectable);
+      this.fitImageInBox(arrow.pressedAssetImage, arrowSize, arrowSize);
     });
 
     this.songButtons.forEach((button, index) => {
@@ -1453,7 +1515,6 @@ export class MainScene extends Phaser.Scene {
       const titleSize = Math.round(Phaser.Math.Clamp((selected ? 24 : 13) * Math.max(screenScale, 0.9), selected ? 20 : 11, selected ? 32 : 16));
       const indexSize = Math.round(Phaser.Math.Clamp((selected ? 22 : 13) * Math.max(screenScale, 0.9), selected ? 18 : 11, selected ? 30 : 16));
       const metaSize = Math.round(Phaser.Math.Clamp((selected ? 13 : 9) * Math.max(screenScale, 0.9), selected ? 11 : 8, selected ? 18 : 12));
-      const starSize = Math.round(Phaser.Math.Clamp((selected ? 18 : 10) * Math.max(screenScale, 0.9), selected ? 15 : 8, selected ? 24 : 13));
 
       button.background
         .setPosition(x, y)
@@ -1473,6 +1534,11 @@ export class MainScene extends Phaser.Scene {
         .setAlpha(isVisible && !selected ? 0.78 : 0)
         .setVisible(isVisible && !selected);
       this.fitImageInBox(button.sideAssetImage, sideWidth, sideHeight);
+
+      button.thumbnailMaskGraphics
+        .clear()
+        .fillStyle(0xffffff, 1)
+        .fillRect(x - buttonWidth / 2, y - buttonHeight / 2, buttonWidth, buttonHeight);
 
       button.thumbnail
         .setOrigin(0.5)
@@ -1513,10 +1579,9 @@ export class MainScene extends Phaser.Scene {
 
       button.starLabel
         .setPosition(x - buttonWidth * (selected ? 0.36 : 0.32), y + buttonHeight * (selected ? 0.41 : 0.39))
-        .setFontSize(starSize)
         .setText(this.getSongCardStars(index))
         .setColor(buttonTheme.colors.accent)
-        .setAlpha(isVisible ? 0.9 : 0);
+        .setAlpha(0);
     });
   }
 
@@ -1719,14 +1784,18 @@ export class MainScene extends Phaser.Scene {
   private layoutJumpButtons() {
     const { width, height } = this.scale;
     const screenScale = this.screenScale;
-    const buttonSize = Phaser.Math.Clamp(width * 0.29, 96 * screenScale, 142 * screenScale);
+    const buttonSize = Phaser.Math.Clamp(width * 0.38, 132 * screenScale, 190 * screenScale);
     const track = this.getTrackLayout();
-    const centerY = height - Math.max(56 * screenScale, buttonSize * 0.56);
+    const runnerScreenScale = Math.max(screenScale, this.isPortrait ? RUNNER_MIN_SCREEN_SCALE : screenScale);
+    const playerScale = Phaser.Math.Linear(0.45, 1.16, GAME_BALANCE.playerZ) * runnerScreenScale;
+    const runnerBottomOffset = (RUNNER_DISPLAY_HEIGHT * playerScale) / 2;
+    const maxButtonY = height - buttonSize * 0.52;
     const isVisible = this.gameStarted;
 
     this.jumpButtons.forEach((button, index) => {
       const playerPoint = this.getLaneCenterPoint(track, index, GAME_BALANCE.playerZ);
       const x = playerPoint.x;
+      const centerY = Math.min(playerPoint.y + runnerBottomOffset + buttonSize * 0.5 + 8 * screenScale, maxButtonY);
 
       button.background
         .setPosition(x, centerY)
@@ -1736,8 +1805,14 @@ export class MainScene extends Phaser.Scene {
         .setAlpha(isVisible ? 0.01 : 0);
       button.assetImage
         ?.setPosition(x, centerY)
-        .setAlpha(isVisible ? 0.95 : 0);
+        .setAlpha(isVisible ? 0.95 : 0)
+        .setVisible(isVisible);
       this.fitImageInBox(button.assetImage, buttonSize, buttonSize);
+      button.pressedAssetImage
+        ?.setPosition(x, centerY)
+        .setAlpha(0)
+        .setVisible(isVisible);
+      this.fitImageInBox(button.pressedAssetImage, buttonSize, buttonSize);
       button.label
         .setPosition(x, centerY)
         .setFontSize(Math.round(Phaser.Math.Clamp(16 * screenScale, 13, 24)))
@@ -1765,47 +1840,47 @@ export class MainScene extends Phaser.Scene {
     }
 
     if (this.menuStep === "start" && targetButton.action === "play") {
-      this.showSongSelect();
+      this.runAfterPressedAssetFeedback(targetButton, () => this.showSongSelect());
       return true;
     }
 
     if (this.menuStep === "start" && targetButton.action === "ranking") {
-      this.showRankingScreen();
+      this.runAfterPressedAssetFeedback(targetButton, () => this.showRankingScreen());
       return true;
     }
 
     if (this.menuStep === "start" && targetButton.action === "setting") {
-      this.popFeedback("SETTING SOON", this.currentTheme.colors.secondary);
+      this.runAfterPressedAssetFeedback(targetButton, () => this.popFeedback("SETTING SOON", this.currentTheme.colors.secondary));
       return true;
     }
 
     if (this.menuStep === "start" && targetButton.action === "help") {
-      this.popFeedback("HELP SOON", this.currentTheme.colors.accent);
+      this.runAfterPressedAssetFeedback(targetButton, () => this.popFeedback("HELP SOON", this.currentTheme.colors.accent));
       return true;
     }
 
     if (this.menuStep === "difficulty" && targetButton.action === "play") {
-      this.startRun();
+      this.runAfterPressedAssetFeedback(targetButton, () => this.startRun());
       return true;
     }
 
     if (this.menuStep === "difficulty" && targetButton.action === "setting") {
-      this.popFeedback("SETTING SOON", this.currentTheme.colors.secondary);
+      this.runAfterPressedAssetFeedback(targetButton, () => this.popFeedback("SETTING SOON", this.currentTheme.colors.secondary));
       return true;
     }
 
     if (this.menuStep === "song" && targetButton.action === "setting") {
-      this.popFeedback("SETTING SOON", this.currentTheme.colors.secondary);
+      this.runAfterPressedAssetFeedback(targetButton, () => this.popFeedback("SETTING SOON", this.currentTheme.colors.secondary));
       return true;
     }
 
     if (this.menuStep === "difficulty" && targetButton.action === "back") {
-      this.showSongSelect();
+      this.runAfterPressedAssetFeedback(targetButton, () => this.showSongSelect());
       return true;
     }
 
     if (this.menuStep === "ranking" && targetButton.action === "back") {
-      this.showStartScreen();
+      this.runAfterPressedAssetFeedback(targetButton, () => this.showStartScreen());
       return true;
     }
 
@@ -1892,10 +1967,40 @@ export class MainScene extends Phaser.Scene {
     this.layout();
   }
 
+  private runAfterPressedAssetFeedback(
+    button: { background: Phaser.GameObjects.Rectangle; assetImage?: Phaser.GameObjects.Image; pressedAssetImage?: Phaser.GameObjects.Image },
+    action: () => void
+  ) {
+    if (!this.showPressedAssetFeedback(button)) {
+      action();
+      return;
+    }
+
+    this.time.delayedCall(120, action);
+  }
+
+  private showPressedAssetFeedback(button: { background: Phaser.GameObjects.Rectangle; assetImage?: Phaser.GameObjects.Image; pressedAssetImage?: Phaser.GameObjects.Image }) {
+    if (!button.assetImage || !button.pressedAssetImage) {
+      return false;
+    }
+
+    const normalAlpha = button.assetImage.alpha;
+    this.tweens.killTweensOf([button.assetImage, button.pressedAssetImage]);
+    button.assetImage.setAlpha(0);
+    button.pressedAssetImage.setAlpha(normalAlpha > 0 ? normalAlpha : 0.95).setVisible(true);
+    this.time.delayedCall(120, () => {
+      button.pressedAssetImage?.setAlpha(0);
+      if (button.background.alpha > 0) {
+        button.assetImage?.setAlpha(normalAlpha > 0 ? normalAlpha : 0.95);
+      }
+    });
+    return true;
+  }
+
   private trySelectSong(x: number, y: number) {
     const targetArrow = this.songArrowButtons.find((button) => button.background.getBounds().contains(x, y));
     if (targetArrow) {
-      this.browseSongByOffset(targetArrow.direction);
+      this.runAfterPressedAssetFeedback(targetArrow, () => this.browseSongByOffset(targetArrow.direction));
       return true;
     }
 
@@ -2044,7 +2149,6 @@ export class MainScene extends Phaser.Scene {
     this.drawBackdrop(graphics, track);
     this.drawLaneSurfaces(graphics, track);
     this.drawLaneCenterDashes(graphics, track);
-    this.drawLaneStartHaze(graphics, track);
     this.drawLaneEdgeHighlights(graphics, track);
   }
 
@@ -2284,6 +2388,9 @@ export class MainScene extends Phaser.Scene {
       runner.face.setScale(runner.isJumping ? 1.08 : 1, runner.isJumping ? 0.92 : 1);
       runner.assetImage?.setDisplaySize(RUNNER_DISPLAY_WIDTH, RUNNER_DISPLAY_HEIGHT).setAlpha(1);
       runner.shadow.setScale(runner.isJumping ? 0.72 : 1, runner.isJumping ? 0.7 : 1);
+      if (!runner.isJumping) {
+        this.startRunnerIdleAnimation(runner);
+      }
     });
   }
 
@@ -3235,9 +3342,9 @@ export class MainScene extends Phaser.Scene {
     }
 
     this.lastLayoutRefreshAt = this.time.now;
-    this.comboLabel?.setText(`COMBO\n${this.combo}`);
-    this.scoreLabel?.setText(`SCORE\n${this.score.toString().padStart(6, "0")}`);
-    this.missLabel?.setText(`MISS\n${this.missCount.toString().padStart(3, "0")}`);
+    this.comboLabel?.setText(`${this.combo}`);
+    this.scoreLabel?.setText(this.score.toString().padStart(6, "0"));
+    this.missLabel?.setText(this.missCount.toString().padStart(3, "0"));
   }
 
   private fadeOutPanel(obstacle: Obstacle) {
@@ -3597,6 +3704,18 @@ export class MainScene extends Phaser.Scene {
     return this.currentThemeAssets.ui.parts.difficultyNormal;
   }
 
+  private getSelectedDifficultyAssetKey(id: DifficultyId) {
+    if (id === "easy") {
+      return this.currentThemeAssets.ui.parts.difficultyEasySelected;
+    }
+
+    if (id === "hard") {
+      return this.currentThemeAssets.ui.parts.difficultyHardSelected;
+    }
+
+    return this.currentThemeAssets.ui.parts.difficultyNormalSelected;
+  }
+
   private getJumpButtonAssetKey(lane: number) {
     if (lane === 0) {
       return this.currentThemeAssets.ui.parts.jumpButtonLeft;
@@ -3609,10 +3728,22 @@ export class MainScene extends Phaser.Scene {
     return this.currentThemeAssets.ui.parts.jumpButtonRight;
   }
 
+  private getJumpButtonPressedAssetKey(lane: number) {
+    if (lane === 0) {
+      return this.currentThemeAssets.ui.parts.jumpButtonLeftPressed;
+    }
+
+    if (lane === 1) {
+      return this.currentThemeAssets.ui.parts.jumpButtonCenterPressed;
+    }
+
+    return this.currentThemeAssets.ui.parts.jumpButtonRightPressed;
+  }
+
   private createRunnerAssetImage(lane: number) {
     const spriteSheetKey = this.getRunnerSpriteSheetKey(lane);
     if (spriteSheetKey && this.textures.exists(spriteSheetKey)) {
-      return this.add.sprite(0, 0, spriteSheetKey, 0).setDepth(1).setDisplaySize(RUNNER_DISPLAY_WIDTH, RUNNER_DISPLAY_HEIGHT);
+      return this.add.sprite(0, 0, spriteSheetKey, RUNNER_IDLE_FRAME).setDepth(1).setDisplaySize(RUNNER_DISPLAY_WIDTH, RUNNER_DISPLAY_HEIGHT);
     }
 
     const assetKey =
@@ -3639,6 +3770,12 @@ export class MainScene extends Phaser.Scene {
     }
 
     runner.assetImage.setFrame(this.getRunnerFrame(state)).setDisplaySize(RUNNER_DISPLAY_WIDTH, RUNNER_DISPLAY_HEIGHT);
+    if (state === "run") {
+      this.startRunnerIdleAnimation(runner);
+      return;
+    }
+
+    this.stopRunnerIdleAnimation(runner);
   }
 
   private getRunnerFrame(state: RunnerVisualState) {
@@ -3647,14 +3784,38 @@ export class MainScene extends Phaser.Scene {
     }
 
     if (state === "land") {
-      return 3;
+      return 4;
     }
 
     if (state === "miss") {
       return 0;
     }
 
-    return 0;
+    return RUNNER_IDLE_FRAME;
+  }
+
+  private startRunnerIdleAnimation(runner: Runner) {
+    if (!(runner.assetImage instanceof Phaser.GameObjects.Sprite) || runner.idleTween?.isPlaying()) {
+      return;
+    }
+
+    runner.assetImage.setY(0).setAngle(0);
+    runner.idleTween = this.tweens.add({
+      targets: runner.assetImage,
+      y: -5 * this.screenScale,
+      duration: 620 + runner.lane * 90,
+      delay: runner.lane * 120,
+      ease: "Sine.InOut",
+      yoyo: true,
+      repeat: -1
+    });
+  }
+
+  private stopRunnerIdleAnimation(runner: Runner) {
+    runner.idleTween?.stop();
+    runner.idleTween?.remove();
+    runner.idleTween = undefined;
+    runner.assetImage?.setY(0);
   }
 
   private playRunnerPerformance(lane: number) {
@@ -3663,13 +3824,21 @@ export class MainScene extends Phaser.Scene {
       return;
     }
 
+    this.stopRunnerIdleAnimation(runner);
     const startY = runner.assetImage.y;
     const startAngle = lane === 0 ? -4 : lane === 2 ? 4 : 0;
 
-    runner.assetImage.setFrame(2).setDisplaySize(RUNNER_DISPLAY_WIDTH, RUNNER_DISPLAY_HEIGHT).setAngle(startAngle);
-    if (runner.assetImage) {
-      this.tweens.killTweensOf(runner.assetImage);
-    }
+    this.tweens.killTweensOf(runner.assetImage);
+    runner.assetImage.setFrame(1).setDisplaySize(RUNNER_DISPLAY_WIDTH, RUNNER_DISPLAY_HEIGHT).setAngle(startAngle);
+    this.time.delayedCall(55, () => {
+      runner.assetImage?.setFrame(2).setDisplaySize(RUNNER_DISPLAY_WIDTH, RUNNER_DISPLAY_HEIGHT);
+    });
+    this.time.delayedCall(130, () => {
+      runner.assetImage?.setFrame(3).setDisplaySize(RUNNER_DISPLAY_WIDTH, RUNNER_DISPLAY_HEIGHT);
+    });
+    this.time.delayedCall(215, () => {
+      runner.assetImage?.setFrame(4).setDisplaySize(RUNNER_DISPLAY_WIDTH, RUNNER_DISPLAY_HEIGHT);
+    });
     this.tweens.add({
       targets: runner.assetImage,
       angle: 0,
@@ -3678,7 +3847,10 @@ export class MainScene extends Phaser.Scene {
       ease: "Sine.Out",
       yoyo: true,
       onComplete: () => {
-        runner.assetImage?.setY(startY).setAngle(0).setDisplaySize(RUNNER_DISPLAY_WIDTH, RUNNER_DISPLAY_HEIGHT);
+        this.time.delayedCall(135, () => {
+          runner.assetImage?.setFrame(RUNNER_IDLE_FRAME).setY(startY).setAngle(0).setDisplaySize(RUNNER_DISPLAY_WIDTH, RUNNER_DISPLAY_HEIGHT);
+          this.startRunnerIdleAnimation(runner);
+        });
       }
     });
   }
@@ -3929,15 +4101,21 @@ export class MainScene extends Phaser.Scene {
       return;
     }
 
-    this.tweens.killTweensOf([button.background, button.label]);
+    this.tweens.killTweensOf([button.background, button.label, button.assetImage, button.pressedAssetImage]);
     button.background.setScale(0.94, 0.9);
     button.label.setScale(0.95);
+    button.assetImage?.setAlpha(0);
+    button.pressedAssetImage?.setAlpha(0.98).setVisible(true);
     this.tweens.add({
       targets: [button.background, button.label],
       scaleX: 1,
       scaleY: 1,
       duration: 150,
-      ease: "Back.Out"
+      ease: "Back.Out",
+      onComplete: () => {
+        button.pressedAssetImage?.setAlpha(0);
+        button.assetImage?.setAlpha(this.gameStarted ? 0.95 : 0);
+      }
     });
   }
 

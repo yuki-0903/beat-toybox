@@ -1,62 +1,89 @@
 # Audio Workflow
 
-Use this guide for BGM and sound effects in browser games.
+Use this guide for BGM and SE work.
 
 ## Browser Audio Rule
 
-Most browsers block audio until the user interacts with the page.
+Browsers block audio until the user interacts with the page.
 
-Recommended:
+The current game starts audio after the user enters gameplay from the menu. Do not autoplay BGM on initial page load.
 
-- do not start BGM automatically on page load
-- start or unlock audio after a user gesture
-- use the title/start button as the first audio trigger
+## Runtime Audio Location
 
-Example flow:
-
-1. User clicks START.
-2. Play start SE immediately.
-3. Start BGM after a short delay if needed.
-4. Store BGM/SE settings in localStorage.
-
-## Recommended Files
+Audio files live in:
 
 ```txt
-game/systems/AudioSettings.ts
 public/assets/audio/
 ```
 
-Suggested asset names:
+Audio paths are loaded through:
+
+```txt
+game/config/assets.ts
+game/config/songs.ts
+game/scenes/PreloadScene.ts
+```
+
+## Current Audio Types
+
+### BGM
+
+BGM files are referenced by each `SongDefinition` in `game/config/songs.ts`.
+
+Current examples:
 
 ```txt
 bgm_main.mp3
-se_start.mp3
-se_hit.mp3
-se_collect.mp3
-se_confirm.mp3
+bgm_track_1.mp3
+bgm_track_2.mp3
+bgm_midnight_mini_mart.wav
+bgm_sushi_techno.wav
 ```
 
-## BGM / SE Settings
+### Character Performance SE
 
-Most games should have separate settings:
+Each character has a lane-specific performance sound:
 
-- BGM on/off
-- SE on/off
+```txt
+se_character_red.mp3
+se_character_yellow.mp3
+se_character_blue.mp3
+```
 
-Keep the setting generic so UI can change later.
+These are loaded in `PreloadScene` and played from `MainScene` when the matching character successfully performs.
+
+Current design intent:
+
+- red: drum-like hit
+- yellow: cymbal/bell-like hit
+- blue: keyboard/guitar-like hit
+
+### Legacy / Generic SE
+
+These still exist and may be used by effects or older logic:
+
+```txt
+se_move_beat.wav
+se_item_collect.wav
+```
 
 ## Mixing Notes
 
-- Start SE should be short and immediate.
-- Avoid covering important gameplay sounds with loud BGM.
-- Hit sounds should be rate-limited when collisions can happen repeatedly.
-- Use short, readable SE for mobile speakers.
-- Test with device volume low.
+- Character SE must be short and immediate.
+- SE should cut through BGM on phone speakers.
+- Avoid long tails that blur fast patterns.
+- Keep character SE volumes similar across lanes.
+- If tapping repeatedly feels noisy, lower volume or add rate limiting.
 
-## Implementation Notes
+## Future Setting Screen
 
-Use `AudioSettings.ts` for persistent settings.
+The UI already has setting buttons, but the setting screen is not implemented yet.
 
-Use Phaser sound only after the game is running in the browser.
+Future settings should include:
 
-When replacing audio assets, keep the load key stable when possible and change only the file path.
+- BGM volume
+- SE volume
+- mute BGM
+- mute SE
+
+Store these values in localStorage when implemented.

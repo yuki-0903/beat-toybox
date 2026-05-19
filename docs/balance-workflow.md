@@ -1,66 +1,61 @@
 # Balance Workflow
 
-Use this guide for gameplay tuning values.
+Use this guide for tuning game feel.
 
-## Core Rule
+## Config Location
 
-Do not scatter balance numbers throughout the codebase.
-
-Create shared config files such as:
+Shared tuning values live in:
 
 ```txt
 game/config/balance.ts
 ```
 
-Examples of values that belong there:
-
-- player speed
-- object scale
-- spawn interval
-- spawn chance
-- difficulty cap
-- recovery amount
-- score interval
-- damage amount
-- animation duration
-
-## Why
-
-During development, game feel changes constantly.
-
-If numbers are scattered across scenes and managers, small tuning changes become slow and risky.
-
-Centralized balance values make it easier to:
-
-- tune with the user
-- compare versions
-- avoid accidental hidden difficulty changes
-- document why a value exists
-
-## Difficulty Curves
-
-Prefer explicit caps.
-
-Examples:
+Current important values:
 
 ```ts
-const difficultyProgress = Phaser.Math.Clamp(score / difficultyScoreCap, 0, 1);
+GAME_BALANCE.playerZ
+GAME_BALANCE.obstacleJudgeZ
+GAME_BALANCE.chartApproachTimeScale
+GAME_BALANCE.obstacleSpawnZ
+GAME_BALANCE.obstacleDespawnZ
+GAME_BALANCE.obstacleBaseWidth
+GAME_BALANCE.obstacleBaseHeight
+GAME_BALANCE.feverComboThreshold
 ```
 
-This lets the game become harder over time without becoming impossible by accident.
+Some names still say `obstacle` because the implementation evolved from an obstacle runner. In current design, these are rhythm cue timing values.
 
-For arcade games, avoid relying only on speed. Consider:
+## Difficulty
 
-- spawn density
-- object variety
-- pattern complexity
-- risk/reward item placement
+Difficulty buttons are:
 
-## Tuning Workflow
+- EASY
+- NORMAL
+- HARD
 
-1. Change one variable at a time.
-2. Test locally.
-3. Let the user confirm feel.
-4. Commit only after approval.
+The game can thin or densify chart events per difficulty. Prefer changing one variable at a time and testing in the browser.
 
-Game feel is subjective. Small adjustments should be easy and reversible.
+## Feel Priorities
+
+Prioritize:
+
+1. Taps feel responsive.
+2. Character SE lands close to the beat.
+3. Incoming cues are readable.
+4. Misses are understandable without feeling harsh.
+5. FEVER feels lively but does not hide cues.
+
+## Tuning Process
+
+1. Change one value.
+2. Run the local game.
+3. Test PC and SP portrait if the change affects layout/input.
+4. Keep the change only if the user confirms the feel.
+
+## Avoid
+
+- hidden difficulty increases over time unless explicitly designed
+- cue density that requires constant perfect timing
+- camera shake that causes motion sickness
+- particles that cover cues
+- button sizes that are too small on phone

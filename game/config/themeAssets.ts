@@ -38,13 +38,20 @@ export type ThemeAssetConfig = {
     combo: string;
     parts: {
       buttonPrimary: string;
+      buttonPrimaryPressed: string;
       buttonSecondary: string;
+      buttonSecondaryPressed: string;
       songCardLarge: string;
       songCardSide: string;
       titleBanner: string;
+      titleLevelBanner: string;
+      rankingTitle: string;
       difficultyEasy: string;
       difficultyNormal: string;
       difficultyHard: string;
+      difficultyEasySelected: string;
+      difficultyNormalSelected: string;
+      difficultyHardSelected: string;
       hudScore: string;
       hudCombo: string;
       hudMiss: string;
@@ -53,15 +60,24 @@ export type ThemeAssetConfig = {
       nameInputPanel: string;
       keyboardKey: string;
       okButton: string;
+      okButtonPressed: string;
       jumpButtonLeft: string;
       jumpButtonCenter: string;
       jumpButtonRight: string;
+      jumpButtonLeftPressed: string;
+      jumpButtonCenterPressed: string;
+      jumpButtonRightPressed: string;
       arrowLeft: string;
       arrowRight: string;
+      arrowLeftPressed: string;
+      arrowRightPressed: string;
       iconHome: string;
       iconTrophy: string;
       iconGear: string;
       iconHelp: string;
+      iconTrophyPressed: string;
+      iconGearPressed: string;
+      iconHelpPressed: string;
       paginationDots: string;
     };
   };
@@ -95,8 +111,8 @@ const tinyToyThemeAssets: ThemeAssetConfig = {
     floor: "tinytoy_background_floor_01",
     decoration: ["tinytoy_background_toy_block_01", "tinytoy_background_desk_surface_01", "tinytoy_background_blurred_toys_01"],
     start: {
-      portrait: "tinytoy_background_start_sp_musicband_01",
-      landscape: "tinytoy_background_start_pc_musicband_01"
+      portrait: "tinytoy_background_start_sp_tiny_beat_band_01",
+      landscape: "tinytoy_background_start_pc_tiny_beat_band_01"
     },
     menu: {
       portrait: "tinytoy_background_menu_sp_01",
@@ -133,13 +149,20 @@ const tinyToyThemeAssets: ThemeAssetConfig = {
     combo: "tinytoy_ui_combo_01",
     parts: {
       buttonPrimary: "tinytoy_ui_part_button_primary_red_01",
+      buttonPrimaryPressed: "tinytoy_ui_part_button_primary_red_pressed_01",
       buttonSecondary: "tinytoy_ui_part_button_secondary_blue_01",
+      buttonSecondaryPressed: "tinytoy_ui_part_button_secondary_blue_pressed_01",
       songCardLarge: "tinytoy_ui_part_song_card_large_01",
       songCardSide: "tinytoy_ui_part_song_card_side_01",
       titleBanner: "tinytoy_ui_part_title_banner_01",
+      titleLevelBanner: "tinytoy_ui_part_title_level_banner_01",
+      rankingTitle: "tinytoy_ui_part_ranking_title_01",
       difficultyEasy: "tinytoy_ui_part_difficulty_easy_01",
       difficultyNormal: "tinytoy_ui_part_difficulty_normal_01",
       difficultyHard: "tinytoy_ui_part_difficulty_hard_01",
+      difficultyEasySelected: "tinytoy_ui_part_difficulty_easy_selected_01",
+      difficultyNormalSelected: "tinytoy_ui_part_difficulty_normal_selected_01",
+      difficultyHardSelected: "tinytoy_ui_part_difficulty_hard_selected_01",
       hudScore: "tinytoy_ui_part_hud_score_01",
       hudCombo: "tinytoy_ui_part_hud_combo_01",
       hudMiss: "tinytoy_ui_part_hud_miss_01",
@@ -148,15 +171,24 @@ const tinyToyThemeAssets: ThemeAssetConfig = {
       nameInputPanel: "tinytoy_ui_part_name_input_panel_01",
       keyboardKey: "tinytoy_ui_part_keyboard_key_01",
       okButton: "tinytoy_ui_part_button_ok_green_01",
+      okButtonPressed: "tinytoy_ui_part_button_ok_green_pressed_01",
       jumpButtonLeft: "tinytoy_ui_part_jump_button_left_01",
       jumpButtonCenter: "tinytoy_ui_part_jump_button_center_01",
       jumpButtonRight: "tinytoy_ui_part_jump_button_right_01",
+      jumpButtonLeftPressed: "tinytoy_ui_part_jump_button_left_pressed_01",
+      jumpButtonCenterPressed: "tinytoy_ui_part_jump_button_center_pressed_01",
+      jumpButtonRightPressed: "tinytoy_ui_part_jump_button_right_pressed_01",
       arrowLeft: "tinytoy_ui_part_arrow_left_01",
       arrowRight: "tinytoy_ui_part_arrow_right_01",
+      arrowLeftPressed: "tinytoy_ui_part_arrow_left_pressed_01",
+      arrowRightPressed: "tinytoy_ui_part_arrow_right_pressed_01",
       iconHome: "tinytoy_ui_part_icon_home_01",
       iconTrophy: "tinytoy_ui_part_icon_trophy_01",
       iconGear: "tinytoy_ui_part_icon_gear_01",
       iconHelp: "tinytoy_ui_part_icon_help_01",
+      iconTrophyPressed: "tinytoy_ui_part_icon_trophy_pressed_01",
+      iconGearPressed: "tinytoy_ui_part_icon_gear_pressed_01",
+      iconHelpPressed: "tinytoy_ui_part_icon_help_pressed_01",
       paginationDots: "tinytoy_ui_part_pagination_dots_01"
     }
   },
@@ -165,9 +197,9 @@ const tinyToyThemeAssets: ThemeAssetConfig = {
     particleNote: "tinytoy_effect_particle_note_01"
   },
   characters: {
-    left: "tinytoy_character_runner_red_01",
-    center: "tinytoy_character_runner_yellow_01",
-    right: "tinytoy_character_runner_blue_01",
+    left: "tinytoy_character_runner_red_sheet_01",
+    center: "tinytoy_character_runner_yellow_sheet_01",
+    right: "tinytoy_character_runner_blue_sheet_01",
     spriteSheets: {
       left: "tinytoy_character_runner_red_sheet_01",
       center: "tinytoy_character_runner_yellow_sheet_01",
@@ -200,24 +232,10 @@ const tinyToyFiles: ThemeAssetFile[] = [
   { key: "tinytoy_background_toy_block_01", category: "background", placeholderFile: "tinytoy_bg_toy_blocks_01.png", productionFile: "tinytoy_bg_toy_blocks_01.png", priority: "P1" },
   { key: "tinytoy_background_desk_surface_01", category: "background", placeholderFile: "tinytoy_bg_desk_surface_01.png", productionFile: "tinytoy_bg_desk_surface_01.png", priority: "P0" },
   { key: "tinytoy_background_blurred_toys_01", category: "background", placeholderFile: "tinytoy_bg_blurred_toys_01.png", productionFile: "tinytoy_bg_blurred_toys_01.png", priority: "P1" },
-  { key: "tinytoy_background_start_sp_musicband_01", category: "background", placeholderFile: "tinytoy_bg_start_sp_musicband_01.png", productionFile: "tinytoy_bg_start_sp_musicband_01.png", priority: "P0" },
-  { key: "tinytoy_background_start_pc_musicband_01", category: "background", placeholderFile: "tinytoy_bg_start_pc_musicband_01.png", productionFile: "tinytoy_bg_start_pc_musicband_01.png", priority: "P0" },
+  { key: "tinytoy_background_start_sp_tiny_beat_band_01", category: "background", placeholderFile: "tinytoy_bg_start_sp_tiny_beat_band_01.png", productionFile: "tinytoy_bg_start_sp_tiny_beat_band_01.png", priority: "P0" },
+  { key: "tinytoy_background_start_pc_tiny_beat_band_01", category: "background", placeholderFile: "tinytoy_bg_start_pc_tiny_beat_band_01.png", productionFile: "tinytoy_bg_start_pc_tiny_beat_band_01.png", priority: "P0" },
   { key: "tinytoy_background_menu_sp_01", category: "background", placeholderFile: "tinytoy_bg_menu_sp_01.png", productionFile: "tinytoy_bg_menu_sp_01.png", priority: "P0" },
   { key: "tinytoy_background_menu_pc_01", category: "background", placeholderFile: "tinytoy_bg_menu_pc_01.png", productionFile: "tinytoy_bg_menu_pc_01.png", priority: "P0" },
-  {
-    key: "tinytoy_background_game_scroll_sp_01",
-    category: "background",
-    placeholderFile: "tinytoy_bg_game_scroll_sp_01.png",
-    productionFile: "tinytoy_bg_game_scroll_sp_01.png",
-    priority: "P0"
-  },
-  {
-    key: "tinytoy_background_game_scroll_sp_02",
-    category: "background",
-    placeholderFile: "tinytoy_bg_game_scroll_sp_02.png",
-    productionFile: "tinytoy_bg_game_scroll_sp_02.png",
-    priority: "P0"
-  },
   {
     key: "tinytoy_background_game_scroll_sp_03",
     category: "background",
@@ -243,13 +261,50 @@ const tinyToyFiles: ThemeAssetFile[] = [
   { key: "tinytoy_ui_combo_01", category: "ui", placeholderFile: "tinytoy_ui_combo_badge_01.png", productionFile: "tinytoy_ui_combo_badge_01.png", priority: "P0" },
   { key: "tinytoy_ui_fever_01", category: "ui", placeholderFile: "tinytoy_ui_fever_badge_01.png", productionFile: "tinytoy_ui_fever_badge_01.png", priority: "P0" },
   { key: "tinytoy_ui_part_button_primary_red_01", category: "ui", placeholderFile: "parts/tinytoy_ui_button_primary_red_01.png", productionFile: "parts/tinytoy_ui_button_primary_red_01.png", priority: "P0" },
+  {
+    key: "tinytoy_ui_part_button_primary_red_pressed_01",
+    category: "ui",
+    placeholderFile: "parts/tinytoy_ui_button_primary_red_pressed_01.png",
+    productionFile: "parts/tinytoy_ui_button_primary_red_pressed_01.png",
+    priority: "P0"
+  },
   { key: "tinytoy_ui_part_button_secondary_blue_01", category: "ui", placeholderFile: "parts/tinytoy_ui_button_secondary_blue_01.png", productionFile: "parts/tinytoy_ui_button_secondary_blue_01.png", priority: "P0" },
+  {
+    key: "tinytoy_ui_part_button_secondary_blue_pressed_01",
+    category: "ui",
+    placeholderFile: "parts/tinytoy_ui_button_secondary_blue_pressed_01.png",
+    productionFile: "parts/tinytoy_ui_button_secondary_blue_pressed_01.png",
+    priority: "P0"
+  },
   { key: "tinytoy_ui_part_song_card_large_01", category: "ui", placeholderFile: "parts/tinytoy_ui_song_card_large_01.png", productionFile: "parts/tinytoy_ui_song_card_large_01.png", priority: "P0" },
   { key: "tinytoy_ui_part_song_card_side_01", category: "ui", placeholderFile: "parts/tinytoy_ui_song_card_side_01.png", productionFile: "parts/tinytoy_ui_song_card_side_01.png", priority: "P1" },
   { key: "tinytoy_ui_part_title_banner_01", category: "ui", placeholderFile: "parts/tinytoy_ui_title_banner_01.png", productionFile: "parts/tinytoy_ui_title_banner_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_title_level_banner_01", category: "ui", placeholderFile: "parts/tinytoy_ui_title_level_banner_01.png", productionFile: "parts/tinytoy_ui_title_level_banner_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_ranking_title_01", category: "ui", placeholderFile: "parts/tinytoy_ui_ranking_title_01.png", productionFile: "parts/tinytoy_ui_ranking_title_01.png", priority: "P1" },
   { key: "tinytoy_ui_part_difficulty_easy_01", category: "ui", placeholderFile: "parts/tinytoy_ui_difficulty_easy_01.png", productionFile: "parts/tinytoy_ui_difficulty_easy_01.png", priority: "P0" },
   { key: "tinytoy_ui_part_difficulty_normal_01", category: "ui", placeholderFile: "parts/tinytoy_ui_difficulty_normal_01.png", productionFile: "parts/tinytoy_ui_difficulty_normal_01.png", priority: "P0" },
   { key: "tinytoy_ui_part_difficulty_hard_01", category: "ui", placeholderFile: "parts/tinytoy_ui_difficulty_hard_01.png", productionFile: "parts/tinytoy_ui_difficulty_hard_01.png", priority: "P0" },
+  {
+    key: "tinytoy_ui_part_difficulty_easy_selected_01",
+    category: "ui",
+    placeholderFile: "parts/tinytoy_ui_difficulty_easy_selected_01.png",
+    productionFile: "parts/tinytoy_ui_difficulty_easy_selected_01.png",
+    priority: "P0"
+  },
+  {
+    key: "tinytoy_ui_part_difficulty_normal_selected_01",
+    category: "ui",
+    placeholderFile: "parts/tinytoy_ui_difficulty_normal_selected_01.png",
+    productionFile: "parts/tinytoy_ui_difficulty_normal_selected_01.png",
+    priority: "P0"
+  },
+  {
+    key: "tinytoy_ui_part_difficulty_hard_selected_01",
+    category: "ui",
+    placeholderFile: "parts/tinytoy_ui_difficulty_hard_selected_01.png",
+    productionFile: "parts/tinytoy_ui_difficulty_hard_selected_01.png",
+    priority: "P0"
+  },
   { key: "tinytoy_ui_part_hud_score_01", category: "ui", placeholderFile: "parts/tinytoy_ui_hud_score_01.png", productionFile: "parts/tinytoy_ui_hud_score_01.png", priority: "P0" },
   { key: "tinytoy_ui_part_hud_combo_01", category: "ui", placeholderFile: "parts/tinytoy_ui_hud_combo_01.png", productionFile: "parts/tinytoy_ui_hud_combo_01.png", priority: "P0" },
   { key: "tinytoy_ui_part_hud_miss_01", category: "ui", placeholderFile: "parts/tinytoy_ui_hud_miss_01.png", productionFile: "parts/tinytoy_ui_hud_miss_01.png", priority: "P0" },
@@ -258,32 +313,50 @@ const tinyToyFiles: ThemeAssetFile[] = [
   { key: "tinytoy_ui_part_name_input_panel_01", category: "ui", placeholderFile: "parts/tinytoy_ui_name_input_panel_01.png", productionFile: "parts/tinytoy_ui_name_input_panel_01.png", priority: "P2" },
   { key: "tinytoy_ui_part_keyboard_key_01", category: "ui", placeholderFile: "parts/tinytoy_ui_keyboard_key_01.png", productionFile: "parts/tinytoy_ui_keyboard_key_01.png", priority: "P2" },
   { key: "tinytoy_ui_part_button_ok_green_01", category: "ui", placeholderFile: "parts/tinytoy_ui_button_ok_green_01.png", productionFile: "parts/tinytoy_ui_button_ok_green_01.png", priority: "P2" },
+  {
+    key: "tinytoy_ui_part_button_ok_green_pressed_01",
+    category: "ui",
+    placeholderFile: "parts/tinytoy_ui_button_ok_green_pressed_01.png",
+    productionFile: "parts/tinytoy_ui_button_ok_green_pressed_01.png",
+    priority: "P2"
+  },
   { key: "tinytoy_ui_part_jump_button_left_01", category: "ui", placeholderFile: "parts/tinytoy_ui_jump_button_left_01.png", productionFile: "parts/tinytoy_ui_jump_button_left_01.png", priority: "P0" },
   { key: "tinytoy_ui_part_jump_button_center_01", category: "ui", placeholderFile: "parts/tinytoy_ui_jump_button_center_01.png", productionFile: "parts/tinytoy_ui_jump_button_center_01.png", priority: "P0" },
   { key: "tinytoy_ui_part_jump_button_right_01", category: "ui", placeholderFile: "parts/tinytoy_ui_jump_button_right_01.png", productionFile: "parts/tinytoy_ui_jump_button_right_01.png", priority: "P0" },
+  { key: "tinytoy_ui_part_jump_button_left_pressed_01", category: "ui", placeholderFile: "parts/tinytoy_ui_jump_button_left_pressed_01.png", productionFile: "parts/tinytoy_ui_jump_button_left_pressed_01.png", priority: "P0" },
+  { key: "tinytoy_ui_part_jump_button_center_pressed_01", category: "ui", placeholderFile: "parts/tinytoy_ui_jump_button_center_pressed_01.png", productionFile: "parts/tinytoy_ui_jump_button_center_pressed_01.png", priority: "P0" },
+  { key: "tinytoy_ui_part_jump_button_right_pressed_01", category: "ui", placeholderFile: "parts/tinytoy_ui_jump_button_right_pressed_01.png", productionFile: "parts/tinytoy_ui_jump_button_right_pressed_01.png", priority: "P0" },
   {
     key: "tinytoy_ui_part_arrow_left_01",
     category: "ui",
-    placeholderFile: "parts/tinytoy_ui_arrow_left_toy_gray_01.svg",
-    productionFile: "parts/tinytoy_ui_arrow_left_toy_gray_01.svg",
+    placeholderFile: "parts/tinytoy_ui_arrow_left_01.png",
+    productionFile: "parts/tinytoy_ui_arrow_left_01.png",
+    priority: "P1"
+  },
+  {
+    key: "tinytoy_ui_part_arrow_left_pressed_01",
+    category: "ui",
+    placeholderFile: "parts/tinytoy_ui_arrow_left_pressed_01.png",
+    productionFile: "parts/tinytoy_ui_arrow_left_pressed_01.png",
     priority: "P1"
   },
   { key: "tinytoy_ui_part_arrow_right_01", category: "ui", placeholderFile: "parts/tinytoy_ui_arrow_right_01.png", productionFile: "parts/tinytoy_ui_arrow_right_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_arrow_right_pressed_01", category: "ui", placeholderFile: "parts/tinytoy_ui_arrow_right_pressed_01.png", productionFile: "parts/tinytoy_ui_arrow_right_pressed_01.png", priority: "P1" },
   { key: "tinytoy_ui_part_icon_home_01", category: "ui", placeholderFile: "parts/tinytoy_ui_icon_home_01.png", productionFile: "parts/tinytoy_ui_icon_home_01.png", priority: "P1" },
   { key: "tinytoy_ui_part_icon_trophy_01", category: "ui", placeholderFile: "parts/tinytoy_ui_icon_trophy_01.png", productionFile: "parts/tinytoy_ui_icon_trophy_01.png", priority: "P2" },
+  { key: "tinytoy_ui_part_icon_trophy_pressed_01", category: "ui", placeholderFile: "parts/tinytoy_ui_icon_trophy_pressed_01.png", productionFile: "parts/tinytoy_ui_icon_trophy_pressed_01.png", priority: "P2" },
   { key: "tinytoy_ui_part_icon_gear_01", category: "ui", placeholderFile: "parts/tinytoy_ui_icon_gear_01.png", productionFile: "parts/tinytoy_ui_icon_gear_01.png", priority: "P2" },
+  { key: "tinytoy_ui_part_icon_gear_pressed_01", category: "ui", placeholderFile: "parts/tinytoy_ui_icon_gear_pressed_01.png", productionFile: "parts/tinytoy_ui_icon_gear_pressed_01.png", priority: "P2" },
   { key: "tinytoy_ui_part_icon_help_01", category: "ui", placeholderFile: "parts/tinytoy_ui_icon_help_01.png", productionFile: "parts/tinytoy_ui_icon_help_01.png", priority: "P2" },
+  { key: "tinytoy_ui_part_icon_help_pressed_01", category: "ui", placeholderFile: "parts/tinytoy_ui_icon_help_pressed_01.png", productionFile: "parts/tinytoy_ui_icon_help_pressed_01.png", priority: "P2" },
   { key: "tinytoy_ui_part_pagination_dots_01", category: "ui", placeholderFile: "parts/tinytoy_ui_pagination_dots_01.png", productionFile: "parts/tinytoy_ui_pagination_dots_01.png", priority: "P2" },
   { key: "tinytoy_effect_particle_star_01", category: "effects", placeholderFile: "tinytoy_effect_star_particle_01.png", productionFile: "tinytoy_effect_star_particle_01.png", priority: "P0" },
   { key: "tinytoy_effect_particle_note_01", category: "effects", placeholderFile: "tinytoy_effect_note_particle_01.png", productionFile: "tinytoy_effect_note_particle_01.png", priority: "P0" },
-  { key: "tinytoy_character_runner_red_01", category: "characters", placeholderFile: "runner_red.svg", productionFile: "tinytoy_character_runner_red_run_01.png", priority: "P0" },
-  { key: "tinytoy_character_runner_yellow_01", category: "characters", placeholderFile: "runner_yellow.svg", productionFile: "tinytoy_character_runner_yellow_run_01.png", priority: "P0" },
-  { key: "tinytoy_character_runner_blue_01", category: "characters", placeholderFile: "runner_blue.svg", productionFile: "tinytoy_character_runner_blue_run_01.png", priority: "P0" },
   {
     key: "tinytoy_character_runner_red_sheet_01",
     category: "characters",
-    placeholderFile: "tinytoy_character_runner_red_front_sheet_01.png",
-    productionFile: "tinytoy_character_runner_red_front_sheet_01.png",
+    placeholderFile: "tinytoy_character_kigurumi_red_performance_sheet_01.png",
+    productionFile: "tinytoy_character_kigurumi_red_performance_sheet_01.png",
     frameWidth: 512,
     frameHeight: 512,
     priority: "P0"
@@ -291,8 +364,8 @@ const tinyToyFiles: ThemeAssetFile[] = [
   {
     key: "tinytoy_character_runner_yellow_sheet_01",
     category: "characters",
-    placeholderFile: "tinytoy_character_runner_yellow_front_sheet_01.png",
-    productionFile: "tinytoy_character_runner_yellow_front_sheet_01.png",
+    placeholderFile: "tinytoy_character_kigurumi_yellow_performance_sheet_01.png",
+    productionFile: "tinytoy_character_kigurumi_yellow_performance_sheet_01.png",
     frameWidth: 512,
     frameHeight: 512,
     priority: "P0"
@@ -300,8 +373,8 @@ const tinyToyFiles: ThemeAssetFile[] = [
   {
     key: "tinytoy_character_runner_blue_sheet_01",
     category: "characters",
-    placeholderFile: "tinytoy_character_runner_blue_front_sheet_01.png",
-    productionFile: "tinytoy_character_runner_blue_front_sheet_01.png",
+    placeholderFile: "tinytoy_character_kigurumi_blue_performance_sheet_01.png",
+    productionFile: "tinytoy_character_kigurumi_blue_performance_sheet_01.png",
     frameWidth: 512,
     frameHeight: 512,
     priority: "P0"

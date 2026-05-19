@@ -1,6 +1,26 @@
 [
   {
     "playerName": "PLAYER",
+    "song": "TRACK 1",
+    "difficulty": "NORMAL",
+    "score": 32774,
+    "avoidCount": 127,
+    "maxCombo": 74,
+    "missCount": 6,
+    "createdAt": "2026-05-19T05:13:02.678Z"
+  },
+  {
+    "playerName": "PLAYER",
+    "song": "TOY SPRINT",
+    "difficulty": "HARD",
+    "score": 27815,
+    "avoidCount": 75,
+    "maxCombo": 75,
+    "missCount": 0,
+    "createdAt": "2026-05-19T05:20:06.591Z"
+  },
+  {
+    "playerName": "PLAYER",
     "song": "TOY SPRINT",
     "difficulty": "HARD",
     "score": 25545,
@@ -8,6 +28,16 @@
     "maxCombo": 47,
     "missCount": 2,
     "createdAt": "2026-05-18T10:38:58.688Z"
+  },
+  {
+    "playerName": "PLAYER",
+    "song": "TOY SPRINT",
+    "difficulty": "HARD",
+    "score": 24850,
+    "avoidCount": 74,
+    "maxCombo": 52,
+    "missCount": 1,
+    "createdAt": "2026-05-19T05:19:05.645Z"
   },
   {
     "playerName": "PLAYER",
@@ -73,6 +103,56 @@
     "playerName": "PLAYER",
     "song": "TOY SPRINT",
     "difficulty": "NORMAL",
+    "score": 17481,
+    "avoidCount": 57,
+    "maxCombo": 57,
+    "missCount": 0,
+    "createdAt": "2026-05-19T03:05:35.922Z"
+  },
+  {
+    "playerName": "PLAYER",
+    "song": "TOY SPRINT",
+    "difficulty": "NORMAL",
+    "score": 17481,
+    "avoidCount": 57,
+    "maxCombo": 57,
+    "missCount": 0,
+    "createdAt": "2026-05-19T05:15:11.105Z"
+  },
+  {
+    "playerName": "PLAYER",
+    "song": "TOY SPRINT",
+    "difficulty": "NORMAL",
+    "score": 17481,
+    "avoidCount": 57,
+    "maxCombo": 57,
+    "missCount": 0,
+    "createdAt": "2026-05-19T05:22:19.336Z"
+  },
+  {
+    "playerName": "PLAYER",
+    "song": "MINI MART",
+    "difficulty": "NORMAL",
+    "score": 17481,
+    "avoidCount": 57,
+    "maxCombo": 57,
+    "missCount": 0,
+    "createdAt": "2026-05-19T05:23:47.754Z"
+  },
+  {
+    "playerName": "PLAYER",
+    "song": "TOY SPRINT",
+    "difficulty": "NORMAL",
+    "score": 17481,
+    "avoidCount": 57,
+    "maxCombo": 57,
+    "missCount": 0,
+    "createdAt": "2026-05-19T05:29:52.249Z"
+  },
+  {
+    "playerName": "PLAYER",
+    "song": "TOY SPRINT",
+    "difficulty": "NORMAL",
     "score": 17136,
     "avoidCount": 56,
     "maxCombo": 56,
@@ -88,6 +168,26 @@
     "maxCombo": 56,
     "missCount": 1,
     "createdAt": "2026-05-18T23:05:10.386Z"
+  },
+  {
+    "playerName": "PLAYER",
+    "song": "TOY SPRINT",
+    "difficulty": "NORMAL",
+    "score": 17136,
+    "avoidCount": 56,
+    "maxCombo": 56,
+    "missCount": 1,
+    "createdAt": "2026-05-19T04:49:51.561Z"
+  },
+  {
+    "playerName": "PLAYER",
+    "song": "TOY SPRINT",
+    "difficulty": "NORMAL",
+    "score": 16917,
+    "avoidCount": 56,
+    "maxCombo": 55,
+    "missCount": 1,
+    "createdAt": "2026-05-19T02:58:04.912Z"
   },
   {
     "playerName": "PLAYER",
@@ -131,6 +231,16 @@
   },
   {
     "playerName": "PLAYER",
+    "song": "MINI MART",
+    "difficulty": "NORMAL",
+    "score": 15848,
+    "avoidCount": 56,
+    "maxCombo": 49,
+    "missCount": 1,
+    "createdAt": "2026-05-19T05:30:45.490Z"
+  },
+  {
+    "playerName": "PLAYER",
     "song": "TOY SPRINT",
     "difficulty": "NORMAL",
     "score": 15653,
@@ -163,6 +273,36 @@
     "playerName": "PLAYER",
     "song": "TOY SPRINT",
     "difficulty": "NORMAL",
+    "score": 13491,
+    "avoidCount": 54,
+    "maxCombo": 33,
+    "missCount": 3,
+    "createdAt": "2026-05-19T03:00:37.112Z"
+  },
+  {
+    "playerName": "PLAYER",
+    "song": "TOY SPRINT",
+    "difficulty": "NORMAL",
+    "score": 13296,
+    "avoidCount": 54,
+    "maxCombo": 31,
+    "missCount": 3,
+    "createdAt": "2026-05-19T05:26:27.141Z"
+  },
+  {
+    "playerName": "PLAYER",
+    "song": "SUSHI TECH",
+    "difficulty": "NORMAL",
+    "score": 12940,
+    "avoidCount": 53,
+    "maxCombo": 26,
+    "missCount": 4,
+    "createdAt": "2026-05-19T06:43:04.004Z"
+  },
+  {
+    "playerName": "PLAYER",
+    "song": "TOY SPRINT",
+    "difficulty": "NORMAL",
     "score": 12831,
     "avoidCount": 46,
     "maxCombo": 35,
@@ -173,11 +313,31 @@
     "playerName": "PLAYER",
     "song": "TOY SPRINT",
     "difficulty": "NORMAL",
+    "score": 12823,
+    "avoidCount": 48,
+    "maxCombo": 39,
+    "missCount": 9,
+    "createdAt": "2026-05-19T05:18:12.985Z"
+  },
+  {
+    "playerName": "PLAYER",
+    "song": "TOY SPRINT",
+    "difficulty": "NORMAL",
     "score": 12548,
     "avoidCount": 54,
     "maxCombo": 31,
     "missCount": 3,
     "createdAt": "2026-05-18T22:31:18.498Z"
+  },
+  {
+    "playerName": "PLAYER",
+    "song": "TOY SPRINT",
+    "difficulty": "NORMAL",
+    "score": 12537,
+    "avoidCount": 55,
+    "maxCombo": 21,
+    "missCount": 2,
+    "createdAt": "2026-05-19T06:46:57.242Z"
   },
   {
     "playerName": "PLAYER",
@@ -213,11 +373,51 @@
     "playerName": "PLAYER",
     "song": "TOY SPRINT",
     "difficulty": "NORMAL",
+    "score": 10959,
+    "avoidCount": 40,
+    "maxCombo": 37,
+    "missCount": 17,
+    "createdAt": "2026-05-19T04:52:50.349Z"
+  },
+  {
+    "playerName": "PLAYER",
+    "song": "TOY SPRINT",
+    "difficulty": "NORMAL",
+    "score": 10547,
+    "avoidCount": 42,
+    "maxCombo": 33,
+    "missCount": 15,
+    "createdAt": "2026-05-19T08:29:51.662Z"
+  },
+  {
+    "playerName": "PLAYER",
+    "song": "TOY SPRINT",
+    "difficulty": "NORMAL",
     "score": 10500,
     "avoidCount": 42,
     "maxCombo": 26,
     "missCount": 15,
     "createdAt": "2026-05-18T21:55:06.527Z"
+  },
+  {
+    "playerName": "PLAYER",
+    "song": "TOY SPRINT",
+    "difficulty": "NORMAL",
+    "score": 10477,
+    "avoidCount": 49,
+    "maxCombo": 21,
+    "missCount": 8,
+    "createdAt": "2026-05-19T06:38:00.448Z"
+  },
+  {
+    "playerName": "PLAYER",
+    "song": "TOY SPRINT",
+    "difficulty": "NORMAL",
+    "score": 10396,
+    "avoidCount": 53,
+    "maxCombo": 19,
+    "missCount": 4,
+    "createdAt": "2026-05-19T06:46:05.991Z"
   },
   {
     "playerName": "PLAYER",
@@ -243,6 +443,36 @@
     "playerName": "PLAYER",
     "song": "TOY SPRINT",
     "difficulty": "NORMAL",
+    "score": 9820,
+    "avoidCount": 48,
+    "maxCombo": 23,
+    "missCount": 9,
+    "createdAt": "2026-05-19T05:34:15.070Z"
+  },
+  {
+    "playerName": "PLAYER",
+    "song": "TOY SPRINT",
+    "difficulty": "HARD",
+    "score": 9183,
+    "avoidCount": 52,
+    "maxCombo": 11,
+    "missCount": 23,
+    "createdAt": "2026-05-19T06:44:44.288Z"
+  },
+  {
+    "playerName": "PLAYER",
+    "song": "TOY SPRINT",
+    "difficulty": "NORMAL",
+    "score": 7200,
+    "avoidCount": 29,
+    "maxCombo": 26,
+    "missCount": 28,
+    "createdAt": "2026-05-19T05:05:52.015Z"
+  },
+  {
+    "playerName": "PLAYER",
+    "song": "TOY SPRINT",
+    "difficulty": "NORMAL",
     "score": 6807,
     "avoidCount": 45,
     "maxCombo": 9,
@@ -252,221 +482,21 @@
   {
     "playerName": "PLAYER",
     "song": "TOY SPRINT",
-    "difficulty": "NORMAL",
-    "score": 5140,
-    "avoidCount": 26,
-    "maxCombo": 18,
-    "missCount": 31,
-    "createdAt": "2026-05-18T22:21:27.315Z"
+    "difficulty": "EASY",
+    "score": 6260,
+    "avoidCount": 29,
+    "maxCombo": 26,
+    "missCount": 15,
+    "createdAt": "2026-05-19T05:02:01.910Z"
   },
   {
     "playerName": "PLAYER",
     "song": "TOY SPRINT",
     "difficulty": "NORMAL",
-    "score": 4532,
-    "avoidCount": 22,
-    "maxCombo": 15,
-    "missCount": 35,
-    "createdAt": "2026-05-18T21:53:21.523Z"
-  },
-  {
-    "playerName": "PLAYER",
-    "song": "TOY SPRINT",
-    "difficulty": "NORMAL",
-    "score": 4172,
-    "avoidCount": 23,
-    "maxCombo": 11,
-    "missCount": 34,
-    "createdAt": "2026-05-19T00:20:29.787Z"
-  },
-  {
-    "playerName": "PLAYER",
-    "song": "TOY SPRINT",
-    "difficulty": "NORMAL",
-    "score": 390,
-    "avoidCount": 3,
-    "maxCombo": 2,
-    "missCount": 54,
-    "createdAt": "2026-05-18T22:34:44.571Z"
-  },
-  {
-    "playerName": "PLAYER",
-    "song": "TOY SPRINT",
-    "difficulty": "NORMAL",
-    "score": 126,
-    "avoidCount": 1,
-    "maxCombo": 1,
-    "missCount": 56,
-    "createdAt": "2026-05-18T22:06:26.067Z"
-  },
-  {
-    "playerName": "PLAYER",
-    "song": "TOY SPRINT",
-    "difficulty": "NORMAL",
-    "score": 0,
-    "avoidCount": 0,
-    "maxCombo": 0,
-    "missCount": 57,
-    "createdAt": "2026-05-18T21:10:15.578Z"
-  },
-  {
-    "playerName": "PLAYER",
-    "song": "TOY SPRINT",
-    "difficulty": "NORMAL",
-    "score": 0,
-    "avoidCount": 0,
-    "maxCombo": 0,
-    "missCount": 57,
-    "createdAt": "2026-05-18T21:11:04.229Z"
-  },
-  {
-    "playerName": "PLAYER",
-    "song": "TOY SPRINT",
-    "difficulty": "NORMAL",
-    "score": 0,
-    "avoidCount": 0,
-    "maxCombo": 0,
-    "missCount": 57,
-    "createdAt": "2026-05-18T21:12:37.380Z"
-  },
-  {
-    "playerName": "PLAYER",
-    "song": "TOY SPRINT",
-    "difficulty": "NORMAL",
-    "score": 0,
-    "avoidCount": 0,
-    "maxCombo": 0,
-    "missCount": 57,
-    "createdAt": "2026-05-18T21:19:21.320Z"
-  },
-  {
-    "playerName": "PLAYER",
-    "song": "TOY SPRINT",
-    "difficulty": "NORMAL",
-    "score": 0,
-    "avoidCount": 0,
-    "maxCombo": 0,
-    "missCount": 57,
-    "createdAt": "2026-05-18T21:36:17.963Z"
-  },
-  {
-    "playerName": "PLAYER",
-    "song": "TOY SPRINT",
-    "difficulty": "NORMAL",
-    "score": 0,
-    "avoidCount": 0,
-    "maxCombo": 0,
-    "missCount": 57,
-    "createdAt": "2026-05-18T21:38:15.217Z"
-  },
-  {
-    "playerName": "PLAYER",
-    "song": "TOY SPRINT",
-    "difficulty": "NORMAL",
-    "score": 0,
-    "avoidCount": 0,
-    "maxCombo": 0,
-    "missCount": 57,
-    "createdAt": "2026-05-18T21:42:48.359Z"
-  },
-  {
-    "playerName": "PLAYER",
-    "song": "TOY SPRINT",
-    "difficulty": "NORMAL",
-    "score": 0,
-    "avoidCount": 0,
-    "maxCombo": 0,
-    "missCount": 57,
-    "createdAt": "2026-05-18T21:46:16.347Z"
-  },
-  {
-    "playerName": "PLAYER",
-    "song": "TOY SPRINT",
-    "difficulty": "NORMAL",
-    "score": 0,
-    "avoidCount": 0,
-    "maxCombo": 0,
-    "missCount": 57,
-    "createdAt": "2026-05-18T21:49:13.937Z"
-  },
-  {
-    "playerName": "PLAYER",
-    "song": "TOY SPRINT",
-    "difficulty": "NORMAL",
-    "score": 0,
-    "avoidCount": 0,
-    "maxCombo": 0,
-    "missCount": 57,
-    "createdAt": "2026-05-18T21:52:06.735Z"
-  },
-  {
-    "playerName": "PLAYER",
-    "song": "TOY SPRINT",
-    "difficulty": "NORMAL",
-    "score": 0,
-    "avoidCount": 0,
-    "maxCombo": 0,
-    "missCount": 57,
-    "createdAt": "2026-05-18T22:16:56.938Z"
-  },
-  {
-    "playerName": "PLAYER",
-    "song": "TOY SPRINT",
-    "difficulty": "NORMAL",
-    "score": 0,
-    "avoidCount": 0,
-    "maxCombo": 0,
-    "missCount": 57,
-    "createdAt": "2026-05-18T22:27:25.425Z"
-  },
-  {
-    "playerName": "PLAYER",
-    "song": "TOY SPRINT",
-    "difficulty": "NORMAL",
-    "score": 0,
-    "avoidCount": 0,
-    "maxCombo": 0,
-    "missCount": 57,
-    "createdAt": "2026-05-18T22:37:27.109Z"
-  },
-  {
-    "playerName": "PLAYER",
-    "song": "TOY SPRINT",
-    "difficulty": "NORMAL",
-    "score": 0,
-    "avoidCount": 0,
-    "maxCombo": 0,
-    "missCount": 57,
-    "createdAt": "2026-05-18T22:40:14.898Z"
-  },
-  {
-    "playerName": "PLAYER",
-    "song": "TOY SPRINT",
-    "difficulty": "NORMAL",
-    "score": 0,
-    "avoidCount": 0,
-    "maxCombo": 0,
-    "missCount": 57,
-    "createdAt": "2026-05-18T22:42:13.801Z"
-  },
-  {
-    "playerName": "PLAYER",
-    "song": "TOY SPRINT",
-    "difficulty": "NORMAL",
-    "score": 0,
-    "avoidCount": 0,
-    "maxCombo": 0,
-    "missCount": 57,
-    "createdAt": "2026-05-18T22:55:03.739Z"
-  },
-  {
-    "playerName": "PLAYER",
-    "song": "TOY SPRINT",
-    "difficulty": "NORMAL",
-    "score": 0,
-    "avoidCount": 0,
-    "maxCombo": 0,
-    "missCount": 57,
-    "createdAt": "2026-05-18T22:56:29.423Z"
+    "score": 6211,
+    "avoidCount": 29,
+    "maxCombo": 21,
+    "missCount": 28,
+    "createdAt": "2026-05-19T03:02:51.820Z"
   }
 ]
