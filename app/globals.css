@@ -1,26 +1,4 @@
-@font-face {
-  font-family: "Fredoka";
-  src: url("/assets/fonts/Fredoka-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Fredoka";
-  src: url("/assets/fonts/Fredoka-SemiBold.ttf") format("truetype");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Fredoka";
-  src: url("/assets/fonts/Fredoka-Bold.ttf") format("truetype");
-  font-weight: 700 900;
-  font-style: normal;
-  font-display: swap;
-}
+@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap");
 
 :root {
   color-scheme: dark;

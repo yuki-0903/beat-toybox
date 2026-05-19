@@ -1,120 +1,75 @@
 # Codex Workflow
 
-This project is designed to be developed with Codex in small, reviewable steps.
+This repository now uses `main` and `develop`.
 
-## Core Rules
+## Branch Policy
 
-- Work one GitHub Issue at a time.
-- Create a working branch for each Issue.
-- Branch names must use this format:
+- `main`: stable pushed state.
+- `develop`: active development base.
+- feature branches: create from `develop`.
+
+Recommended feature branch format:
 
 ```txt
-feature/#<issue-number>
+feature/#<issue-number>-short-name
 ```
 
 Example:
 
 ```txt
-feature/#12
+feature/#2-game-feel
 ```
 
-- Confirm changes locally with the user before pushing.
-- Do not push or deploy until the user says OK.
-- Do not add unrequested features.
-- Do not silently change gameplay specs.
-- Ask or propose before making UI/UX changes that affect feel, layout, controls, or presentation.
-- Keep unrelated files out of the commit.
-- Do not revert user changes unless explicitly requested.
+## Issue Workflow
 
-## Standard Flow
+1. Pick one GitHub Issue.
+2. Create a branch from `develop`.
+3. Implement only that scope.
+4. Run checks.
+5. Confirm in the local browser with the user when the change is visual or gameplay-related.
+6. Commit.
+7. Push the branch.
+8. Open a PR into `develop`.
 
-1. Check the target Issue.
-2. Create or switch to the Issue branch.
-3. Implement only the requested scope.
-4. Run local checks.
-5. Start the local dev server when visual confirmation is needed.
-6. Let the user confirm in the browser.
-7. After user approval, commit.
-8. Merge or push as requested.
-9. Deploy to GitHub Pages only after user approval.
-10. Comment the Issue with a concise summary.
-11. Close the Issue.
+Merge to `main` only when the user wants a stable checkpoint.
 
-## Local Confirmation
+## Required Local Checks
 
-Before push or deploy, confirm:
-
-- The user can view the change locally.
-- The browser console has no relevant errors.
-- The change matches the user's requested direction.
-- UI changes have been visually checked.
-- Mobile behavior is checked when the change affects layout, input, or scale.
-
-## Issue Completion Comment Format
-
-Use this format when closing an Issue:
-
-```md
-## 対応内容
-
-* 
-* 
-* 
-
-## 変更ファイル
-
-* 
-* 
-
-## 確認項目
-
-* [x] PC動作確認
-* [x] スマホ動作確認
-* [x] コンソールエラーなし
-
-## 補足
-
-* 
-```
-
-## Push / Deploy Rule
-
-Do not push or deploy automatically.
-
-Push and GitHub Pages deployment should happen only after the user says something like:
-
-- `OK`
-- `pushお願い`
-- `GitHub Pagesまでお願い`
-- `アップして`
-
-## UI Adjustment Rule
-
-For UI, controls, animations, and game feel:
-
-- Make one focused change at a time.
-- Let the user check it locally.
-- Iterate from user feedback.
-- Avoid adding new UI concepts without confirmation.
-
-## Recommended Verification
-
-Run at least:
+Run:
 
 ```bash
+npm run typecheck
 npm run lint
 ```
 
-When changing build config, routing, asset paths, or deployment:
+When assets change, also run:
 
 ```bash
-npm run build
+npm run validate:assets
 ```
 
-## Git Hygiene
+## Local Server
 
-- Keep commits focused.
-- Do not include generated build output.
-- Do not include unrelated notes unless requested.
-- Leave unrelated untracked files alone.
-- If the worktree has unexpected changes, inspect before editing the same files.
+Run:
+
+```bash
+npm run dev -- -H 0.0.0.0 -p 3000
+```
+
+Use `-H 0.0.0.0` when checking on a phone on the same network.
+
+## Visual Confirmation
+
+Before considering UI/gameplay work done:
+
+- check the in-app browser
+- check SP portrait when controls/layout are affected
+- check console errors
+- verify text readability
+- verify hit areas after moving buttons
+
+## Push / Deploy Rule
+
+Do not push or deploy unless the user asks.
+
+GitHub Pages deployment is not automatic work unless explicitly requested.

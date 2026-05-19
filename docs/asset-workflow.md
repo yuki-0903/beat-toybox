@@ -1,104 +1,164 @@
 # Asset Workflow
 
-Use this guide when generating or importing game assets.
+Use this guide when adding or replacing theme assets.
 
-## Directory Rules
+## Runtime Asset Root
 
-Put runtime assets under:
+All runtime assets live under:
 
 ```txt
 public/assets/
   audio/
-  images/
-  sprites/
+  charts/
+  fonts/
+  themes/
+```
+
+Tiny Toy Sprint assets live under:
+
+```txt
+public/assets/themes/tiny_toy_sprint/
+  background/
+  characters/
+  effects/
+  items/
+  lanes/
+  obstacles/
   ui/
 ```
 
-Use clear, purpose-based names:
+## Asset Config
+
+Theme asset keys are defined in:
 
 ```txt
-player_idle.png
-button_start.png
-enemy_drone_01.png
-pickup_recovery_01.png
-se_collect.mp3
+game/config/themeAssets.ts
 ```
 
-Avoid vague names like:
+The game loads assets by key. Do not hard-code image paths inside scenes when a theme asset key can be used.
+
+Example:
+
+```ts
+this.currentThemeAssets.ui.parts.buttonPrimary
+this.currentThemeAssets.characters.spriteSheets.left
+this.currentThemeAssets.items.star
+```
+
+## Theme Config
+
+Theme colors and world metadata are defined in:
 
 ```txt
-image1.png
-final.png
-new_new.png
+game/config/themes.ts
 ```
 
-## Phaser Asset Paths
+Only `tiny-toy-sprint` has a full production asset set now. Other theme ids fall back to Tiny Toy Sprint assets until their own files are added.
 
-Do not hard-code `/assets/...`.
+## Naming Rule
 
-Use helpers in:
+Use:
 
 ```txt
-game/config/assets.ts
+tinytoy_category_name_variant.ext
 ```
 
-This keeps GitHub Pages paths working.
+Examples:
 
-## AI Generated Image Issues
+```txt
+tinytoy_character_runner_red_front_sheet_01.png
+tinytoy_ui_button_primary_red_01.png
+tinytoy_item_keyboard_car_01.png
+tinytoy_bg_start_sp_musicband_01.png
+```
 
-AI-generated transparent PNG assets often have:
+## Current Important Assets
 
-- white edges
-- jagged outlines
-- uneven transparent padding
-- glow cut off by the crop
-- too much detail for small gameplay size
+### Characters
 
-Before using generated assets:
+The current characters are front-facing music-band toys.
 
-1. Trim unnecessary transparent margins.
-2. Keep the object centered.
-3. Preserve glow.
-4. Check for white or pale edge pixels.
-5. Test the asset over the actual game background.
-6. Check the asset at the size it appears in gameplay.
+Runtime sprite sheets:
 
-## White Edge / Jagged Edge Fixes
+```txt
+public/assets/themes/tiny_toy_sprint/characters/tinytoy_character_runner_red_front_sheet_01.png
+public/assets/themes/tiny_toy_sprint/characters/tinytoy_character_runner_yellow_front_sheet_01.png
+public/assets/themes/tiny_toy_sprint/characters/tinytoy_character_runner_blue_front_sheet_01.png
+```
 
-Options:
+Each sheet uses 512x512 frames.
 
-- regenerate with stronger transparent-background instructions
-- crop and clean edges manually
-- reduce pale edge alpha
-- add matching glow behind the asset
-- use a silhouette-friendly design
-- avoid tiny high-detail objects
+### UI
 
-Important gameplay objects should be recognizable by silhouette, not detail.
+Important UI parts:
 
-## UI Images + Text
+```txt
+public/assets/themes/tiny_toy_sprint/ui/parts/tinytoy_ui_button_primary_red_01.png
+public/assets/themes/tiny_toy_sprint/ui/parts/tinytoy_ui_song_card_large_01.png
+public/assets/themes/tiny_toy_sprint/ui/parts/tinytoy_ui_difficulty_easy_01.png
+public/assets/themes/tiny_toy_sprint/ui/parts/tinytoy_ui_difficulty_normal_01.png
+public/assets/themes/tiny_toy_sprint/ui/parts/tinytoy_ui_difficulty_hard_01.png
+public/assets/themes/tiny_toy_sprint/ui/parts/tinytoy_ui_arrow_left_toy_gray_01.svg
+public/assets/themes/tiny_toy_sprint/ui/parts/tinytoy_ui_icon_gear_01.png
+```
 
-When placing Phaser text over UI images:
+### Fonts
 
-- scale the panel and text together
-- use `screenScale`
-- keep enough vertical padding
-- test large numbers and long labels
-- avoid text-only placeholder UI when image UI is required
+Fredoka is bundled locally:
 
-Panel, text, and hit area should be laid out from the same measurements.
+```txt
+public/assets/fonts/Fredoka-Regular.ttf
+public/assets/fonts/Fredoka-SemiBold.ttf
+public/assets/fonts/Fredoka-Bold.ttf
+```
 
-## Mobile Visibility
+CSS registration lives in `app/globals.css`.
 
-Assets that look good on desktop may be unreadable on mobile.
+## Source Images
 
-Check:
+Some generated source sheets are stored under `source/` directories.
 
-- small gameplay size
-- dark background
-- bright background
-- motion
-- glow visibility
-- color separation from the environment
+Keep source images when they help regenerate or recut sprite sheets. Avoid referencing `source/` files directly in game runtime.
 
-For important pickups or hazards, choose colors that contrast with the main background palette.
+## Validation
+
+Run:
+
+```bash
+npm run validate:assets
+```
+
+This checks every asset listed in `game/config/themeAssets.ts`.
+
+For a markdown report:
+
+```bash
+npm run report:assets
+```
+
+## Dashboard
+
+The asset dashboard is available at:
+
+```txt
+/assets
+```
+
+Implementation:
+
+```txt
+app/assets/page.tsx
+```
+
+## AI Generated Image Notes
+
+Generated assets often need cleanup:
+
+- keep silhouettes readable at mobile size
+- avoid tiny details
+- avoid text baked into assets unless the user explicitly asks
+- preserve transparent padding
+- check over the actual game background
+- prefer strong outer rims for buttons and panels
+
+For UI, decide early whether text is baked into the image or drawn by Phaser. Do not use both.

@@ -1,97 +1,97 @@
 # Troubleshooting
 
-Common problems found while building Phaser + Next.js browser games.
+Common issues in this Next.js + Phaser project.
 
-## Phaser Must Be Client Only
+## Next Dev Missing Chunk
 
-Phaser depends on browser APIs, so it should not run during SSR.
-
-Use:
-
-- a client component
-- `next/dynamic`
-- `ssr: false`
-- dynamic `await import("phaser")` inside `createGame`
-
-Recommended pattern:
-
-```tsx
-const PhaserGame = dynamic(
-  async () => {
-    const { PhaserGameClient } = await import("@/components/PhaserGameClient");
-    return PhaserGameClient;
-  },
-  { ssr: false }
-);
-```
-
-And inside game creation:
-
-```ts
-const PhaserRuntime = await import("phaser");
-return new PhaserRuntime.Game(config);
-```
-
-Avoid importing Phaser into server components.
-
-## Dev Server / .next Inconsistency
-
-Sometimes Next.js dev/build can show errors like:
+Symptoms:
 
 ```txt
 Cannot find module './819.js'
-Cannot find module './682.js'
-GET /_next/static/chunks/main-app.js 404
+Cannot find module './276.js'
+GET /_next/static/... 404
 ```
 
-This usually means `.next` or the dev server has stale build output.
+This usually means the Next dev output is stale.
 
-Recommended recovery:
+Fix:
 
 1. Stop the dev server.
-2. Start it again.
-3. If still broken, delete `.next`.
-4. Run `npm run dev` again.
+2. Delete `.next`.
+3. Start dev again.
 
 ```bash
 rm -rf .next
-npm run dev
+npm run dev -- -H 0.0.0.0 -p 3000
 ```
 
-Do not debug gameplay code first when the missing file is inside `.next`.
+## Phone Cannot Open Localhost
 
-## GitHub Pages Deployment 404
+Use the Mac LAN IP instead of `localhost`.
 
-If GitHub Actions deploy fails with:
+Start dev with:
+
+```bash
+npm run dev -- -H 0.0.0.0 -p 3000
+```
+
+Then open:
 
 ```txt
-Failed to create deployment (status: 404)
-Ensure GitHub Pages has been enabled
+http://<mac-lan-ip>:3000
 ```
 
-Check repository settings:
+Both devices must be on the same network.
 
-1. Open GitHub repository settings.
-2. Go to Pages.
-3. Set Source to GitHub Actions.
-4. Re-run the workflow.
+## Phaser Must Stay Client-Side
 
-The workflow alone is not enough if Pages is not enabled.
+Phaser depends on browser APIs.
 
-## Asset Path Problems
+Do not import Phaser into server components. Keep Phaser inside the client game bootstrapping path.
 
-On GitHub Pages, hard-coded paths like this may fail:
+## Asset Missing
 
-```ts
-"/assets/image.png"
+Run:
+
+```bash
+npm run validate:assets
 ```
 
-Use the shared asset helpers:
+If an asset key fails:
 
-```ts
-import { IMAGE_ASSET_BASE } from "@/game/config/assets";
+1. Check `game/config/themeAssets.ts`.
+2. Check the file exists under `public/assets/themes/...`.
+3. Check PNG/SVG extension matches the path.
+4. Restart dev if the asset was just added.
 
-this.load.image("key", `${IMAGE_ASSET_BASE}/image.png`);
+## Ranking JSON
+
+Local/server runtime rankings use:
+
+```txt
+app/api/rankings/route.ts
+data/rankings.json
 ```
 
-This keeps local development and GitHub Pages working with the same code.
+This is useful for local shared testing, but it is not a production database. A static export or GitHub Pages deployment cannot persist writes to this JSON file at runtime.
+
+## Git Push Fails With HTTP 500
+
+Large image asset pushes may fail with:
+
+```txt
+RPC failed; HTTP 500
+send-pack: unexpected disconnect
+```
+
+Retry after setting:
+
+```bash
+git config http.postBuffer 524288000
+git config http.version HTTP/1.1
+git push
+```
+
+## Browser Audio Does Not Play
+
+Audio must start after a user gesture. Enter gameplay from the menu before expecting BGM/SE to play.
