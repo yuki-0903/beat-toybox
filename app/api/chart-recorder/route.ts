@@ -1,6 +1,7 @@
 import { mkdir, writeFile } from "fs/promises";
 import path from "path";
 import { NextResponse } from "next/server";
+import { CHART_RECORDER_ENABLED } from "@/game/config/features";
 
 function slugify(value: string) {
   return value
@@ -11,6 +12,10 @@ function slugify(value: string) {
 }
 
 export async function POST(request: Request) {
+  if (!CHART_RECORDER_ENABLED) {
+    return NextResponse.json({ error: "Chart recorder is disabled" }, { status: 403 });
+  }
+
   const payload = (await request.json().catch(() => null)) as
     | {
         chartId?: string;

@@ -1,5 +1,6 @@
 import * as Phaser from "phaser";
 import { GAME_BALANCE } from "@/game/config/balance";
+import { CHART_RECORDER_ENABLED } from "@/game/config/features";
 import { BACKGROUND_COLOR, BASE_GAME_HEIGHT, BASE_GAME_WIDTH } from "@/game/config/gameConfig";
 import { SONGS, type SongDefinition } from "@/game/config/songs";
 import { THEME_ASSETS, type ThemeAssetConfig } from "@/game/config/themeAssets";
@@ -4666,6 +4667,10 @@ export class MainScene extends Phaser.Scene {
   }
 
   private isChartRecorderMode() {
+    if (!CHART_RECORDER_ENABLED) {
+      return false;
+    }
+
     if (typeof window === "undefined") {
       return false;
     }
