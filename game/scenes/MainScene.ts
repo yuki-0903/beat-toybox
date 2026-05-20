@@ -177,6 +177,11 @@ interface RankingEntry {
   createdAt: string;
 }
 
+interface RecordedChartTap {
+  time: number;
+  lane: number;
+}
+
 const DIFFICULTY_SETTINGS: Record<
   DifficultyId,
   {
@@ -218,13 +223,14 @@ const TRACK_FEVER_SCROLL_SPEED = 0.58;
 const NORMAL_GAMEPLAY_THEME_ID: ThemeId = "techno-industrial";
 const FEVER_GAMEPLAY_THEME_ID: ThemeId = "dnb-neon-city";
 const JUDGE_WINDOWS_SECONDS = {
-  perfect: 0.08,
-  good: 0.15,
-  nice: 0.24
+  perfect: 0.12,
+  good: 0.24,
+  nice: 0.46
 };
-const RUN_START_DELAY_MS = 760;
+const RUN_START_DELAY_MS = 1800;
 const RUN_FINISH_DELAY_MS = 1050;
 const LAYOUT_DEBUG_STORAGE_KEY = "beat-runner-layout-debug-v1";
+const CHART_RECORDER_OFFSET_SECONDS = 0;
 const toColorNumber = (hexColor: string) => Number.parseInt(hexColor.replace("#", ""), 16);
 
 type LayoutDebugState = {
@@ -284,6 +290,7 @@ export class MainScene extends Phaser.Scene {
   private feedbackLabel?: Phaser.GameObjects.Text;
   private startLabel?: Phaser.GameObjects.Text;
   private resultLabel?: Phaser.GameObjects.Text;
+  private recorderStatusLabel?: Phaser.GameObjects.Text;
   private debugDensityLabel?: Phaser.GameObjects.Text;
   private debugSpeedLabel?: Phaser.GameObjects.Text;
   private debugLayoutLabels: Phaser.GameObjects.Text[] = [];
@@ -329,6 +336,9 @@ export class MainScene extends Phaser.Scene {
   private debugSpeedLevel = 0;
   private layoutDebug: LayoutDebugState = { ...DEFAULT_LAYOUT_DEBUG };
   private readonly feverBackgroundState = { alpha: 0 };
+  private chartRecorderEnabled = false;
+  private recordedChartTaps: RecordedChartTap[] = [];
+  private recorderSavedPath = "";
   private lastMissEffectAt = 0;
   private lastLayoutRefreshAt = 0;
   private lastFeverCameraBumpAt = 0;
@@ -503,6 +513,7 @@ export class MainScene extends Phaser.Scene {
 
   create() {
     this.cameras.main.setBackgroundColor(BACKGROUND_COLOR);
+    this.chartRecorderEnabled = this.isChartRecorderMode();
     this.inputController = new InputController(this);
     this.loadLayoutDebug();
     this.createPrototypeView();
@@ -514,6 +525,9 @@ export class MainScene extends Phaser.Scene {
     this.yellowPerformanceSe = this.sound.add("se_character_yellow", { volume: 0.86 });
     this.bluePerformanceSe = this.sound.add("se_character_blue", { volume: 0.86 });
     this.loadChart();
+    if (this.chartRecorderEnabled) {
+      this.popFeedback("CHART RECORDER", this.currentTheme.colors.accent);
+    }
     this.layout();
     this.input.keyboard?.on("keydown", this.handleKeyDown);
     this.input.on("pointerdown", this.handlePointerDown);
@@ -718,6 +732,18 @@ export class MainScene extends Phaser.Scene {
       .setAlpha(0)
       .setDepth(330)
       .setLineSpacing(8);
+
+    this.recorderStatusLabel = this.add
+      .text(0, 0, "", {
+        fontFamily: UI_FONT,
+        fontStyle: "900",
+        color: theme.colors.accent,
+        align: "center"
+      })
+      .setOrigin(0.5)
+      .setAlpha(0)
+      .setDepth(360)
+      .setLineSpacing(4);
 
     this.debugDensityLabel = this.add
       .text(0, 0, "", {
@@ -1047,6 +1073,13 @@ export class MainScene extends Phaser.Scene {
       ?.setPosition(width / 2, height * 0.46)
       .setFontSize(Math.round(24 * screenScale));
 
+    this.recorderStatusLabel
+      ?.setPosition(width / 2, height - 74 * Math.max(screenScale, 0.9))
+      .setFontSize(Math.round(Phaser.Math.Clamp(16 * Math.max(screenScale, 0.9), 13, 22)))
+      .setColor(theme.colors.accent)
+      .setText(this.getRecorderStatusText())
+      .setAlpha(this.chartRecorderEnabled ? 1 : 0);
+
     this.layoutSongButtons();
     this.layoutDifficultyButtons();
     this.layoutDebugButtons();
@@ -1078,6 +1111,26 @@ export class MainScene extends Phaser.Scene {
     }
 
     return "SELECT LEVEL";
+  }
+
+  private getRecorderStatusText() {
+    if (!this.chartRecorderEnabled) {
+      return "";
+    }
+
+    if (this.gameStarted) {
+      return `REC ${this.recordedChartTaps.length} taps  A/S/D`;
+    }
+
+    if (this.recorderSavedPath) {
+      return `Saved ${this.recorderSavedPath}`;
+    }
+
+    if (this.gameEnded) {
+      return `Recorded ${this.recordedChartTaps.length} taps`;
+    }
+
+    return "RECORDER MODE - choose a song, start, then play A/S/D";
   }
 
   private layoutBackgroundImages(track: TrackLayout) {
@@ -1492,7 +1545,6 @@ export class MainScene extends Phaser.Scene {
     const minCenterY = titleY + titleLayoutHeight * 0.5 + buttonHeight * 1.15;
     const maxCenterY = height - buttonHeight * 2.3;
     const centerY = Phaser.Math.Clamp(desiredCenterY, minCenterY, maxCenterY);
-    const startX = width / 2 - totalWidth / 2 + buttonWidth / 2;
     const isSelectable = !this.gameStarted && !this.gameEnded && this.menuStep === "difficulty";
 
     this.difficultyTitleImage
@@ -1501,28 +1553,33 @@ export class MainScene extends Phaser.Scene {
       .setVisible(isSelectable);
     this.fitImageInBox(this.difficultyTitleImage, titleWidth, titleHeight);
 
+    const startX = width / 2 - totalWidth / 2 + buttonWidth / 2;
+
     this.difficultyButtons.forEach((button, index) => {
       const selected = button.id === this.selectedDifficulty;
       const x = startX + index * (buttonWidth + gap);
       const fillColor = selected ? this.themeColor("accent") : this.themeColor("trackAlt");
       const strokeColor = selected ? this.themeColor("line") : this.themeColor("primary");
+      const alpha = isSelectable ? 1 : 0;
 
       button.background
         .setPosition(x, centerY)
         .setSize(buttonWidth, buttonHeight)
         .setFillStyle(fillColor, button.assetImage ? 0 : selected ? 1 : 0.92)
         .setStrokeStyle(2 * screenScale, strokeColor, button.assetImage ? 0 : selected ? 0.95 : 0.65)
-        .setAlpha(isSelectable ? 1 : 0);
+        .setAlpha(alpha);
 
       button.assetImage
         ?.setPosition(x, centerY)
         .setAlpha(isSelectable && !selected ? 0.92 : 0)
-        .setVisible(isSelectable);
+        .setVisible(alpha > 0);
+      button.assetImage?.setTint(0xffffff);
       this.fitImageInBox(button.assetImage, buttonWidth * 1.35, buttonHeight * 2.05);
       button.selectedAssetImage
         ?.setPosition(x, centerY)
         .setAlpha(isSelectable && selected ? 1 : 0)
-        .setVisible(isSelectable);
+        .setVisible(alpha > 0);
+      button.selectedAssetImage?.setTint(0xffffff);
       this.fitImageInBox(button.selectedAssetImage, buttonWidth * 1.5, buttonHeight * 2.28);
 
       button.label
@@ -2022,7 +2079,7 @@ export class MainScene extends Phaser.Scene {
   }
 
   private trySelectDifficulty(x: number, y: number) {
-    const targetButton = this.difficultyButtons.find((button) => button.background.getBounds().contains(x, y));
+    const targetButton = this.difficultyButtons.find((button) => button.background.alpha > 0 && button.background.getBounds().contains(x, y));
     if (!targetButton) {
       return false;
     }
@@ -2096,7 +2153,7 @@ export class MainScene extends Phaser.Scene {
 
   private selectDifficulty(difficulty: DifficultyId) {
     this.selectedDifficulty = difficulty;
-    this.rebuildDifficultyChart();
+    this.loadChart();
     this.popFeedback(DIFFICULTY_SETTINGS[difficulty].label, this.currentTheme.colors.secondary);
     this.layout();
   }
@@ -2582,8 +2639,11 @@ export class MainScene extends Phaser.Scene {
     this.gameStarted = true;
     this.gameEnded = false;
     this.finishPending = false;
+    this.recordedChartTaps = [];
+    this.recorderSavedPath = "";
     this.rebuildDifficultyChart();
-    this.startTime = this.time.now + RUN_START_DELAY_MS;
+    const runStartDelayMs = RUN_START_DELAY_MS;
+    this.startTime = this.time.now + runStartDelayMs;
     this.nextChartIndex = 0;
     this.nextItemIndex = 0;
     this.judgedGroupIds.clear();
@@ -2602,9 +2662,13 @@ export class MainScene extends Phaser.Scene {
     this.setFeverActive(false);
     this.clearObstacles();
     this.clearItems();
+    if (this.chartRecorderEnabled) {
+      this.chartObstacles = [];
+      this.chartItems = [];
+    }
 
     this.bgm?.stop();
-    this.time.delayedCall(RUN_START_DELAY_MS, () => {
+    this.time.delayedCall(runStartDelayMs, () => {
       if (!this.gameStarted || this.finishPending) {
         return;
       }
@@ -2634,7 +2698,7 @@ export class MainScene extends Phaser.Scene {
   }
 
   private loadChart() {
-    const rawChart = this.cache.json.get(this.selectedSong.chartKey) as BeatmapChart | undefined;
+    const rawChart = this.cache.json.get(this.selectedChartKey) as BeatmapChart | undefined;
     if (!rawChart) {
       return;
     }
@@ -2661,6 +2725,12 @@ export class MainScene extends Phaser.Scene {
   }
 
   private createAuthoredDifficultyObstacles(chart: BeatmapChart) {
+    if (this.selectedSong.preserveAuthoredChart) {
+      return chart.obstacles
+        .filter((obstacle) => obstacle.lane >= 0 && obstacle.lane < GAME_BALANCE.laneCount)
+        .sort((a, b) => a.time - b.time);
+    }
+
     const baseRatio = 1 / DIFFICULTY_SETTINGS[this.selectedDifficulty].authoredStep;
     const targetRatio = Phaser.Math.Clamp(baseRatio * this.debugDensityFactor, 0.08, 0.75);
     let accumulator = 0;
@@ -2762,6 +2832,10 @@ export class MainScene extends Phaser.Scene {
   }
 
   private updateChartSpawns() {
+    if (this.chartRecorderEnabled) {
+      return;
+    }
+
     const chart = this.chart;
     if (!chart) {
       return;
@@ -2826,6 +2900,20 @@ export class MainScene extends Phaser.Scene {
 
   private finishRun() {
     if (this.gameEnded || !this.finishPending) {
+      return;
+    }
+
+    if (this.chartRecorderEnabled) {
+      this.gameStarted = false;
+      this.gameEnded = true;
+      this.finishPending = false;
+      this.bgm?.stop();
+      this.clearObstacles();
+      this.clearItems();
+      this.setFeverActive(false);
+      this.showRecordedChartResult("SAVING...");
+      this.layout();
+      void this.saveRecordedChart();
       return;
     }
 
@@ -2899,6 +2987,67 @@ export class MainScene extends Phaser.Scene {
       this.layout();
     } catch {
       // Ranking is optimistic locally; gameplay should never fail if the server is unavailable.
+    }
+  }
+
+  private async saveRecordedChart() {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const chartId = `${this.selectedSong.id}-played`;
+    const laneTypes = ["music_note_red", "music_note_yellow", "music_note_blue"];
+    const duration = this.roundChartTime(this.chart?.duration ?? this.songTimeSeconds);
+    const chart = {
+      id: chartId,
+      title: this.selectedSong.title,
+      bpm: this.selectedSong.bpm,
+      lanes: GAME_BALANCE.laneCount,
+      duration,
+      approachTime: this.chart?.approachTime ?? 1.6,
+      chartMode: "performance",
+      difficulty: this.selectedDifficulty,
+      globalOffsetSeconds: CHART_RECORDER_OFFSET_SECONDS,
+      notes: "Recorded in gameplay recorder mode.",
+      obstacles: this.recordedChartTaps
+        .map((tap) => ({
+          time: this.roundChartTime(Math.max(0, tap.time + CHART_RECORDER_OFFSET_SECONDS)),
+          lane: tap.lane,
+          type: laneTypes[tap.lane] ?? "music_note_yellow",
+          pattern: "single",
+          energy: 0.55,
+          soundOnDodge: "note"
+        }))
+        .sort((a, b) => a.time - b.time || a.lane - b.lane),
+      items: []
+    };
+
+    try {
+      const response = await fetch(this.chartRecorderApiPath, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          chartId,
+          difficulty: this.selectedDifficulty,
+          chart
+        })
+      });
+      const payload = (await response.json().catch(() => null)) as { path?: string; error?: string } | null;
+
+      if (!response.ok) {
+        this.showRecordedChartResult(payload?.error ?? "SAVE FAILED");
+        this.layout();
+        return;
+      }
+
+      this.recorderSavedPath = payload?.path ?? "Saved";
+      this.showRecordedChartResult(this.recorderSavedPath);
+      this.layout();
+    } catch {
+      this.showRecordedChartResult("SAVE FAILED");
+      this.layout();
     }
   }
 
@@ -3464,6 +3613,20 @@ export class MainScene extends Phaser.Scene {
     this.pruneLaneInputHistory(lane, now - 1);
   }
 
+  private recordChartTap(lane: number) {
+    if (!this.chartRecorderEnabled || !this.gameStarted || this.finishPending) {
+      return;
+    }
+
+    const time = this.roundChartTime(this.songTimeSeconds);
+    if (time < 0) {
+      return;
+    }
+
+    this.recordedChartTaps.push({ time, lane });
+    this.recorderStatusLabel?.setText(this.getRecorderStatusText());
+  }
+
   private pruneLaneInputHistory(lane: number, minTime: number) {
     const history = this.laneInputHistory[lane];
     if (!history) {
@@ -3924,6 +4087,27 @@ export class MainScene extends Phaser.Scene {
     });
   }
 
+  private showRecordedChartResult(status: string) {
+    const label = this.resultLabel;
+    if (!label) {
+      return;
+    }
+
+    this.tweens.killTweensOf(label);
+    label
+      .setText(["REC FINISH", this.selectedSong.shortTitle, `${this.recordedChartTaps.length} TAPS`, status, "TAP TO MENU"].join("\n"))
+      .setAlpha(0)
+      .setScale(0.92);
+
+    this.tweens.add({
+      targets: label,
+      alpha: 1,
+      scale: 1,
+      duration: 260,
+      ease: "Back.Out"
+    });
+  }
+
   private flashRunner(lane: number) {
     const runner = this.runners[lane];
     if (!runner) {
@@ -4080,6 +4264,14 @@ export class MainScene extends Phaser.Scene {
 
   private get selectedSong() {
     return SONGS[this.selectedSongIndex] ?? SONGS[0];
+  }
+
+  private get selectedChartKey() {
+    if (this.selectedSong.chartFiles?.[this.selectedDifficulty]) {
+      return `${this.selectedSong.chartKey}_${this.selectedDifficulty}`;
+    }
+
+    return this.selectedSong.chartKey;
   }
 
   private get currentTheme(): ThemeConfig {
@@ -4469,6 +4661,23 @@ export class MainScene extends Phaser.Scene {
     return `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/rankings`;
   }
 
+  private get chartRecorderApiPath() {
+    return `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/chart-recorder`;
+  }
+
+  private isChartRecorderMode() {
+    if (typeof window === "undefined") {
+      return false;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    return params.get("record") === "1";
+  }
+
+  private roundChartTime(value: number) {
+    return Math.round(value * 1000) / 1000;
+  }
+
   private get songTimeSeconds() {
     return (this.time.now - this.startTime) / 1000;
   }
@@ -4491,7 +4700,17 @@ export class MainScene extends Phaser.Scene {
   }
 
   private tryJumpFromPointer(x: number, y: number) {
-    const targetButton = this.jumpButtons.find((button) => button.background.getBounds().contains(x, y));
+    const hitButtons = this.jumpButtons.filter((button) => button.background.getBounds().contains(x, y));
+    const targetButton = hitButtons.reduce<JumpButton | undefined>((nearestButton, button) => {
+      if (!nearestButton) {
+        return button;
+      }
+
+      const nearestDistance = Math.abs(x - nearestButton.background.x);
+      const buttonDistance = Math.abs(x - button.background.x);
+      return buttonDistance < nearestDistance ? button : nearestButton;
+    }, undefined);
+
     if (targetButton) {
       this.jumpRunner(targetButton.lane);
       return;
@@ -4535,6 +4754,7 @@ export class MainScene extends Phaser.Scene {
     }
 
     this.recordLaneInput(lane);
+    this.recordChartTap(lane);
     runner.isJumping = true;
     this.playPerformanceSe(lane);
     this.setRunnerVisualState(lane, "jump");

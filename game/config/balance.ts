@@ -26,5 +26,5 @@ export const GAME_BALANCE = {
   obstacleJudgeZ: 0.58,
   obstacleBaseWidth: 46,
   obstacleBaseHeight: 32,
-  feverComboThreshold: 4
+  feverComboThreshold: 50
 };

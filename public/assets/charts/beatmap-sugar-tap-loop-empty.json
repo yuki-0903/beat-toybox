@@ -1,0 +1,14 @@
+{
+  "id": "sugar-tap-loop",
+  "title": "Sugar Tap Loop",
+  "bpm": 120,
+  "lanes": 3,
+  "duration": 24.864,
+  "approachTime": 1.6,
+  "chartMode": "performance",
+  "difficulty": "recording",
+  "globalOffsetSeconds": 0,
+  "notes": "Empty starter chart for gameplay recording mode.",
+  "obstacles": [],
+  "items": []
+}
