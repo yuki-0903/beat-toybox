@@ -1,0 +1,14 @@
+{
+  "id": "tiny-parade-loop",
+  "title": "Tiny Parade Loop",
+  "bpm": 120,
+  "lanes": 3,
+  "duration": 47.832,
+  "approachTime": 1.6,
+  "chartMode": "performance",
+  "difficulty": "recording",
+  "globalOffsetSeconds": 0,
+  "notes": "Empty starter chart for gameplay recording mode.",
+  "obstacles": [],
+  "items": []
+}

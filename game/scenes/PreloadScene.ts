@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
 import { AUDIO_ASSET_BASE, CHART_ASSET_BASE, IMAGE_ASSET_BASE } from "@/game/config/assets";
-import { SONGS } from "@/game/config/songs";
+import { SONGS, type SongDifficulty } from "@/game/config/songs";
 import { getThemeAssetEntries } from "@/game/config/themeAssets";
 import { gameEvents } from "@/game/systems/GameEvents";
 
@@ -30,7 +30,13 @@ export class PreloadScene extends Phaser.Scene {
 
     SONGS.forEach((song) => {
       this.load.audio(song.audioKey, [`${AUDIO_ASSET_BASE}/${song.audioFile}`]);
-      this.load.json(song.chartKey, `${CHART_ASSET_BASE}/${song.chartFile}`);
+      if (song.chartFiles) {
+        (Object.entries(song.chartFiles) as Array<[SongDifficulty, string]>).forEach(([difficulty, chartFile]) => {
+          this.load.json(`${song.chartKey}_${difficulty}`, `${CHART_ASSET_BASE}/${chartFile}`);
+        });
+      } else {
+        this.load.json(song.chartKey, `${CHART_ASSET_BASE}/${song.chartFile}`);
+      }
       if (song.thumbnailKey && song.thumbnailFile) {
         this.load.image(song.thumbnailKey, `${IMAGE_ASSET_BASE}/${song.thumbnailFile}`);
       }

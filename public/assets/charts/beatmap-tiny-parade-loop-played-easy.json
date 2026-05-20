@@ -1,0 +1,439 @@
+{
+  "id": "tiny-parade-loop-easy",
+  "title": "Tiny Parade Loop",
+  "bpm": 120,
+  "lanes": 3,
+  "duration": 47.832,
+  "approachTime": 1.6,
+  "chartMode": "performance",
+  "globalOffsetSeconds": 0,
+  "items": [],
+  "difficulty": "easy",
+  "notes": "Codex-authored EASY chart for Tiny Parade Loop. Replaces recorded user chart. Mobile-safe: no three-lane simultaneous clusters.",
+  "obstacles": [
+    {
+      "time": 2,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "accent",
+      "energy": 0.72,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 3,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 4,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 5,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 6,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "accent",
+      "energy": 0.72,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 7,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 8,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 9,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 10,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "accent",
+      "energy": 0.72,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 11,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 12,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 13,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 14,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "accent",
+      "energy": 0.72,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 15,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 16,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 17,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 18,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "accent",
+      "energy": 0.72,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 19,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 20,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 21,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 21.5,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 22,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "accent",
+      "energy": 0.72,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 22.5,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 23.5,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 24.5,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 25.25,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "pickup",
+      "energy": 0.48,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 26,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "accent",
+      "energy": 0.72,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 27,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 28,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 29,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 29.5,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 30,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "accent",
+      "energy": 0.72,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 30.5,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 31.5,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 32.5,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 33.25,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "pickup",
+      "energy": 0.48,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 34,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "accent",
+      "energy": 0.72,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 35,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 36,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 37,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 37.5,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 38,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "accent",
+      "energy": 0.72,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 38.5,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 39.5,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 40.5,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 41.25,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "pickup",
+      "energy": 0.48,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 42,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "accent",
+      "energy": 0.72,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 43,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 44,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 45,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 45.5,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 46,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "accent",
+      "energy": 0.72,
+      "soundOnDodge": "note"
+    },
+    {
+      "time": 46.5,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55,
+      "soundOnDodge": "note"
+    }
+  ]
+}

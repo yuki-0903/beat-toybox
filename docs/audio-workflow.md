@@ -34,8 +34,8 @@ Current examples:
 
 ```txt
 bgm_main.mp3
-bgm_track_1.mp3
-bgm_track_2.mp3
+tiny-parade-loop.mp3
+sugar-tap-loop.mp3
 bgm_midnight_mini_mart.wav
 bgm_sushi_techno.wav
 ```

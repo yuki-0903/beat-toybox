@@ -1,27 +1,19 @@
 {
-  "id": "coin-pop-parade-hard",
+  "id": "coin-pop-parade-normal",
   "title": "Coin Pop Parade",
   "bpm": 152,
   "lanes": 3,
   "duration": 39.6,
   "approachTime": 1.6,
   "chartMode": "performance",
-  "difficulty": "hard",
+  "difficulty": "normal",
   "globalOffsetSeconds": 0,
-  "notes": "Codex-authored HARD chart expanded from the base rhythm chart. Mobile cleanup: removed 1 near-simultaneous third-lane cue(s).",
+  "notes": "Codex-authored NORMAL chart derived from the HARD rhythm chart.",
   "obstacles": [
     {
       "time": 1.152,
       "lane": 2,
       "type": "music_note_blue",
-      "pattern": "single",
-      "energy": 0.55,
-      "soundOnDodge": "note"
-    },
-    {
-      "time": 1.942,
-      "lane": 0,
-      "type": "music_note_red",
       "pattern": "single",
       "energy": 0.55,
       "soundOnDodge": "note"
@@ -43,14 +35,6 @@
       "soundOnDodge": "note"
     },
     {
-      "time": 3.521,
-      "lane": 0,
-      "type": "music_note_red",
-      "pattern": "single",
-      "energy": 0.55,
-      "soundOnDodge": "note"
-    },
-    {
       "time": 4.31,
       "lane": 2,
       "type": "music_note_blue",
@@ -62,14 +46,6 @@
       "time": 5.1,
       "lane": 0,
       "type": "music_note_red",
-      "pattern": "single",
-      "energy": 0.55,
-      "soundOnDodge": "note"
-    },
-    {
-      "time": 5.889,
-      "lane": 2,
-      "type": "music_note_blue",
       "pattern": "single",
       "energy": 0.55,
       "soundOnDodge": "note"
@@ -91,14 +67,6 @@
       "soundOnDodge": "note"
     },
     {
-      "time": 7.468,
-      "lane": 2,
-      "type": "music_note_blue",
-      "pattern": "single",
-      "energy": 0.55,
-      "soundOnDodge": "note"
-    },
-    {
       "time": 7.863,
       "lane": 1,
       "type": "music_note_yellow",
@@ -110,14 +78,6 @@
       "time": 8.258,
       "lane": 0,
       "type": "music_note_red",
-      "pattern": "single",
-      "energy": 0.72,
-      "soundOnDodge": "note"
-    },
-    {
-      "time": 8.652,
-      "lane": 1,
-      "type": "music_note_yellow",
       "pattern": "single",
       "energy": 0.72,
       "soundOnDodge": "note"
@@ -139,14 +99,6 @@
       "soundOnDodge": "note"
     },
     {
-      "time": 9.837,
-      "lane": 0,
-      "type": "music_note_red",
-      "pattern": "single",
-      "energy": 0.72,
-      "soundOnDodge": "note"
-    },
-    {
       "time": 10.231,
       "lane": 1,
       "type": "music_note_yellow",
@@ -163,14 +115,6 @@
       "soundOnDodge": "note"
     },
     {
-      "time": 10.824,
-      "lane": 1,
-      "type": "music_note_yellow",
-      "pattern": "offbeat",
-      "energy": 0.77,
-      "soundOnDodge": "note"
-    },
-    {
       "time": 11.021,
       "lane": 1,
       "type": "music_note_yellow",
@@ -182,14 +126,6 @@
       "time": 11.416,
       "lane": 0,
       "type": "music_note_red",
-      "pattern": "single",
-      "energy": 0.72,
-      "soundOnDodge": "note"
-    },
-    {
-      "time": 11.81,
-      "lane": 1,
-      "type": "music_note_yellow",
       "pattern": "single",
       "energy": 0.72,
       "soundOnDodge": "note"
@@ -211,14 +147,6 @@
       "soundOnDodge": "note"
     },
     {
-      "time": 12.995,
-      "lane": 0,
-      "type": "music_note_red",
-      "pattern": "single",
-      "energy": 0.72,
-      "soundOnDodge": "note"
-    },
-    {
       "time": 13.389,
       "lane": 1,
       "type": "music_note_yellow",
@@ -232,14 +160,6 @@
       "type": "music_note_blue",
       "pattern": "single",
       "energy": 0.72,
-      "soundOnDodge": "note"
-    },
-    {
-      "time": 13.981,
-      "lane": 1,
-      "type": "music_note_yellow",
-      "pattern": "offbeat",
-      "energy": 0.77,
       "soundOnDodge": "note"
     },
     {
@@ -259,14 +179,6 @@
       "soundOnDodge": "note"
     },
     {
-      "time": 14.968,
-      "lane": 2,
-      "type": "music_note_blue",
-      "pattern": "single",
-      "energy": 0.72,
-      "soundOnDodge": "note"
-    },
-    {
       "time": 15.153,
       "lane": 0,
       "type": "music_note_red",
@@ -280,14 +192,6 @@
       "type": "music_note_blue",
       "pattern": "double",
       "energy": 0.95,
-      "soundOnDodge": "note"
-    },
-    {
-      "time": 15.363,
-      "lane": 2,
-      "type": "music_note_blue",
-      "pattern": "single",
-      "energy": 0.72,
       "soundOnDodge": "note"
     },
     {
@@ -302,14 +206,6 @@
       "time": 16.152,
       "lane": 0,
       "type": "music_note_red",
-      "pattern": "single",
-      "energy": 0.72,
-      "soundOnDodge": "note"
-    },
-    {
-      "time": 16.547,
-      "lane": 1,
-      "type": "music_note_yellow",
       "pattern": "single",
       "energy": 0.72,
       "soundOnDodge": "note"
@@ -331,14 +227,6 @@
       "soundOnDodge": "note"
     },
     {
-      "time": 17.337,
-      "lane": 1,
-      "type": "music_note_yellow",
-      "pattern": "single",
-      "energy": 0.72,
-      "soundOnDodge": "note"
-    },
-    {
       "time": 17.731,
       "lane": 0,
       "type": "music_note_red",
@@ -348,14 +236,6 @@
     },
     {
       "time": 18.126,
-      "lane": 2,
-      "type": "music_note_blue",
-      "pattern": "single",
-      "energy": 0.72,
-      "soundOnDodge": "note"
-    },
-    {
-      "time": 18.521,
       "lane": 2,
       "type": "music_note_blue",
       "pattern": "single",
@@ -379,14 +259,6 @@
       "soundOnDodge": "note"
     },
     {
-      "time": 19.705,
-      "lane": 1,
-      "type": "music_note_yellow",
-      "pattern": "single",
-      "energy": 0.72,
-      "soundOnDodge": "note"
-    },
-    {
       "time": 20.1,
       "lane": 2,
       "type": "music_note_blue",
@@ -403,14 +275,6 @@
       "soundOnDodge": "note"
     },
     {
-      "time": 20.495,
-      "lane": 1,
-      "type": "music_note_yellow",
-      "pattern": "single",
-      "energy": 0.72,
-      "soundOnDodge": "note"
-    },
-    {
       "time": 20.889,
       "lane": 0,
       "type": "music_note_red",
@@ -420,14 +284,6 @@
     },
     {
       "time": 21.284,
-      "lane": 2,
-      "type": "music_note_blue",
-      "pattern": "single",
-      "energy": 0.72,
-      "soundOnDodge": "note"
-    },
-    {
-      "time": 21.679,
       "lane": 2,
       "type": "music_note_blue",
       "pattern": "single",
@@ -451,14 +307,6 @@
       "soundOnDodge": "note"
     },
     {
-      "time": 22.271,
-      "lane": 0,
-      "type": "music_note_red",
-      "pattern": "offbeat",
-      "energy": 0.95,
-      "soundOnDodge": "note"
-    },
-    {
       "time": 22.468,
       "lane": 0,
       "type": "music_note_red",
@@ -476,14 +324,6 @@
     },
     {
       "time": 23.052,
-      "lane": 0,
-      "type": "music_note_red",
-      "pattern": "double",
-      "energy": 0.95,
-      "soundOnDodge": "note"
-    },
-    {
-      "time": 23.052,
       "lane": 2,
       "type": "music_note_blue",
       "pattern": "double",
@@ -494,14 +334,6 @@
       "time": 23.258,
       "lane": 0,
       "type": "music_note_red",
-      "pattern": "single",
-      "energy": 0.9,
-      "soundOnDodge": "note"
-    },
-    {
-      "time": 23.652,
-      "lane": 1,
-      "type": "music_note_yellow",
       "pattern": "single",
       "energy": 0.9,
       "soundOnDodge": "note"
@@ -523,14 +355,6 @@
       "soundOnDodge": "note"
     },
     {
-      "time": 24.442,
-      "lane": 1,
-      "type": "music_note_yellow",
-      "pattern": "single",
-      "energy": 0.9,
-      "soundOnDodge": "note"
-    },
-    {
       "time": 24.639,
       "lane": 2,
       "type": "music_note_blue",
@@ -542,14 +366,6 @@
       "time": 24.837,
       "lane": 2,
       "type": "music_note_blue",
-      "pattern": "single",
-      "energy": 0.9,
-      "soundOnDodge": "note"
-    },
-    {
-      "time": 25.231,
-      "lane": 1,
-      "type": "music_note_yellow",
       "pattern": "single",
       "energy": 0.9,
       "soundOnDodge": "note"
@@ -571,14 +387,6 @@
       "soundOnDodge": "note"
     },
     {
-      "time": 26.021,
-      "lane": 1,
-      "type": "music_note_yellow",
-      "pattern": "single",
-      "energy": 0.9,
-      "soundOnDodge": "note"
-    },
-    {
       "time": 26.21,
       "lane": 0,
       "type": "music_note_red",
@@ -592,14 +400,6 @@
       "type": "music_note_blue",
       "pattern": "double",
       "energy": 0.95,
-      "soundOnDodge": "note"
-    },
-    {
-      "time": 26.416,
-      "lane": 2,
-      "type": "music_note_blue",
-      "pattern": "single",
-      "energy": 0.9,
       "soundOnDodge": "note"
     },
     {
@@ -619,14 +419,6 @@
       "soundOnDodge": "note"
     },
     {
-      "time": 27.205,
-      "lane": 0,
-      "type": "music_note_red",
-      "pattern": "single",
-      "energy": 0.9,
-      "soundOnDodge": "note"
-    },
-    {
       "time": 27.6,
       "lane": 1,
       "type": "music_note_yellow",
@@ -640,14 +432,6 @@
       "type": "music_note_blue",
       "pattern": "offbeat",
       "energy": 0.95,
-      "soundOnDodge": "note"
-    },
-    {
-      "time": 27.995,
-      "lane": 0,
-      "type": "music_note_red",
-      "pattern": "single",
-      "energy": 0.9,
       "soundOnDodge": "note"
     },
     {
@@ -667,14 +451,6 @@
       "soundOnDodge": "note"
     },
     {
-      "time": 28.784,
-      "lane": 0,
-      "type": "music_note_red",
-      "pattern": "single",
-      "energy": 0.9,
-      "soundOnDodge": "note"
-    },
-    {
       "time": 29.179,
       "lane": 1,
       "type": "music_note_yellow",
@@ -688,14 +464,6 @@
       "type": "music_note_blue",
       "pattern": "offbeat",
       "energy": 0.95,
-      "soundOnDodge": "note"
-    },
-    {
-      "time": 29.574,
-      "lane": 2,
-      "type": "music_note_blue",
-      "pattern": "single",
-      "energy": 0.9,
       "soundOnDodge": "note"
     },
     {
@@ -715,10 +483,10 @@
       "soundOnDodge": "note"
     },
     {
-      "time": 30.157,
-      "lane": 2,
-      "type": "music_note_blue",
-      "pattern": "double",
+      "time": 30.166,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "offbeat",
       "energy": 0.95,
       "soundOnDodge": "note"
     },
@@ -726,14 +494,6 @@
       "time": 30.363,
       "lane": 2,
       "type": "music_note_blue",
-      "pattern": "single",
-      "energy": 0.9,
-      "soundOnDodge": "note"
-    },
-    {
-      "time": 30.758,
-      "lane": 1,
-      "type": "music_note_yellow",
       "pattern": "single",
       "energy": 0.9,
       "soundOnDodge": "note"
@@ -755,14 +515,6 @@
       "soundOnDodge": "note"
     },
     {
-      "time": 31.547,
-      "lane": 1,
-      "type": "music_note_yellow",
-      "pattern": "single",
-      "energy": 0.9,
-      "soundOnDodge": "note"
-    },
-    {
       "time": 31.745,
       "lane": 0,
       "type": "music_note_red",
@@ -774,14 +526,6 @@
       "time": 31.942,
       "lane": 0,
       "type": "music_note_red",
-      "pattern": "single",
-      "energy": 0.9,
-      "soundOnDodge": "note"
-    },
-    {
-      "time": 32.337,
-      "lane": 1,
-      "type": "music_note_yellow",
       "pattern": "single",
       "energy": 0.9,
       "soundOnDodge": "note"
@@ -803,14 +547,6 @@
       "soundOnDodge": "note"
     },
     {
-      "time": 33.126,
-      "lane": 1,
-      "type": "music_note_yellow",
-      "pattern": "single",
-      "energy": 0.9,
-      "soundOnDodge": "note"
-    },
-    {
       "time": 33.324,
       "lane": 1,
       "type": "music_note_yellow",
@@ -822,14 +558,6 @@
       "time": 33.521,
       "lane": 0,
       "type": "music_note_red",
-      "pattern": "single",
-      "energy": 0.65,
-      "soundOnDodge": "note"
-    },
-    {
-      "time": 34.31,
-      "lane": 2,
-      "type": "music_note_blue",
       "pattern": "single",
       "energy": 0.65,
       "soundOnDodge": "note"
@@ -851,14 +579,6 @@
       "soundOnDodge": "note"
     },
     {
-      "time": 35.889,
-      "lane": 2,
-      "type": "music_note_blue",
-      "pattern": "single",
-      "energy": 0.65,
-      "soundOnDodge": "note"
-    },
-    {
       "time": 36.679,
       "lane": 0,
       "type": "music_note_red",
@@ -870,14 +590,6 @@
       "time": 37.074,
       "lane": 1,
       "type": "music_note_yellow",
-      "pattern": "single",
-      "energy": 0.65,
-      "soundOnDodge": "note"
-    },
-    {
-      "time": 37.468,
-      "lane": 2,
-      "type": "music_note_blue",
       "pattern": "single",
       "energy": 0.65,
       "soundOnDodge": "note"
