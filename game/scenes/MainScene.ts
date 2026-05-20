@@ -106,6 +106,18 @@ type DebugAction =
   | "densityUp"
   | "speedDown"
   | "speedUp"
+  | "laneWidthDown"
+  | "laneWidthUp"
+  | "depthDown"
+  | "depthUp"
+  | "characterSizeDown"
+  | "characterSizeUp"
+  | "laneAngleDown"
+  | "laneAngleUp"
+  | "bgXDown"
+  | "bgXUp"
+  | "feverModeDown"
+  | "feverModeUp"
   | "trackYDown"
   | "trackYUp"
   | "farYDown"
@@ -230,7 +242,8 @@ const JUDGE_WINDOWS_SECONDS = {
 };
 const RUN_START_DELAY_MS = 1800;
 const RUN_FINISH_DELAY_MS = 1050;
-const LAYOUT_DEBUG_STORAGE_KEY = "beat-runner-layout-debug-v1";
+const LAYOUT_DEBUG_STORAGE_KEY = "beat-runner-layout-debug-v3";
+const LAYOUT_DEBUG_BASE_NEAR_W = 11;
 const CHART_RECORDER_OFFSET_SECONDS = 0;
 const toColorNumber = (hexColor: string) => Number.parseInt(hexColor.replace("#", ""), 16);
 
@@ -239,15 +252,19 @@ type LayoutDebugState = {
   farY: number;
   farW: number;
   nearW: number;
+  characterSize: number;
+  bgX: number;
   bgY: number;
   bgScale: number;
 };
 
 const DEFAULT_LAYOUT_DEBUG: LayoutDebugState = {
   trackY: -10,
-  farY: 1,
-  farW: 3,
-  nearW: 11,
+  farY: 15,
+  farW: -24,
+  nearW: 27,
+  characterSize: 0,
+  bgX: -2,
   bgY: 1,
   bgScale: 2
 };
@@ -294,6 +311,7 @@ export class MainScene extends Phaser.Scene {
   private recorderStatusLabel?: Phaser.GameObjects.Text;
   private debugDensityLabel?: Phaser.GameObjects.Text;
   private debugSpeedLabel?: Phaser.GameObjects.Text;
+  private debugLayoutPanel?: Phaser.GameObjects.Rectangle;
   private debugLayoutLabels: Phaser.GameObjects.Text[] = [];
   private songButtons: SongButton[] = [];
   private songSelectTitleImage?: Phaser.GameObjects.Image;
@@ -374,6 +392,10 @@ export class MainScene extends Phaser.Scene {
     }
 
     const pointerPosition = this.getPointerWorldPoint(pointer);
+    if (this.tryPressDebugButton(pointerPosition.x, pointerPosition.y)) {
+      return;
+    }
+
     this.tryJumpFromPointer(pointerPosition.x, pointerPosition.y);
   };
   private readonly handleKeyDown = (event: KeyboardEvent) => {
@@ -520,11 +542,11 @@ export class MainScene extends Phaser.Scene {
     this.createPrototypeView();
     this.loadRankings();
     this.createSelectedBgm();
-    this.moveSe = this.sound.add("se_move_beat", { volume: 0.68 });
-    this.itemSe = this.sound.add("se_item_collect", { volume: 0.76 });
-    this.redPerformanceSe = this.sound.add("se_character_red", { volume: 0.86 });
-    this.yellowPerformanceSe = this.sound.add("se_character_yellow", { volume: 0.86 });
-    this.bluePerformanceSe = this.sound.add("se_character_blue", { volume: 0.86 });
+    this.moveSe = this.createSoundIfLoaded("se_move_beat", { volume: 0.68 });
+    this.itemSe = this.createSoundIfLoaded("se_item_collect", { volume: 0.76 });
+    this.redPerformanceSe = this.createSoundIfLoaded("se_character_red", { volume: 0.86 });
+    this.yellowPerformanceSe = this.createSoundIfLoaded("se_character_yellow", { volume: 0.86 });
+    this.bluePerformanceSe = this.createSoundIfLoaded("se_character_blue", { volume: 0.86 });
     this.loadChart();
     if (this.chartRecorderEnabled) {
       this.popFeedback("CHART RECORDER", this.currentTheme.colors.accent);
@@ -549,11 +571,9 @@ export class MainScene extends Phaser.Scene {
     this.updateChartSpawns();
     if (this.itemsEnabled) {
       this.updateItemSpawns();
-    }
-    this.updateObstacles();
-    if (this.itemsEnabled) {
       this.updateItems();
     }
+    this.updateObstacles();
     const track = this.getTrackLayout();
     this.layoutBackgroundImages(track);
     this.drawTrack(track);
@@ -766,6 +786,13 @@ export class MainScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setDepth(316);
 
+    this.debugLayoutPanel = this.add
+      .rectangle(0, 0, 1, 1, this.themeColor("surface"), 0.82)
+      .setOrigin(0.5)
+      .setAlpha(0)
+      .setDepth(314);
+    this.debugLayoutPanel.setStrokeStyle(2, this.themeColor("line"), 0.55);
+
     this.debugLayoutLabels = Array.from({ length: 6 }, () =>
       this.add
         .text(0, 0, "", {
@@ -872,6 +899,18 @@ export class MainScene extends Phaser.Scene {
         "densityUp",
         "speedDown",
         "speedUp",
+        "laneWidthDown",
+        "laneWidthUp",
+        "depthDown",
+        "depthUp",
+        "characterSizeDown",
+        "characterSizeUp",
+        "laneAngleDown",
+        "laneAngleUp",
+        "bgXDown",
+        "bgXUp",
+        "feverModeDown",
+        "feverModeUp",
         "trackYDown",
         "trackYUp",
         "farYDown",
@@ -1192,14 +1231,13 @@ export class MainScene extends Phaser.Scene {
     const source = images[0].texture.getSourceImage() as HTMLImageElement | HTMLCanvasElement;
     const sourceWidth = source.width || width;
     const sourceHeight = source.height || height;
-    const coverScale = Math.max(width / sourceWidth, height / sourceHeight) * (1 + this.layoutDebug.bgScale * 0.035);
+    const coverScale = Math.max(width / sourceWidth, height / sourceHeight);
     const displayWidth = sourceWidth * coverScale;
     const displayHeight = sourceHeight * coverScale;
-    const y = height / 2 + height * this.layoutDebug.bgY * 0.01;
 
     images.forEach((image, index) => {
       image
-        .setPosition(width / 2, y)
+        .setPosition(width / 2, height / 2)
         .setDisplaySize(displayWidth, displayHeight)
         .setAlpha(isVisible && index === 0 ? 0.88 : 0)
         .setVisible(isVisible && index === 0);
@@ -1233,11 +1271,13 @@ export class MainScene extends Phaser.Scene {
     const texture = image.texture.getSourceImage() as HTMLImageElement | HTMLCanvasElement;
     const sourceWidth = texture.width || width;
     const sourceHeight = texture.height || height;
-    const scale = Math.max(width / sourceWidth, height / sourceHeight);
+    const scale = Math.max(width / sourceWidth, height / sourceHeight) * (1 + this.layoutDebug.bgScale * 0.035);
     const alpha = isActiveOrientation ? this.feverBackgroundState.alpha : 0;
+    const x = width / 2 + width * this.layoutDebug.bgX * 0.01;
+    const y = height / 2 + height * this.layoutDebug.bgY * 0.01;
 
     image
-      .setPosition(width / 2, height / 2)
+      .setPosition(x, y)
       .setDisplaySize(sourceWidth * scale, sourceHeight * scale)
       .setAlpha(alpha)
       .setVisible(alpha > 0.01);
@@ -1273,6 +1313,7 @@ export class MainScene extends Phaser.Scene {
     const { width, height } = this.scale;
     const screenScale = this.screenScale;
     const theme = this.currentTheme;
+    const isDesktopLandscape = this.isDesktopLandscape;
     const isStartScreen = this.menuStep === "start" && !this.gameStarted && !this.gameEnded;
     const isSongScreen = this.menuStep === "song" && !this.gameStarted && !this.gameEnded;
     const isDifficultyScreen = this.menuStep === "difficulty" && !this.gameStarted && !this.gameEnded;
@@ -1280,15 +1321,15 @@ export class MainScene extends Phaser.Scene {
     const buttonWidth = isStartScreen
       ? Math.min(width * (this.isPortrait ? 0.78 : 0.34), 420 * startButtonScale)
       : isDifficultyScreen
-        ? Math.min(width * (this.isPortrait ? 0.68 : 0.3), 350 * Math.max(screenScale, 0.9))
+        ? Math.min(width * (this.isPortrait ? 0.68 : isDesktopLandscape ? 0.26 : 0.3), (isDesktopLandscape ? 300 : 350) * Math.max(screenScale, 0.9))
         : Math.min(width * 0.72, 280 * screenScale);
-    const buttonHeight = isStartScreen ? 82 * startButtonScale : isDifficultyScreen ? 68 * Math.max(screenScale, 0.9) : 54 * screenScale;
-    const difficultyStartButtonWidth = Math.min(width * (this.isPortrait ? 0.78 : 0.34), 420 * Math.max(screenScale, 0.9));
-    const difficultyStartButtonHeight = 82 * Math.max(screenScale, 0.9);
+    const buttonHeight = isStartScreen ? 82 * startButtonScale : isDifficultyScreen ? (isDesktopLandscape ? 58 : 68) * Math.max(screenScale, 0.9) : 54 * screenScale;
+    const difficultyStartButtonWidth = Math.min(width * (this.isPortrait ? 0.78 : isDesktopLandscape ? 0.28 : 0.34), (isDesktopLandscape ? 300 : 420) * Math.max(screenScale, 0.9));
+    const difficultyStartButtonHeight = (isDesktopLandscape ? 64 : 82) * Math.max(screenScale, 0.9);
     const iconSize = Math.round(Phaser.Math.Clamp(68 * startButtonScale, 58, this.isPortrait ? 82 : 76));
     const textSize = Math.round(Phaser.Math.Clamp((isStartScreen ? 27 : isDifficultyScreen ? 25 : 18) * Math.max(startButtonScale, 0.9), 15, 36));
     const centerX = width / 2;
-    const startY = isStartScreen ? height * (this.isPortrait ? 0.73 : 0.75) : isDifficultyScreen ? height * (this.isPortrait ? 0.64 : 0.66) : height * 0.55;
+    const startY = isStartScreen ? height * (this.isPortrait ? 0.73 : 0.75) : isDifficultyScreen ? height * (this.isPortrait ? 0.64 : isDesktopLandscape ? 0.8 : 0.66) : height * 0.55;
     const iconY = isStartScreen ? height * (this.isPortrait ? 0.86 : 0.88) : startY + 78 * startButtonScale;
     const iconGap = iconSize * (this.isPortrait ? 1.36 : 1.48);
 
@@ -1332,7 +1373,7 @@ export class MainScene extends Phaser.Scene {
           : isRankingUtilityButton
             ? rankingPanelBottom + 18 * Math.max(screenScale, 0.9) + rankingUtilityButtonSize / 2
             : isLowerRightSettingButton
-              ? height * (this.isPortrait ? 0.9 : 0.86)
+              ? height * (this.isPortrait ? 0.9 : isDesktopLandscape && isDifficultyScreen ? 0.9 : 0.86)
             : isIconAction
             ? iconY
             : height * 0.84;
@@ -1534,17 +1575,18 @@ export class MainScene extends Phaser.Scene {
   private layoutDifficultyButtons() {
     const { width, height } = this.scale;
     const screenScale = this.screenScale;
-    const titleWidth = Math.min(width * 0.75, 470 * Math.max(screenScale, 0.9));
+    const isDesktopLandscape = this.isDesktopLandscape;
+    const titleWidth = isDesktopLandscape ? Math.min(width * 0.43, 330) : Math.min(width * 0.75, 470 * Math.max(screenScale, 0.9));
     const titleHeight = titleWidth * 0.6;
-    const titleLayoutHeight = titleWidth * 0.36;
-    const titleY = height * (this.isPortrait ? 0.19 : 0.17);
-    const totalWidth = Math.min(width * 0.9, 390 * Math.max(screenScale, 0.9));
-    const gap = 10 * screenScale;
+    const titleLayoutHeight = titleWidth * (isDesktopLandscape ? 0.28 : 0.36);
+    const titleY = height * (this.isPortrait ? 0.19 : isDesktopLandscape ? 0.16 : 0.17);
+    const totalWidth = isDesktopLandscape ? Math.min(width * 0.46, 340) : Math.min(width * 0.9, 390 * Math.max(screenScale, 0.9));
+    const gap = (isDesktopLandscape ? 8 : 10) * screenScale;
     const buttonWidth = (totalWidth - gap * 2) / 3;
-    const buttonHeight = 104 * Math.max(screenScale, 0.9);
-    const desiredCenterY = height * (this.isPortrait ? 0.47 : 0.49);
-    const minCenterY = titleY + titleLayoutHeight * 0.5 + buttonHeight * 1.15;
-    const maxCenterY = height - buttonHeight * 2.3;
+    const buttonHeight = (isDesktopLandscape ? 82 : 104) * Math.max(screenScale, 0.9);
+    const desiredCenterY = height * (this.isPortrait ? 0.47 : isDesktopLandscape ? 0.55 : 0.49);
+    const minCenterY = titleY + titleLayoutHeight * 0.5 + buttonHeight * (isDesktopLandscape ? 1.06 : 1.15);
+    const maxCenterY = height - buttonHeight * (isDesktopLandscape ? 2.55 : 2.3);
     const centerY = Phaser.Math.Clamp(desiredCenterY, minCenterY, maxCenterY);
     const isSelectable = !this.gameStarted && !this.gameEnded && this.menuStep === "difficulty";
 
@@ -1594,32 +1636,34 @@ export class MainScene extends Phaser.Scene {
     const { width, height } = this.scale;
     const screenScale = this.screenScale;
     const theme = this.currentTheme;
+    const isDesktopLandscape = this.isDesktopLandscape;
     const isSelectable = !this.gameStarted && !this.gameEnded && this.menuStep === "song";
     const isTitleVisible = !this.gameStarted && !this.gameEnded && this.menuStep === "song";
     const centerX = width / 2;
-    const titleWidth = Math.min(width * 0.75, 470 * Math.max(screenScale, 0.9));
+    const titleWidth = isDesktopLandscape ? Math.min(width * 0.43, 330) : Math.min(width * 0.75, 470 * Math.max(screenScale, 0.9));
     const titleHeight = titleWidth * 0.6;
-    const titleLayoutHeight = titleWidth * 0.36;
-    const titleY = height * (this.isPortrait ? 0.18 : 0.16);
-    const cardWidth = this.isPortrait ? Math.min(width * 0.56, 250) : Math.min(width * 0.26, 270);
+    const titleLayoutHeight = titleWidth * (isDesktopLandscape ? 0.28 : 0.36);
+    const titleY = height * (this.isPortrait ? 0.18 : isDesktopLandscape ? 0.12 : 0.16);
+    const titleDisplayY = isDesktopLandscape ? height * 0.15 : titleY;
+    const cardWidth = this.isPortrait ? Math.min(width * 0.56, 250) : isDesktopLandscape ? Math.min(width * 0.215, 198) : Math.min(width * 0.26, 270);
     const cardHeight = cardWidth * (806 / 450);
     const sideWidth = cardWidth * 0.58;
     const sideHeight = sideWidth * (806 / 450);
-    const desiredCardY = height * (this.isPortrait ? 0.53 : 0.53);
-    const minCardY = titleY + titleLayoutHeight * 0.5 + cardHeight * 0.52 + 18 * screenScale;
-    const maxCardY = height - cardHeight * 0.58 - 58 * screenScale;
+    const desiredCardY = height * (this.isPortrait ? 0.53 : isDesktopLandscape ? 0.51 : 0.53);
+    const minCardY = titleY + titleLayoutHeight * 0.5 + cardHeight * 0.52 + (isDesktopLandscape ? 6 : 18) * screenScale;
+    const maxCardY = height - cardHeight * 0.58 - (isDesktopLandscape ? 72 : 58) * screenScale;
     const cardY = Phaser.Math.Clamp(desiredCardY, minCardY, maxCardY);
-    const sideOffsetX = Math.min(width * 0.28, cardWidth * 0.72);
+    const sideOffsetX = isDesktopLandscape ? cardWidth * 0.58 : Math.min(width * 0.28, cardWidth * 0.72);
     const sideY = cardY + cardHeight * 0.02;
-    const arrowSize = Math.round(Phaser.Math.Clamp(72 * Math.max(screenScale, 0.86), 62, 86));
+    const arrowSize = Math.round(Phaser.Math.Clamp((isDesktopLandscape ? 72 : 72) * Math.max(screenScale, 0.86), isDesktopLandscape ? 62 : 62, isDesktopLandscape ? 82 : 86));
     const arrowY = cardY;
-    const arrowOffsetX = Math.min(width * 0.43, cardWidth * 0.98);
+    const arrowOffsetX = isDesktopLandscape ? cardWidth * 1.08 : Math.min(width * 0.43, cardWidth * 0.98);
     const currentIndex = this.selectedSongIndex;
     const previousIndex = (currentIndex - 1 + SONGS.length) % SONGS.length;
     const nextIndex = (currentIndex + 1) % SONGS.length;
 
     this.songSelectTitleImage
-      ?.setPosition(centerX, titleY)
+      ?.setPosition(centerX, titleDisplayY)
       .setAlpha(isTitleVisible ? 0.98 : 0)
       .setVisible(isTitleVisible);
     this.fitImageInBox(this.songSelectTitleImage, titleWidth, titleHeight);
@@ -1794,51 +1838,39 @@ export class MainScene extends Phaser.Scene {
     const { width, height } = this.scale;
     const screenScale = this.screenScale;
     const isVisible = false;
-    const buttonSize = 34 * Math.max(screenScale, 0.82);
-    const labelWidth = Math.min(width * 0.46, 220 * Math.max(screenScale, 0.82));
-    const gap = 6 * Math.max(screenScale, 0.82);
-    const centerX = width / 2;
-    const startY = height * (this.isPortrait ? 0.5 : 0.5);
-    const rowGap = (this.isPortrait ? 31 : 28) * Math.max(screenScale, 0.82);
-    const textSize = Math.round(Phaser.Math.Clamp(13 * Math.max(screenScale, 0.82), 11, 18));
-    const rows: Array<{ actions: [DebugAction, DebugAction]; label: string; y: number; labelObject?: Phaser.GameObjects.Text }> = [
+    const buttonSize = 30 * Math.max(screenScale, 0.82);
+    const labelWidth = Math.min(width * 0.18, 128 * Math.max(screenScale, 0.82));
+    const gap = 5 * Math.max(screenScale, 0.82);
+    const centerX = width - Math.min(width * 0.17, 164 * Math.max(screenScale, 0.82));
+    const startY = height * 0.44;
+    const rowGap = 34 * Math.max(screenScale, 0.82);
+    const textSize = Math.round(Phaser.Math.Clamp(12 * Math.max(screenScale, 0.82), 10, 16));
+    const rows: Array<{ actions: [DebugAction, DebugAction]; label: string; y: number; labelObject?: Phaser.GameObjects.Text; buttonText?: [string, string] }> = [
       {
-        actions: ["trackYDown", "trackYUp"],
-        label: `TRACK Y ${this.layoutDebug.trackY}`,
+        actions: ["bgXDown", "bgXUp"],
+        label: `BG X ${this.layoutDebug.bgX}`,
         y: startY,
         labelObject: this.debugLayoutLabels[0]
       },
       {
-        actions: ["farYDown", "farYUp"],
-        label: `FAR Y ${this.layoutDebug.farY}`,
+        actions: ["bgYDown", "bgYUp"],
+        label: `BG Y ${this.layoutDebug.bgY}`,
         y: startY + rowGap,
         labelObject: this.debugLayoutLabels[1]
       },
       {
-        actions: ["farWDown", "farWUp"],
-        label: `FAR W ${this.layoutDebug.farW}`,
+        actions: ["feverModeDown", "feverModeUp"],
+        label: `MODE FEVER`,
         y: startY + rowGap * 2,
-        labelObject: this.debugLayoutLabels[2]
-      },
-      {
-        actions: ["nearWDown", "nearWUp"],
-        label: `NEAR W ${this.layoutDebug.nearW}`,
-        y: startY + rowGap * 3,
-        labelObject: this.debugLayoutLabels[3]
-      },
-      {
-        actions: ["bgYDown", "bgYUp"],
-        label: `BG Y ${this.layoutDebug.bgY}`,
-        y: startY + rowGap * 4,
-        labelObject: this.debugLayoutLabels[4]
-      },
-      {
-        actions: ["bgScaleDown", "bgScaleUp"],
-        label: `BG SCALE ${this.layoutDebug.bgScale}`,
-        y: startY + rowGap * 5,
-        labelObject: this.debugLayoutLabels[5]
+        labelObject: this.debugLayoutLabels[2],
+        buttonText: ["N", "F"]
       }
     ];
+
+    this.debugLayoutPanel
+      ?.setPosition(centerX, startY + rowGap)
+      .setSize(labelWidth + buttonSize * 2 + gap * 4, rowGap * 3 + 24 * Math.max(screenScale, 0.82))
+      .setAlpha(isVisible ? 1 : 0);
 
     this.debugButtons.forEach((button) => {
       button.background.setAlpha(0);
@@ -1855,15 +1887,15 @@ export class MainScene extends Phaser.Scene {
       const downX = centerX - labelWidth / 2 - buttonSize / 2 - gap;
       const upX = centerX + labelWidth / 2 + buttonSize / 2 + gap;
 
-      this.layoutDebugButton(downButton, downX, row.y, buttonSize, textSize, isVisible, "-");
-      this.layoutDebugButton(upButton, upX, row.y, buttonSize, textSize, isVisible, "+");
+      this.layoutDebugButton(downButton, downX, row.y, buttonSize, textSize, isVisible, row.buttonText?.[0] ?? "-");
+      this.layoutDebugButton(upButton, upX, row.y, buttonSize, textSize, isVisible, row.buttonText?.[1] ?? "+");
 
       if (!downButton || !upButton) {
         return;
       }
 
-      downButton.label.setText("-");
-      upButton.label.setText("+");
+      downButton.label.setText(row.buttonText?.[0] ?? "-");
+      upButton.label.setText(row.buttonText?.[1] ?? "+");
       row.labelObject
         ?.setPosition(centerX, row.y)
         .setFontSize(textSize)
@@ -1971,16 +2003,18 @@ export class MainScene extends Phaser.Scene {
   private layoutJumpButtons() {
     const { width, height } = this.scale;
     const screenScale = this.screenScale;
-    const buttonSize = Phaser.Math.Clamp(width * 0.38, 132 * screenScale, 190 * screenScale);
     const track = this.getTrackLayout();
+    const laneResponsiveScale = this.getLaneResponsiveScale(track);
+    const buttonScale = Phaser.Math.Clamp(laneResponsiveScale * 0.78, 0.48, 0.78);
+    const buttonSize = Phaser.Math.Clamp(width * 0.38 * buttonScale, 76 * screenScale, 142 * screenScale);
     const runnerScreenScale = Math.max(screenScale, this.isPortrait ? RUNNER_MIN_SCREEN_SCALE : screenScale);
-    const playerScale = Phaser.Math.Linear(0.45, 1.16, GAME_BALANCE.playerZ) * runnerScreenScale;
+    const playerScale = Phaser.Math.Linear(0.45, 1.16, GAME_BALANCE.playerZ) * runnerScreenScale * laneResponsiveScale * this.characterDebugScale;
     const runnerBottomOffset = (RUNNER_DISPLAY_HEIGHT * playerScale) / 2;
     const maxButtonY = height - buttonSize * 0.52;
-    const isVisible = this.gameStarted;
+    const isVisible = this.gameStarted && !this.isDesktopLandscape;
 
     this.jumpButtons.forEach((button, index) => {
-      const playerPoint = this.getLaneCenterPoint(track, index, GAME_BALANCE.playerZ);
+      const playerPoint = this.getPlayerLaneCenterPoint(track, index);
       const x = playerPoint.x;
       const centerY = Math.min(playerPoint.y + runnerBottomOffset + buttonSize * 0.5 + 8 * screenScale, maxButtonY);
 
@@ -2123,6 +2157,30 @@ export class MainScene extends Phaser.Scene {
   private adjustLayoutDebug(action: DebugAction) {
     const delta = action.endsWith("Down") ? -1 : 1;
 
+    if (action === "laneWidthDown" || action === "laneWidthUp") {
+      this.layoutDebug.nearW = Phaser.Math.Clamp(this.layoutDebug.nearW + delta, -12, 42);
+    }
+
+    if (action === "depthDown" || action === "depthUp") {
+      this.layoutDebug.farY = Phaser.Math.Clamp(this.layoutDebug.farY + delta, -16, 16);
+    }
+
+    if (action === "characterSizeDown" || action === "characterSizeUp") {
+      this.layoutDebug.characterSize = Phaser.Math.Clamp(this.layoutDebug.characterSize + delta, -8, 10);
+    }
+
+    if (action === "bgXDown" || action === "bgXUp") {
+      this.layoutDebug.bgX = Phaser.Math.Clamp(this.layoutDebug.bgX + delta, -18, 18);
+    }
+
+    if (action === "feverModeDown" || action === "feverModeUp") {
+      this.setFeverActive(action === "feverModeUp", true);
+    }
+
+    if (action === "laneAngleDown" || action === "laneAngleUp") {
+      this.layoutDebug.farW = Phaser.Math.Clamp(this.layoutDebug.farW + delta, -100, 18);
+    }
+
     if (action === "trackYDown" || action === "trackYUp") {
       this.layoutDebug.trackY = Phaser.Math.Clamp(this.layoutDebug.trackY + delta, -16, 16);
     }
@@ -2132,11 +2190,11 @@ export class MainScene extends Phaser.Scene {
     }
 
     if (action === "farWDown" || action === "farWUp") {
-      this.layoutDebug.farW = Phaser.Math.Clamp(this.layoutDebug.farW + delta, -12, 18);
+      this.layoutDebug.farW = Phaser.Math.Clamp(this.layoutDebug.farW + delta, -100, 18);
     }
 
     if (action === "nearWDown" || action === "nearWUp") {
-      this.layoutDebug.nearW = Phaser.Math.Clamp(this.layoutDebug.nearW + delta, -12, 18);
+      this.layoutDebug.nearW = Phaser.Math.Clamp(this.layoutDebug.nearW + delta, -12, 42);
     }
 
     if (action === "bgYDown" || action === "bgYUp") {
@@ -2289,7 +2347,7 @@ export class MainScene extends Phaser.Scene {
     this.clearLaneInputHistory();
     this.lastMissEffectAt = 0;
     this.lastLayoutRefreshAt = 0;
-    this.setFeverActive(false);
+    this.setFeverActive(false, true);
     this.updateRunnerSpriteSheets();
     this.clearObstacles();
     this.clearItems();
@@ -2316,6 +2374,14 @@ export class MainScene extends Phaser.Scene {
     return this.scale.height > this.scale.width;
   }
 
+  private get isDesktopLandscape() {
+    return !this.isPortrait && this.scale.width >= 768;
+  }
+
+  private get judgeZ() {
+    return this.isDesktopLandscape && this.gameStarted ? 0.7 : GAME_BALANCE.obstacleJudgeZ;
+  }
+
   private getTrackLayout(): TrackLayout {
     const { width, height } = this.scale;
     const mode = this.isPortrait ? "portrait" : "landscape";
@@ -2324,16 +2390,27 @@ export class MainScene extends Phaser.Scene {
     const farWidthScale = 1 + this.layoutDebug.farW * 0.035;
     const nearWidthScale = (1 + this.layoutDebug.nearW * 0.035) * (this.gameStarted ? (this.isPortrait ? 1.38 : 1.22) : 1);
 
-    const topY = height * GAME_BALANCE.trackTopYRatio[mode] + trackYOffset + farYOffset;
-    const baseBottomY = height * GAME_BALANCE.trackBottomYRatio[mode] + trackYOffset;
+    const topY = height * (this.isDesktopLandscape && this.gameStarted ? 0.19 : GAME_BALANCE.trackTopYRatio[mode]) + trackYOffset + farYOffset;
+    const baseBottomY = height * (this.isDesktopLandscape && this.gameStarted ? 0.96 : GAME_BALANCE.trackBottomYRatio[mode]) + trackYOffset;
     const bottomY = this.gameStarted ? Math.max(baseBottomY, height * (this.isPortrait ? 1.06 : 1.04)) : baseBottomY;
+    const desktopGameTrackWidthRatio = 0.38;
+    const desktopGameTrackWidthScale = 1 + (this.layoutDebug.nearW - LAYOUT_DEBUG_BASE_NEAR_W) * 0.025;
+    const desktopGameTrackBottomWidth = width * desktopGameTrackWidthRatio * desktopGameTrackWidthScale;
+    const desktopGameTrackTopWidth = desktopGameTrackBottomWidth * 0.18;
+    const desktopGameTrackTopMinWidth = width * 0.012;
+    const topWidth = this.isDesktopLandscape && this.gameStarted
+      ? Math.max(desktopGameTrackTopWidth * farWidthScale, desktopGameTrackTopMinWidth)
+      : Phaser.Math.Clamp(width * GAME_BALANCE.trackTopWidthRatio[mode] * farWidthScale, width * 0.08, width * 0.52);
+    const bottomWidth = this.isDesktopLandscape && this.gameStarted
+      ? desktopGameTrackBottomWidth
+      : Phaser.Math.Clamp(width * GAME_BALANCE.trackBottomWidthRatio[mode] * nearWidthScale, width * 0.5, width * (this.gameStarted ? 1.48 : 1.08));
 
     return {
       centerX: width / 2,
       topY,
       bottomY,
-      topWidth: Phaser.Math.Clamp(width * GAME_BALANCE.trackTopWidthRatio[mode] * farWidthScale, width * 0.08, width * 0.52),
-      bottomWidth: Phaser.Math.Clamp(width * GAME_BALANCE.trackBottomWidthRatio[mode] * nearWidthScale, width * 0.5, width * (this.gameStarted ? 1.48 : 1.08))
+      topWidth,
+      bottomWidth
     };
   }
 
@@ -2344,9 +2421,33 @@ export class MainScene extends Phaser.Scene {
     }
 
     graphics.clear();
+    if (this.isDesktopLandscape && this.gameStarted) {
+      this.drawDesktopGameLanes(graphics, track);
+      return;
+    }
+
     this.drawBackdrop(graphics, track);
     this.drawLaneSurfaces(graphics, track);
     this.drawLaneCenterDashes(graphics, track);
+  }
+
+  private drawDesktopGameLanes(graphics: Phaser.GameObjects.Graphics, track: TrackLayout) {
+    const scale = this.screenScale;
+    const laneAlpha = this.feverActive ? 0.9 : 0.78;
+    const edgeAlpha = this.feverActive ? 0.54 : 0.38;
+
+    for (let boundary = 0; boundary <= GAME_BALANCE.laneCount; boundary += 1) {
+      const start = this.getLaneBoundaryPoint(track, boundary, 0.08);
+      const end = this.getLaneBoundaryPoint(track, boundary, 0.98);
+      const isOuter = boundary === 0 || boundary === GAME_BALANCE.laneCount;
+      graphics.lineStyle(isOuter ? 3.4 * scale : 2.4 * scale, 0xffffff, isOuter ? edgeAlpha : 0.3);
+      graphics.beginPath();
+      graphics.moveTo(start.x, start.y);
+      graphics.lineTo(end.x, end.y);
+      graphics.strokePath();
+    }
+
+    this.drawLaneCenterDashes(graphics, track, laneAlpha);
   }
 
   private drawBackdrop(graphics: Phaser.GameObjects.Graphics, track: TrackLayout) {
@@ -2509,7 +2610,7 @@ export class MainScene extends Phaser.Scene {
     }
   }
 
-  private drawLaneCenterDashes(graphics: Phaser.GameObjects.Graphics, track: TrackLayout) {
+  private drawLaneCenterDashes(graphics: Phaser.GameObjects.Graphics, track: TrackLayout, alphaScale = 1) {
     const dashCount = 12;
     const spacing = 1 / dashCount;
     const offset = 0;
@@ -2526,7 +2627,7 @@ export class MainScene extends Phaser.Scene {
         const end = this.getLaneCenterPoint(track, lane, Phaser.Math.Clamp(z + dashLength, 0, 1));
         const lineWidth = Phaser.Math.Linear(2, 7, z) * this.screenScale;
 
-        graphics.lineStyle(lineWidth, 0xffffff, Phaser.Math.Linear(0.22, 0.7, z));
+        graphics.lineStyle(lineWidth, 0xffffff, Phaser.Math.Linear(0.22, 0.7, z) * alphaScale);
         graphics.beginPath();
         graphics.moveTo(start.x, start.y);
         graphics.lineTo(end.x, end.y);
@@ -2579,14 +2680,15 @@ export class MainScene extends Phaser.Scene {
 
   private layoutPlayers(track: TrackLayout) {
     const runnerScreenScale = Math.max(this.screenScale, this.isPortrait ? RUNNER_MIN_SCREEN_SCALE : this.screenScale);
-    const playerScale = Phaser.Math.Linear(0.45, 1.16, GAME_BALANCE.playerZ) * runnerScreenScale;
+    const playerScale = Phaser.Math.Linear(0.45, 1.16, GAME_BALANCE.playerZ) * runnerScreenScale * this.getLaneResponsiveScale(track) * this.characterDebugScale;
 
     this.runners.forEach((runner) => {
-      const playerPoint = this.getLaneCenterPoint(track, runner.lane, GAME_BALANCE.playerZ);
+      const playerPoint = this.getPlayerLaneCenterPoint(track, runner.lane);
+      const playerY = playerPoint.y + (this.isDesktopLandscape && this.gameStarted ? 58 * this.screenScale : 0);
 
       runner.container.setX(playerPoint.x).setScale(playerScale).setAngle(runner.isJumping ? runner.container.angle : 0);
       if (!runner.isJumping) {
-        runner.container.setY(playerPoint.y);
+        runner.container.setY(playerY);
       }
       runner.body.setFillStyle(this.runnerColor(runner.lane), 1);
       runner.face.setFillStyle(this.themeColor("background"), 1);
@@ -3309,7 +3411,8 @@ export class MainScene extends Phaser.Scene {
     const scale = Phaser.Math.Linear(0.24, 1.22, z) * this.screenScale * (1 + nearPulse);
     const baseSize = this.getPerformanceCueVisualSize(obstacle.lane);
     const laneWidth = right.x - left.x;
-    const visualWidth = Phaser.Math.Clamp((laneWidth / scale) * 1.08, 112, 176);
+    const obstacleSizeScale = this.isDesktopLandscape ? 0.58 : 1;
+    const visualWidth = Phaser.Math.Clamp((laneWidth / scale) * 1.08 * obstacleSizeScale, 64, 176);
     const size = {
       width: visualWidth,
       height: visualWidth * (baseSize.height / baseSize.width)
@@ -3338,7 +3441,8 @@ export class MainScene extends Phaser.Scene {
     const right = this.getLaneBoundaryPoint(track, item.lane + 1, z);
     const scale = Phaser.Math.Linear(0.28, 1.18, z) * this.screenScale;
     const laneWidth = right.x - left.x;
-    const imageSize = Phaser.Math.Clamp((laneWidth / scale) * 1.34, 150, 228);
+    const itemSizeScale = this.isDesktopLandscape ? 0.56 : 1;
+    const imageSize = Phaser.Math.Clamp((laneWidth / scale) * 1.34 * itemSizeScale, 78, 228);
     const runPhase = this.time.now / 82 + item.hitTime * 5 + item.lane * 0.7;
     const pulse = 1 + Math.sin(runPhase) * Phaser.Math.Linear(0.045, 0.1, z);
     const hop = Math.abs(Math.sin(runPhase)) * Phaser.Math.Linear(2, 10, z) * this.screenScale;
@@ -3480,11 +3584,11 @@ export class MainScene extends Phaser.Scene {
   }
 
   private judgeItem(item: CollectibleItem, z: number) {
-    if (item.collected || item.judged || z < GAME_BALANCE.obstacleJudgeZ) {
+    if (item.collected || item.judged || z < this.judgeZ) {
       return;
     }
 
-    const judgeText = this.getJudgeTextForTiming(item.hitTime, item.lane);
+    const judgeText = this.getJudgeTextForTiming(item.hitTime, item.lane, false);
     if (judgeText === "×") {
       item.judged = true;
       this.spawnItemMissEffects(item);
@@ -3502,7 +3606,7 @@ export class MainScene extends Phaser.Scene {
   }
 
   private judgeObstacle(obstacle: Obstacle, z: number) {
-    if (obstacle.judged || this.judgedGroupIds.has(obstacle.groupId) || z < GAME_BALANCE.obstacleJudgeZ) {
+    if (obstacle.judged || this.judgedGroupIds.has(obstacle.groupId) || z < this.judgeZ) {
       return;
     }
 
@@ -3541,9 +3645,6 @@ export class MainScene extends Phaser.Scene {
     this.spawnSuccessEffects(judgedObstacle, judgeText);
     if (enteredFever) {
       this.setFeverActive(true);
-    }
-    if (this.feverActive) {
-      this.spawnRunnerFeverPulse(judgedObstacle.lane);
     }
     this.playRunnerPerformance(judgedObstacle.lane);
     this.triggerComboMilestone();
@@ -3639,7 +3740,7 @@ export class MainScene extends Phaser.Scene {
     }
   }
 
-  private getJudgeTextForTiming(hitTime: number, lane: number) {
+  private getJudgeTextForTiming(hitTime: number, lane: number, consumeInput = true) {
     const targetTime = this.getJudgeTargetTime(hitTime);
     const history = this.laneInputHistory[lane];
     if (!history) {
@@ -3662,7 +3763,9 @@ export class MainScene extends Phaser.Scene {
       return "×";
     }
 
-    history.splice(bestIndex, 1);
+    if (consumeInput) {
+      history.splice(bestIndex, 1);
+    }
     const delta = bestDelta;
     if (delta <= JUDGE_WINDOWS_SECONDS.perfect) {
       return "◎";
@@ -3683,7 +3786,7 @@ export class MainScene extends Phaser.Scene {
     const approachTime = this.chartApproachTime;
     const spawnTime = hitTime - approachTime;
     const judgeProgress =
-      (GAME_BALANCE.obstacleJudgeZ - GAME_BALANCE.obstacleSpawnZ) / Math.max(0.001, GAME_BALANCE.obstacleDespawnZ - GAME_BALANCE.obstacleSpawnZ);
+      (this.judgeZ - GAME_BALANCE.obstacleSpawnZ) / Math.max(0.001, GAME_BALANCE.obstacleDespawnZ - GAME_BALANCE.obstacleSpawnZ);
 
     return spawnTime + approachTime * judgeProgress;
   }
@@ -4144,7 +4247,7 @@ export class MainScene extends Phaser.Scene {
     });
   }
 
-  private setFeverActive(active: boolean) {
+  private setFeverActive(active: boolean, silent = false) {
     if (this.feverActive === active) {
       return;
     }
@@ -4161,7 +4264,7 @@ export class MainScene extends Phaser.Scene {
     this.layout();
     const label = this.feverLabel;
 
-    if (active) {
+    if (active && !silent) {
       this.cameras.main.flash(160, 255, 220, 115, false);
       this.cameras.main.shake(110, 0.003);
       this.spawnParticleBurst(this.scale.width / 2, this.scale.height * 0.26, {
@@ -4578,6 +4681,10 @@ export class MainScene extends Phaser.Scene {
     return Phaser.Math.Clamp(1 + this.debugSpeedLevel * 0.12, 0.6, 1.9);
   }
 
+  private get characterDebugScale() {
+    return Phaser.Math.Clamp(1 + this.layoutDebug.characterSize * 0.04, 0.68, 1.4);
+  }
+
   private loadLayoutDebug() {
     if (typeof window === "undefined") {
       return;
@@ -4593,8 +4700,10 @@ export class MainScene extends Phaser.Scene {
       this.layoutDebug = {
         trackY: this.clampLayoutDebugValue(parsed.trackY, -16, 16),
         farY: this.clampLayoutDebugValue(parsed.farY, -16, 16),
-        farW: this.clampLayoutDebugValue(parsed.farW, -12, 18),
-        nearW: this.clampLayoutDebugValue(parsed.nearW, -12, 18),
+        farW: this.clampLayoutDebugValue(parsed.farW, -100, 18),
+        nearW: this.clampLayoutDebugValue(parsed.nearW, -12, 42),
+        characterSize: this.clampLayoutDebugValue(parsed.characterSize, -8, 10),
+        bgX: this.clampLayoutDebugValue(parsed.bgX, -18, 18),
         bgY: this.clampLayoutDebugValue(parsed.bgY, -18, 18),
         bgScale: this.clampLayoutDebugValue(parsed.bgScale, -10, 20)
       };
@@ -4623,11 +4732,22 @@ export class MainScene extends Phaser.Scene {
   }
 
   private getLayoutDebugSummary() {
-    return `LAYOUT T${this.layoutDebug.trackY} F${this.layoutDebug.farY} FW${this.layoutDebug.farW} NW${this.layoutDebug.nearW} BY${this.layoutDebug.bgY} BZ${this.layoutDebug.bgScale}`;
+    const laneWidthPercent = Math.round((1 + (this.layoutDebug.nearW - LAYOUT_DEBUG_BASE_NEAR_W) * 0.025) * 100);
+    return `LANE ${laneWidthPercent}% DEPTH ${this.layoutDebug.farY} CHAR ${Math.round(this.characterDebugScale * 100)}% ANGLE ${this.layoutDebug.farW}`;
   }
 
   private tryLayoutDebugHotkey(event: KeyboardEvent) {
     const hotkeys: Partial<Record<string, DebugAction>> = {
+      BracketLeft: "laneWidthDown",
+      BracketRight: "laneWidthUp",
+      Minus: "depthDown",
+      Equal: "depthUp",
+      Comma: "characterSizeDown",
+      Period: "characterSizeUp",
+      Slash: "laneAngleDown",
+      Quote: "laneAngleUp",
+      KeyZ: "bgXDown",
+      KeyX: "bgXUp",
       KeyI: "trackYDown",
       KeyK: "trackYUp",
       KeyU: "farYDown",
@@ -4851,6 +4971,10 @@ export class MainScene extends Phaser.Scene {
   }
 
   private pulseJumpButton(lane: number) {
+    if (this.isDesktopLandscape) {
+      return;
+    }
+
     const button = this.jumpButtons[lane];
     if (!button) {
       return;
@@ -4878,6 +5002,15 @@ export class MainScene extends Phaser.Scene {
     this.moveSe?.play();
   }
 
+  private createSoundIfLoaded(key: string, config: Phaser.Types.Sound.SoundConfig) {
+    if (!this.cache.audio.exists(key)) {
+      console.warn(`[BEAT RUNNER] Audio key "${key}" is unavailable; skipping sound effect.`);
+      return undefined;
+    }
+
+    return this.sound.add(key, config);
+  }
+
   private playPerformanceSe(lane: number) {
     const se = lane === 0 ? this.redPerformanceSe : lane === 1 ? this.yellowPerformanceSe : this.bluePerformanceSe;
     se?.play();
@@ -4891,6 +5024,35 @@ export class MainScene extends Phaser.Scene {
       x: (left.x + right.x) / 2,
       y: (left.y + right.y) / 2
     };
+  }
+
+  private getPlayerLaneCenterPoint(track: TrackLayout, lane: number) {
+    const point = this.getLaneCenterPoint(track, lane, GAME_BALANCE.playerZ);
+    if (!this.isDesktopLandscape || !this.gameStarted || lane === 1) {
+      return point;
+    }
+
+    const left = this.getLaneBoundaryPoint(track, lane, GAME_BALANCE.playerZ);
+    const right = this.getLaneBoundaryPoint(track, lane + 1, GAME_BALANCE.playerZ);
+    const laneWidth = Math.abs(right.x - left.x);
+    const direction = lane === 0 ? -1 : 1;
+
+    return {
+      x: point.x + direction * laneWidth * 0.22,
+      y: point.y
+    };
+  }
+
+  private getLaneResponsiveScale(track: TrackLayout) {
+    if (!this.isDesktopLandscape || !this.gameStarted) {
+      return 1;
+    }
+
+    const left = this.getLaneBoundaryPoint(track, 0, GAME_BALANCE.playerZ);
+    const right = this.getLaneBoundaryPoint(track, 1, GAME_BALANCE.playerZ);
+    const laneWidth = Math.abs(right.x - left.x);
+
+    return Phaser.Math.Clamp(laneWidth / 112, 0.54, 0.86);
   }
 
   private getLaneBoundaryPoint(track: TrackLayout, boundaryIndex: number, z: number) {

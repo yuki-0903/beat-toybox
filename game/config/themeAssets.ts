@@ -127,11 +127,11 @@ const tinyToyThemeAssets: ThemeAssetConfig = {
     },
     gameplay: {
       portrait: "tinytoy_background_game_scroll_sp_03",
-      landscape: "tinytoy_background_game_scroll_sp_03"
+      landscape: "tinytoy_background_game_pc_toys_spwide_01"
     },
     fever: {
       portrait: "tinytoy_background_fever_toy_room_sp_05",
-      landscape: "tinytoy_background_fever_neon_space_pc_01"
+      landscape: "tinytoy_background_fever_toy_room_pc_02"
     }
   },
   lanes: {
@@ -262,10 +262,24 @@ const tinyToyFiles: ThemeAssetFile[] = [
     priority: "P0"
   },
   {
+    key: "tinytoy_background_game_pc_toys_spwide_01",
+    category: "background",
+    placeholderFile: "tinytoy_bg_game_pc_toys_spwide_01.png",
+    productionFile: "tinytoy_bg_game_pc_toys_spwide_01.png",
+    priority: "P0"
+  },
+  {
     key: "tinytoy_background_fever_neon_space_pc_01",
     category: "background",
     placeholderFile: "tinytoy_bg_fever_neon_space_pc_01.png",
     productionFile: "tinytoy_bg_fever_neon_space_pc_01.png",
+    priority: "P0"
+  },
+  {
+    key: "tinytoy_background_fever_toy_room_pc_02",
+    category: "background",
+    placeholderFile: "tinytoy_bg_fever_toy_room_pc_02.png",
+    productionFile: "tinytoy_bg_fever_toy_room_pc_02.png",
     priority: "P0"
   },
   {
