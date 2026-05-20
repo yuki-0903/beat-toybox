@@ -1,0 +1,792 @@
+{
+  "id": "coin-pop-parade",
+  "title": "Coin Pop Parade",
+  "bpm": 152.0,
+  "lanes": 3,
+  "duration": 39.6,
+  "approachTime": 1.6,
+  "chartMode": "performance",
+  "difficulty": "hard",
+  "globalOffsetSeconds": 0.0,
+  "notes": "This chart uses obstacles as rhythm cues/performance targets. Items are disabled in the current spec.",
+  "obstacles": [
+    {
+      "time": 1.152,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.55
+    },
+    {
+      "time": 1.942,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.55
+    },
+    {
+      "time": 2.731,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.55
+    },
+    {
+      "time": 3.126,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55
+    },
+    {
+      "time": 3.521,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.55
+    },
+    {
+      "time": 4.31,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.55
+    },
+    {
+      "time": 5.1,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.55
+    },
+    {
+      "time": 5.889,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.55
+    },
+    {
+      "time": 6.284,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.55
+    },
+    {
+      "time": 6.679,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.55
+    },
+    {
+      "time": 7.468,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.55
+    },
+    {
+      "time": 7.863,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 8.258,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 8.652,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 9.047,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 9.245,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "offbeat",
+      "energy": 0.77
+    },
+    {
+      "time": 9.837,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 10.231,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 10.626,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 10.824,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "offbeat",
+      "energy": 0.77
+    },
+    {
+      "time": 11.021,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 11.416,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 11.81,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 12.205,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 12.402,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "offbeat",
+      "energy": 0.77
+    },
+    {
+      "time": 12.995,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 13.389,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 13.784,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 13.981,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "offbeat",
+      "energy": 0.77
+    },
+    {
+      "time": 14.179,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 14.574,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 14.968,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 15.153,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "double",
+      "energy": 0.95
+    },
+    {
+      "time": 15.153,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "double",
+      "energy": 0.95
+    },
+    {
+      "time": 15.363,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 15.56,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "offbeat",
+      "energy": 0.77
+    },
+    {
+      "time": 16.152,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 16.547,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 16.942,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 17.139,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "offbeat",
+      "energy": 0.77
+    },
+    {
+      "time": 17.337,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 17.731,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 18.126,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 18.521,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 18.718,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "offbeat",
+      "energy": 0.77
+    },
+    {
+      "time": 19.31,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 19.705,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 20.1,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 20.297,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "offbeat",
+      "energy": 0.77
+    },
+    {
+      "time": 20.495,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 20.889,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 21.284,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 21.679,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.72
+    },
+    {
+      "time": 21.876,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "offbeat",
+      "energy": 0.77
+    },
+    {
+      "time": 22.074,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 22.271,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "offbeat",
+      "energy": 0.95
+    },
+    {
+      "time": 22.468,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 22.863,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 23.052,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "double",
+      "energy": 0.95
+    },
+    {
+      "time": 23.052,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "double",
+      "energy": 0.95
+    },
+    {
+      "time": 23.258,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 23.652,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 23.85,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "offbeat",
+      "energy": 0.95
+    },
+    {
+      "time": 24.047,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 24.442,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 24.639,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "offbeat",
+      "energy": 0.95
+    },
+    {
+      "time": 24.837,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 25.231,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 25.429,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "offbeat",
+      "energy": 0.95
+    },
+    {
+      "time": 25.626,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 26.021,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 26.21,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "double",
+      "energy": 0.95
+    },
+    {
+      "time": 26.21,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "double",
+      "energy": 0.95
+    },
+    {
+      "time": 26.416,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 26.81,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 27.008,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "offbeat",
+      "energy": 0.95
+    },
+    {
+      "time": 27.205,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 27.6,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 27.797,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "offbeat",
+      "energy": 0.95
+    },
+    {
+      "time": 27.995,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 28.389,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 28.587,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "offbeat",
+      "energy": 0.95
+    },
+    {
+      "time": 28.784,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 29.179,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 29.376,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "offbeat",
+      "energy": 0.95
+    },
+    {
+      "time": 29.574,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 29.968,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 30.157,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "double",
+      "energy": 0.95
+    },
+    {
+      "time": 30.157,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "double",
+      "energy": 0.95
+    },
+    {
+      "time": 30.166,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "offbeat",
+      "energy": 0.95
+    },
+    {
+      "time": 30.363,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 30.758,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 30.955,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "offbeat",
+      "energy": 0.95
+    },
+    {
+      "time": 31.152,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 31.547,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 31.745,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "offbeat",
+      "energy": 0.95
+    },
+    {
+      "time": 31.942,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 32.337,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 32.534,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "offbeat",
+      "energy": 0.95
+    },
+    {
+      "time": 32.731,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 33.126,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.9
+    },
+    {
+      "time": 33.324,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "offbeat",
+      "energy": 0.95
+    },
+    {
+      "time": 33.521,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.65
+    },
+    {
+      "time": 34.31,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.65
+    },
+    {
+      "time": 34.705,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.65
+    },
+    {
+      "time": 35.1,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.65
+    },
+    {
+      "time": 35.889,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.65
+    },
+    {
+      "time": 36.679,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.65
+    },
+    {
+      "time": 37.074,
+      "lane": 1,
+      "type": "music_note_yellow",
+      "pattern": "single",
+      "energy": 0.65
+    },
+    {
+      "time": 37.468,
+      "lane": 2,
+      "type": "music_note_blue",
+      "pattern": "single",
+      "energy": 0.65
+    },
+    {
+      "time": 38.258,
+      "lane": 0,
+      "type": "music_note_red",
+      "pattern": "single",
+      "energy": 0.65
+    }
+  ],
+  "items": []
+}
