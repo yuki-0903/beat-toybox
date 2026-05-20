@@ -3,7 +3,7 @@ import { GAME_BALANCE } from "@/game/config/balance";
 import { BACKGROUND_COLOR, BASE_GAME_HEIGHT, BASE_GAME_WIDTH } from "@/game/config/gameConfig";
 import { SONGS, type SongDefinition } from "@/game/config/songs";
 import { THEME_ASSETS, type ThemeAssetConfig } from "@/game/config/themeAssets";
-import { DEFAULT_THEME, THEMES, type ThemeConfig } from "@/game/config/themes";
+import { DEFAULT_THEME, THEMES, type ThemeConfig, type ThemeId } from "@/game/config/themes";
 import { gameEvents } from "@/game/systems/GameEvents";
 import { InputController } from "@/game/systems/InputController";
 
@@ -22,6 +22,7 @@ interface Obstacle {
   blockedLanes: number[];
   visualType: ObstacleVisualType;
   judged: boolean;
+  isPopping?: boolean;
   container: Phaser.GameObjects.Container;
   body: Phaser.GameObjects.Rectangle;
   shine: Phaser.GameObjects.Rectangle;
@@ -36,8 +37,9 @@ interface CollectibleItem {
   itemType: ItemVisualType;
   score: number;
   collected: boolean;
+  judged?: boolean;
   container: Phaser.GameObjects.Container;
-  body: Phaser.GameObjects.Star;
+  body: Phaser.GameObjects.Ellipse;
   glow: Phaser.GameObjects.Ellipse;
   detail: Phaser.GameObjects.Shape;
   assetImage?: Phaser.GameObjects.Image;
@@ -115,7 +117,7 @@ type DebugAction =
   | "bgYUp"
   | "bgScaleDown"
   | "bgScaleUp";
-type MenuAction = "play" | "ranking" | "setting" | "help" | "back";
+type MenuAction = "play" | "ranking" | "setting" | "help" | "back" | "home" | "retry";
 type RunnerVisualState = "run" | "jump" | "land" | "miss";
 type ObstacleVisualType = "toy_block" | "mini_car" | "traffic_cone" | "cardboard_box" | "robot_toy";
 type ItemVisualType = "star" | "music_note" | "drum" | "bell" | "toy_keyboard";
@@ -133,6 +135,7 @@ interface SongButton {
   background: Phaser.GameObjects.Rectangle;
   thumbnail: Phaser.GameObjects.Rectangle;
   thumbnailAccent: Phaser.GameObjects.Rectangle;
+  thumbnailImage?: Phaser.GameObjects.Image;
   thumbnailMaskGraphics: Phaser.GameObjects.Graphics;
   label: Phaser.GameObjects.Text;
   assetImage?: Phaser.GameObjects.Image;
@@ -204,12 +207,23 @@ const DIFFICULTY_SETTINGS: Record<
 };
 
 const UI_FONT = '"Fredoka", Arial, Helvetica, sans-serif';
-const RUNNER_DISPLAY_WIDTH = 228;
-const RUNNER_DISPLAY_HEIGHT = 228;
+const HUD_NUMBER_COLOR = "#5A3824";
+const HUD_NUMBER_Y_OFFSET = 6;
+const RUNNER_DISPLAY_WIDTH = 252;
+const RUNNER_DISPLAY_HEIGHT = 252;
 const RUNNER_IDLE_FRAME = 5;
 const RUNNER_MIN_SCREEN_SCALE = 0.9;
 const TRACK_SCROLL_SPEED = 0.36;
 const TRACK_FEVER_SCROLL_SPEED = 0.58;
+const NORMAL_GAMEPLAY_THEME_ID: ThemeId = "techno-industrial";
+const FEVER_GAMEPLAY_THEME_ID: ThemeId = "dnb-neon-city";
+const JUDGE_WINDOWS_SECONDS = {
+  perfect: 0.08,
+  good: 0.15,
+  nice: 0.24
+};
+const RUN_START_DELAY_MS = 760;
+const RUN_FINISH_DELAY_MS = 1050;
 const LAYOUT_DEBUG_STORAGE_KEY = "beat-runner-layout-debug-v1";
 const toColorNumber = (hexColor: string) => Number.parseInt(hexColor.replace("#", ""), 16);
 
@@ -241,6 +255,8 @@ export class MainScene extends Phaser.Scene {
   private menuBackgroundPortraitImage?: Phaser.GameObjects.Image;
   private menuBackgroundLandscapeImage?: Phaser.GameObjects.Image;
   private gameplayBackgroundImages: Phaser.GameObjects.Image[] = [];
+  private feverBackgroundPortraitImage?: Phaser.GameObjects.Image;
+  private feverBackgroundLandscapeImage?: Phaser.GameObjects.Image;
   private deskSurfaceImage?: Phaser.GameObjects.Image;
   private toyRoadImage?: Phaser.GameObjects.Image;
   private toyBlocksDecorImage?: Phaser.GameObjects.Image;
@@ -253,6 +269,7 @@ export class MainScene extends Phaser.Scene {
   private rankingPanelImage?: Phaser.GameObjects.Image;
   private rankingTitleImage?: Phaser.GameObjects.Image;
   private trackGraphics?: Phaser.GameObjects.Graphics;
+  private runnerFeverGraphics?: Phaser.GameObjects.Graphics;
   private hudGraphics?: Phaser.GameObjects.Graphics;
   private feverGraphics?: Phaser.GameObjects.Graphics;
   private runners: Runner[] = [];
@@ -292,6 +309,7 @@ export class MainScene extends Phaser.Scene {
   private obstacles: Obstacle[] = [];
   private items: CollectibleItem[] = [];
   private judgedGroupIds = new Set<string>();
+  private laneInputHistory: number[][] = Array.from({ length: GAME_BALANCE.laneCount }, () => []);
   private startTime = 0;
   private nextChartIndex = 0;
   private nextItemIndex = 0;
@@ -301,6 +319,7 @@ export class MainScene extends Phaser.Scene {
   private maxCombo = 0;
   private missCount = 0;
   private feverActive = false;
+  private finishPending = false;
   private gameStarted = false;
   private gameEnded = false;
   private menuStep: MenuStep = "start";
@@ -309,6 +328,7 @@ export class MainScene extends Phaser.Scene {
   private debugDensityLevel = 0;
   private debugSpeedLevel = 0;
   private layoutDebug: LayoutDebugState = { ...DEFAULT_LAYOUT_DEBUG };
+  private readonly feverBackgroundState = { alpha: 0 };
   private lastMissEffectAt = 0;
   private lastLayoutRefreshAt = 0;
   private lastFeverCameraBumpAt = 0;
@@ -527,6 +547,7 @@ export class MainScene extends Phaser.Scene {
       this.drawFeverLayer();
       this.updateFeverCameraBump();
     }
+    this.drawRunnerFeverLayer();
   }
 
   private createPrototypeView() {
@@ -538,10 +559,13 @@ export class MainScene extends Phaser.Scene {
     this.menuBackgroundPortraitImage = this.createThemeImage(this.currentThemeAssets.background.menu.portrait, 0, 0, -30);
     this.menuBackgroundLandscapeImage = this.createThemeImage(this.currentThemeAssets.background.menu.landscape, 0, 0, -30);
     this.gameplayBackgroundImages = [0, 1].flatMap(() => {
-      const assetKey = this.isPortrait ? this.currentThemeAssets.background.gameplay.portrait : this.currentThemeAssets.background.gameplay.landscape;
+      const normalAssets = this.getThemeAssetsById(NORMAL_GAMEPLAY_THEME_ID);
+      const assetKey = this.isPortrait ? normalAssets.background.gameplay.portrait : normalAssets.background.gameplay.landscape;
       const image = this.createThemeImage(assetKey, 0, 0, -28);
       return image ? [image] : [];
     });
+    this.feverBackgroundPortraitImage = this.createThemeImage(this.getThemeAssetsById(FEVER_GAMEPLAY_THEME_ID).background.fever.portrait, 0, 0, -27);
+    this.feverBackgroundLandscapeImage = this.createThemeImage(this.getThemeAssetsById(FEVER_GAMEPLAY_THEME_ID).background.fever.landscape, 0, 0, -27);
     this.deskSurfaceImage = this.createThemeImage(this.currentThemeAssets.background.decoration[1], 0, 0, -29);
     this.toyBlocksDecorImage = this.createThemeImage(this.currentThemeAssets.background.decoration[0], 0, 0, -3);
     this.blurredToysDecorImage = this.createThemeImage(this.currentThemeAssets.background.decoration[2], 0, 0, -4);
@@ -561,15 +585,20 @@ export class MainScene extends Phaser.Scene {
     this.rankingPanelImage = this.createThemeImage(this.currentThemeAssets.ui.parts.rankingPanel, 0, 0, 314);
     this.rankingTitleImage = this.createThemeImage(this.currentThemeAssets.ui.parts.rankingTitle, 0, 0, 315);
     this.trackGraphics = this.add.graphics().setDepth(1);
+    this.runnerFeverGraphics = this.add.graphics().setDepth(151);
     this.hudGraphics = this.add.graphics().setDepth(299);
     this.feverGraphics = this.add.graphics().setDepth(298);
 
     this.runners = Array.from({ length: GAME_BALANCE.laneCount }, (_, lane) => {
-      const shadow = this.add.ellipse(0, 58, 124, 34, this.themeColor("shadow"), 0.32);
+      const shadow = this.add.ellipse(0, 58, 124, 34, this.themeColor("shadow"), 0);
+      shadow.setVisible(false);
       const body = this.add.ellipse(0, 0, 44, 54, this.runnerColor(lane));
       const face = this.add.ellipse(0, -8, 24, 20, this.themeColor("background"));
       const assetImage = this.createRunnerAssetImage(lane);
-      const containerChildren: Phaser.GameObjects.GameObject[] = assetImage ? [shadow, body, face, assetImage] : [shadow, body, face];
+      const containerChildren: Phaser.GameObjects.GameObject[] = [shadow, body, face];
+      if (assetImage) {
+        containerChildren.push(assetImage);
+      }
       const container = this.add.container(0, 0, containerChildren).setDepth(160 + lane);
       if (assetImage) {
         body.setAlpha(0);
@@ -736,16 +765,19 @@ export class MainScene extends Phaser.Scene {
       return { direction, background, assetImage, pressedAssetImage };
     });
 
-    this.songButtons = SONGS.map((song) => {
-      const background = this.add.rectangle(0, 0, 1, 1, this.themeColor("track"), 0.95).setDepth(315);
-      const assetImage = this.createThemeImage(this.currentThemeAssets.ui.parts.songCardLarge, 0, 0, 315);
-      const sideAssetImage = this.createThemeImage(this.currentThemeAssets.ui.parts.songCardLarge, 0, 0, 314);
-      const thumbnail = this.add.rectangle(0, 0, 1, 1, this.themeColor("rightLane"), 0.92).setDepth(315.4);
-      const thumbnailAccent = this.add.rectangle(0, 0, 1, 1, this.themeColor("accent"), 0.82).setDepth(315.5);
+    this.songButtons = SONGS.map((song, index) => {
+      const cardAssetKey = index % 2 === 0 ? this.currentThemeAssets.ui.parts.songCardLarge : this.currentThemeAssets.ui.parts.songCardSide;
+      const background = this.add.rectangle(0, 0, 1, 1, this.themeColor("track"), 0.95).setDepth(313);
+      const assetImage = this.createThemeImage(cardAssetKey, 0, 0, 316);
+      const sideAssetImage = this.createThemeImage(cardAssetKey, 0, 0, 316);
+      const thumbnail = this.add.rectangle(0, 0, 1, 1, this.themeColor("rightLane"), 0.92).setDepth(314.8);
+      const thumbnailAccent = this.add.rectangle(0, 0, 1, 1, this.themeColor("accent"), 0.82).setDepth(314.9);
+      const thumbnailImage = song.thumbnailKey ? this.add.image(0, 0, song.thumbnailKey).setDepth(315) : undefined;
       const thumbnailMaskGraphics = this.make.graphics({ x: 0, y: 0 });
       const thumbnailMask = thumbnailMaskGraphics.createGeometryMask();
       thumbnail.setMask(thumbnailMask);
       thumbnailAccent.setMask(thumbnailMask);
+      thumbnailImage?.setMask(thumbnailMask);
       const indexLabel = this.add
         .text(0, 0, "01", {
           fontFamily: UI_FONT,
@@ -754,7 +786,7 @@ export class MainScene extends Phaser.Scene {
           align: "left"
         })
         .setOrigin(0, 0.5)
-        .setDepth(316);
+        .setDepth(317);
       const label = this.add
         .text(0, 0, song.shortTitle, {
           fontFamily: UI_FONT,
@@ -763,16 +795,16 @@ export class MainScene extends Phaser.Scene {
           align: "center"
         })
         .setOrigin(0.5)
-        .setDepth(316);
+        .setDepth(317);
       const metaLabel = this.add
-        .text(0, 0, `BPM ${Math.round(song.bpm)}`, {
+        .text(0, 0, "", {
           fontFamily: UI_FONT,
           fontStyle: "800",
           color: theme.colors.text,
           align: "left"
         })
         .setOrigin(0, 0.5)
-        .setDepth(316);
+        .setDepth(317);
       const starLabel = this.add
         .text(0, 0, "★ ★ ★ ☆ ☆", {
           fontFamily: UI_FONT,
@@ -781,11 +813,10 @@ export class MainScene extends Phaser.Scene {
           align: "left"
         })
         .setOrigin(0, 0.5)
-        .setDepth(316);
-
+        .setDepth(317);
       background.setStrokeStyle(2, this.themeColor("line"), 0.65);
 
-      return { song, background, thumbnail, thumbnailAccent, thumbnailMaskGraphics, label, assetImage, sideAssetImage, metaLabel, indexLabel, starLabel };
+      return { song, background, thumbnail, thumbnailAccent, thumbnailImage, thumbnailMaskGraphics, label, assetImage, sideAssetImage, metaLabel, indexLabel, starLabel };
     });
 
     this.difficultyButtons = (["easy", "normal", "hard"] as DifficultyId[]).map((id) => {
@@ -849,7 +880,9 @@ export class MainScene extends Phaser.Scene {
       { action: "ranking" as const, text: "", assetKey: this.currentThemeAssets.ui.parts.iconTrophy, pressedAssetKey: this.currentThemeAssets.ui.parts.iconTrophyPressed },
       { action: "setting" as const, text: "", assetKey: this.currentThemeAssets.ui.parts.iconGear, pressedAssetKey: this.currentThemeAssets.ui.parts.iconGearPressed },
       { action: "help" as const, text: "", assetKey: this.currentThemeAssets.ui.parts.iconHelp, pressedAssetKey: this.currentThemeAssets.ui.parts.iconHelpPressed },
-      { action: "back" as const, text: "", assetKey: this.currentThemeAssets.ui.parts.arrowLeft, pressedAssetKey: this.currentThemeAssets.ui.parts.arrowLeftPressed }
+      { action: "back" as const, text: "", assetKey: this.currentThemeAssets.ui.parts.arrowLeft, pressedAssetKey: this.currentThemeAssets.ui.parts.arrowLeftPressed },
+      { action: "home" as const, text: "", assetKey: this.currentThemeAssets.ui.parts.iconHome, pressedAssetKey: this.currentThemeAssets.ui.parts.iconHome },
+      { action: "retry" as const, text: "", assetKey: this.currentThemeAssets.ui.parts.iconRetry, pressedAssetKey: this.currentThemeAssets.ui.parts.iconRetryPressed }
     ].map(({ action, text, assetKey, pressedAssetKey }) => {
       const background = this.add.rectangle(0, 0, 1, 1, this.themeColor("track"), 0.95).setDepth(315);
       const assetImage = this.createThemeImage(assetKey, 0, 0, 315);
@@ -922,6 +955,7 @@ export class MainScene extends Phaser.Scene {
       this.layoutLaneOverlays(track);
       this.drawFeverLayer();
       this.layoutPlayers(track);
+      this.drawRunnerFeverLayer();
       this.setRunnersVisible(true);
       this.layoutObstacles(track);
       if (this.itemsEnabled) {
@@ -932,6 +966,7 @@ export class MainScene extends Phaser.Scene {
       this.trackGraphics?.setAlpha(1);
       this.layoutLaneOverlays(track);
       this.feverGraphics?.clear();
+      this.runnerFeverGraphics?.clear();
       this.setRunnersVisible(false);
     }
     this.layoutJumpButtons();
@@ -958,40 +993,42 @@ export class MainScene extends Phaser.Scene {
 
     this.comboLabel
       ?.setOrigin(0.5)
-      .setPosition(88 * Math.max(screenScale, 0.94), 129 * Math.max(screenScale, 0.94))
+      .setPosition(88 * Math.max(screenScale, 0.94), (181 + HUD_NUMBER_Y_OFFSET) * Math.max(screenScale, 0.94))
       .setFontSize(Math.round(Phaser.Math.Clamp(29 * Math.max(screenScale, 0.94), 24, 36)))
       .setAlign("center")
-      .setColor(theme.colors.text)
+      .setColor(HUD_NUMBER_COLOR)
       .setStroke(theme.colors.line, Math.round(5 * Math.max(screenScale, 0.94)))
       .setLineSpacing(-5 * Math.max(screenScale, 0.94))
       .setText(`${this.combo}`)
+      .setDepth(301)
       .setAlpha(this.gameStarted || this.gameEnded ? 1 : 0);
 
     this.scoreLabel
       ?.setOrigin(0.5)
-      .setPosition(86 * Math.max(screenScale, 0.94), 64 * Math.max(screenScale, 0.94))
+      .setPosition(86 * Math.max(screenScale, 0.94), (64 + HUD_NUMBER_Y_OFFSET) * Math.max(screenScale, 0.94))
       .setFontSize(Math.round(Phaser.Math.Clamp(27 * Math.max(screenScale, 0.94), 23, 34)))
       .setAlign("center")
-      .setColor(theme.colors.text)
+      .setColor(HUD_NUMBER_COLOR)
       .setStroke(theme.colors.line, Math.round(6 * Math.max(screenScale, 0.94)))
       .setLineSpacing(-4 * Math.max(screenScale, 0.94))
       .setText(this.score.toString().padStart(6, "0"))
+      .setDepth(300)
       .setAlpha(this.gameStarted || this.gameEnded ? 1 : 0);
 
     this.missLabel
       ?.setOrigin(0.5)
-      .setPosition(width - 82 * Math.max(screenScale, 0.94), 64 * Math.max(screenScale, 0.94))
+      .setPosition(width - 82 * Math.max(screenScale, 0.94), (64 + HUD_NUMBER_Y_OFFSET) * Math.max(screenScale, 0.94))
       .setFontSize(Math.round(Phaser.Math.Clamp(27 * Math.max(screenScale, 0.94), 23, 34)))
       .setAlign("center")
-      .setColor(theme.colors.text)
+      .setColor(HUD_NUMBER_COLOR)
       .setStroke(theme.colors.line, Math.round(6 * Math.max(screenScale, 0.94)))
       .setLineSpacing(-4 * Math.max(screenScale, 0.94))
       .setText(this.missCount.toString().padStart(3, "0"))
       .setAlpha(this.gameStarted || this.gameEnded ? 1 : 0);
 
     this.feverLabel
-      ?.setPosition(width / 2, 98 * screenScale)
-      .setFontSize(Math.round(22 * screenScale));
+      ?.setPosition(width / 2, height * (this.isPortrait ? 0.28 : 0.34))
+      .setFontSize(Math.round(Phaser.Math.Clamp(58 * screenScale, 46, 86)));
 
     this.feedbackLabel
       ?.setPosition(width / 2, height * (this.isPortrait ? 0.28 : 0.36))
@@ -1013,8 +1050,8 @@ export class MainScene extends Phaser.Scene {
     this.layoutSongButtons();
     this.layoutDifficultyButtons();
     this.layoutDebugButtons();
-    this.layoutMenuButtons();
     this.layoutRankingLabels();
+    this.layoutMenuButtons();
 
     this.sizeLabel
       ?.setPosition(width / 2, height - 24 * screenScale)
@@ -1062,6 +1099,8 @@ export class MainScene extends Phaser.Scene {
     this.layoutCoverBackgroundImage(this.menuBackgroundPortraitImage, isMenuScreen && this.isPortrait);
     this.layoutCoverBackgroundImage(this.menuBackgroundLandscapeImage, isMenuScreen && !this.isPortrait);
     this.layoutGameplayScrollingBackground(this.gameStarted || this.gameEnded);
+    this.layoutFeverBackgroundImage(this.feverBackgroundPortraitImage, showGameBackground && this.isPortrait);
+    this.layoutFeverBackgroundImage(this.feverBackgroundLandscapeImage, showGameBackground && !this.isPortrait);
 
     this.deskSurfaceImage
       ?.setPosition(width / 2, height / 2)
@@ -1131,6 +1170,25 @@ export class MainScene extends Phaser.Scene {
       .setVisible(isVisible);
   }
 
+  private layoutFeverBackgroundImage(image: Phaser.GameObjects.Image | undefined, isActiveOrientation: boolean) {
+    if (!image) {
+      return;
+    }
+
+    const { width, height } = this.scale;
+    const texture = image.texture.getSourceImage() as HTMLImageElement | HTMLCanvasElement;
+    const sourceWidth = texture.width || width;
+    const sourceHeight = texture.height || height;
+    const scale = Math.max(width / sourceWidth, height / sourceHeight);
+    const alpha = isActiveOrientation ? this.feverBackgroundState.alpha : 0;
+
+    image
+      .setPosition(width / 2, height / 2)
+      .setDisplaySize(sourceWidth * scale, sourceHeight * scale)
+      .setAlpha(alpha)
+      .setVisible(alpha > 0.01);
+  }
+
   private layoutLaneOverlays(track: TrackLayout) {
     this.laneOverlayImages.forEach((image, lane) => {
       image.setAlpha(0).setVisible(false);
@@ -1186,17 +1244,25 @@ export class MainScene extends Phaser.Scene {
       const isSongSettingButton = isSongScreen && button.action === "setting";
       const isDifficultySettingButton = isDifficultyScreen && button.action === "setting";
       const isDifficultyStartButton = isDifficultyScreen && button.action === "play";
-      const isBackButton = (this.menuStep === "ranking" || isDifficultyScreen) && button.action === "back";
-      const isVisible = !this.gameStarted && !this.gameEnded && (isStartButton || isSongSettingButton || isDifficultySettingButton || isDifficultyStartButton || isBackButton);
-      const isRankingBackButton = button.action === "back" && this.menuStep === "ranking";
+      const isBackButton = isDifficultyScreen && button.action === "back";
+      const isRankingUtilityButton = this.menuStep === "ranking" && (button.action === "home" || button.action === "retry");
+      const isVisible =
+        !this.gameStarted &&
+        !this.gameEnded &&
+        (isStartButton || isSongSettingButton || isDifficultySettingButton || isDifficultyStartButton || isBackButton || isRankingUtilityButton);
       const isDifficultyBackButton = button.action === "back" && isDifficultyScreen;
       const isLowerRightSettingButton = isSongSettingButton || isDifficultySettingButton;
       const backButtonSize = Math.round(Phaser.Math.Clamp(58 * Math.max(screenScale, 0.9), 52, 72));
+      const rankingUtilityButtonSize = Math.round(Phaser.Math.Clamp(76 * Math.max(screenScale, 0.9), 66, 84));
       const songSettingButtonSize = Math.round(Phaser.Math.Clamp(58 * Math.max(screenScale, 0.9), 52, 72));
       const difficultyButtonGap = 12 * Math.max(screenScale, 0.9);
       const difficultyBackX = centerX - difficultyStartButtonWidth / 2 - difficultyButtonGap - backButtonSize / 2;
-      const x = isRankingBackButton
-        ? width * (this.isPortrait ? 0.23 : 0.12)
+      const rankingUtilityGap = rankingUtilityButtonSize * 1.24;
+      const rankingPanelBottom = this.rankingPanelImage
+        ? this.rankingPanelImage.y + this.rankingPanelImage.displayHeight / 2
+        : height * (this.isPortrait ? 0.675 : 0.655);
+      const x = isRankingUtilityButton
+        ? centerX + (button.action === "home" ? -rankingUtilityGap / 2 : rankingUtilityGap / 2)
         : isDifficultyBackButton
           ? difficultyBackX
         : isLowerRightSettingButton
@@ -1209,8 +1275,8 @@ export class MainScene extends Phaser.Scene {
           ? startY
           : isDifficultyBackButton
             ? startY
-          : isRankingBackButton
-            ? height * (this.isPortrait ? 0.9 : 0.86)
+          : isRankingUtilityButton
+            ? rankingPanelBottom + 18 * Math.max(screenScale, 0.9) + rankingUtilityButtonSize / 2
             : isLowerRightSettingButton
               ? height * (this.isPortrait ? 0.9 : 0.86)
             : isIconAction
@@ -1218,10 +1284,35 @@ export class MainScene extends Phaser.Scene {
             : height * 0.84;
       const fillColor = button.action === "play" ? this.themeColor("secondary") : this.themeColor("trackAlt");
       const textColor = theme.colors.text;
-      const displayWidth = isRankingBackButton || isDifficultyBackButton ? backButtonSize : isLowerRightSettingButton ? songSettingButtonSize : isStartScreen && isIconAction ? iconSize : isDifficultyStartButton ? difficultyStartButtonWidth : buttonWidth;
-      const displayHeight = isRankingBackButton || isDifficultyBackButton ? backButtonSize : isLowerRightSettingButton ? songSettingButtonSize : isStartScreen && isIconAction ? iconSize : isDifficultyStartButton ? difficultyStartButtonHeight : buttonHeight;
-      const imageWidth = isRankingBackButton || isDifficultyBackButton || isLowerRightSettingButton || (isStartScreen && isIconAction) ? displayWidth : displayWidth * 1.08;
-      const imageHeight = isRankingBackButton || isDifficultyBackButton || isLowerRightSettingButton || (isStartScreen && isIconAction) ? displayHeight : displayHeight * 1.18;
+      const displayWidth = isRankingUtilityButton
+        ? rankingUtilityButtonSize
+        : isDifficultyBackButton
+          ? backButtonSize
+          : isLowerRightSettingButton
+            ? songSettingButtonSize
+            : isStartScreen && isIconAction
+              ? iconSize
+              : isDifficultyStartButton
+                ? difficultyStartButtonWidth
+                : buttonWidth;
+      const displayHeight = isRankingUtilityButton
+        ? rankingUtilityButtonSize
+        : isDifficultyBackButton
+          ? backButtonSize
+          : isLowerRightSettingButton
+            ? songSettingButtonSize
+            : isStartScreen && isIconAction
+              ? iconSize
+              : isDifficultyStartButton
+                ? difficultyStartButtonHeight
+                : buttonHeight;
+      const imageWidth = isRankingUtilityButton || isDifficultyBackButton || isLowerRightSettingButton || (isStartScreen && isIconAction) ? displayWidth : displayWidth * 1.08;
+      const imageHeight = isRankingUtilityButton || isDifficultyBackButton || isLowerRightSettingButton || (isStartScreen && isIconAction) ? displayHeight : displayHeight * 1.18;
+
+      if (isDifficultyBackButton) {
+        button.assetImage?.setTexture(this.currentThemeAssets.ui.parts.arrowLeft);
+        button.pressedAssetImage?.setTexture(this.currentThemeAssets.ui.parts.arrowLeftPressed);
+      }
 
       button.background
         .setPosition(x, y)
@@ -1231,7 +1322,8 @@ export class MainScene extends Phaser.Scene {
         .setAlpha(isVisible ? 1 : 0);
       button.assetImage
         ?.setPosition(x, y)
-        .setAlpha(isVisible ? 0.95 : 0);
+        .setAlpha(isVisible ? 0.95 : 0)
+        .setVisible(isVisible);
       this.fitImageInBox(button.assetImage, imageWidth, imageHeight);
       button.pressedAssetImage
         ?.setPosition(x, y)
@@ -1240,7 +1332,7 @@ export class MainScene extends Phaser.Scene {
       this.fitImageInBox(button.pressedAssetImage, imageWidth, imageHeight);
       button.label
         .setPosition(x, y)
-        .setFontSize(isRankingBackButton || isDifficultyBackButton || isLowerRightSettingButton ? Math.round(Phaser.Math.Clamp(16 * Math.max(screenScale, 0.9), 13, 20)) : textSize)
+        .setFontSize(isDifficultyBackButton || isLowerRightSettingButton ? Math.round(Phaser.Math.Clamp(16 * Math.max(screenScale, 0.9), 13, 20)) : textSize)
         .setColor(textColor)
         .setAlpha(isVisible && button.label.text && !button.assetImage ? 1 : 0);
     });
@@ -1325,13 +1417,15 @@ export class MainScene extends Phaser.Scene {
     const missHeight = 104 * scale;
 
     this.comboBadgeImage
-      ?.setPosition(12 * scale + comboWidth / 2, 68 * scale + comboHeight / 2)
+      ?.setPosition(12 * scale + comboWidth / 2, 120 * scale + comboHeight / 2)
+      .setDepth(299.8)
       .setAlpha(isHudVisible ? 1 : 0)
       .setVisible(isHudVisible);
     this.fitImageInBox(this.comboBadgeImage, comboWidth, comboHeight);
 
     this.scoreStickerImage
       ?.setPosition(8 * scale + scoreWidth / 2, 6 * scale + scoreHeight / 2)
+      .setDepth(299.5)
       .setAlpha(isHudVisible ? 1 : 0)
       .setVisible(isHudVisible);
     this.fitImageInBox(this.scoreStickerImage, scoreWidth, scoreHeight);
@@ -1344,8 +1438,8 @@ export class MainScene extends Phaser.Scene {
 
     this.feverBadgeImage
       ?.setPosition(width - 58 * scale, 116 * scale)
-      .setAlpha(this.feverActive ? 0.96 : 0)
-      .setVisible(this.feverActive);
+      .setAlpha(0)
+      .setVisible(false);
     this.fitImageInBox(this.feverBadgeImage, 72 * scale, 78 * scale);
   }
 
@@ -1509,12 +1603,25 @@ export class MainScene extends Phaser.Scene {
       const buttonTheme = THEMES[button.song.themeId] ?? DEFAULT_THEME;
       const fillColor = selected ? toColorNumber(buttonTheme.colors.secondary) : toColorNumber(buttonTheme.colors.trackAlt);
       const strokeColor = selected ? this.themeColor("line") : toColorNumber(buttonTheme.colors.primary);
-      const textColor = theme.colors.text;
+      const textColor = "#6B4326";
       const titleText = this.getSongCardTitle(button.song.title, selected);
       const indexText = String(index + 1).padStart(2, "0");
-      const titleSize = Math.round(Phaser.Math.Clamp((selected ? 24 : 13) * Math.max(screenScale, 0.9), selected ? 20 : 11, selected ? 32 : 16));
+      const titleSize = Math.round(Phaser.Math.Clamp((selected ? 19 : 12) * Math.max(screenScale, 0.9), selected ? 17 : 10, selected ? 24 : 15));
       const indexSize = Math.round(Phaser.Math.Clamp((selected ? 22 : 13) * Math.max(screenScale, 0.9), selected ? 18 : 11, selected ? 30 : 16));
       const metaSize = Math.round(Phaser.Math.Clamp((selected ? 13 : 9) * Math.max(screenScale, 0.9), selected ? 11 : 8, selected ? 18 : 12));
+      const titleY = y + buttonHeight * (selected ? 0.245 : 0.24);
+      const baseDepth = selected ? 332 : 314;
+
+      button.background.setDepth(baseDepth);
+      button.thumbnail.setDepth(baseDepth + 1);
+      button.thumbnailAccent.setDepth(baseDepth + 1.1);
+      button.thumbnailImage?.setDepth(baseDepth + 1.2);
+      button.assetImage?.setDepth(baseDepth + 2);
+      button.sideAssetImage?.setDepth(baseDepth + 2);
+      button.indexLabel.setDepth(baseDepth + 3);
+      button.label.setDepth(baseDepth + 3);
+      button.metaLabel.setDepth(baseDepth + 3);
+      button.starLabel.setDepth(baseDepth + 3);
 
       button.background
         .setPosition(x, y)
@@ -1535,47 +1642,69 @@ export class MainScene extends Phaser.Scene {
         .setVisible(isVisible && !selected);
       this.fitImageInBox(button.sideAssetImage, sideWidth, sideHeight);
 
+      const cardAsset = selected ? button.assetImage : button.sideAssetImage;
+      const cardVisualWidth = cardAsset?.displayWidth || buttonWidth;
+      const cardVisualHeight = cardAsset?.displayHeight || buttonHeight;
+      const thumbnailWidth = cardVisualWidth * 0.743;
+      const thumbnailHeight = cardVisualHeight * 0.606;
+      const thumbnailY = y - cardVisualHeight * 0.101;
+
       button.thumbnailMaskGraphics
         .clear()
         .fillStyle(0xffffff, 1)
-        .fillRect(x - buttonWidth / 2, y - buttonHeight / 2, buttonWidth, buttonHeight);
+        .fillRoundedRect(
+          x - thumbnailWidth * 0.5,
+          thumbnailY - thumbnailHeight * 0.5,
+          thumbnailWidth,
+          thumbnailHeight,
+          12 * Math.max(screenScale, 0.85)
+        );
 
       button.thumbnail
         .setOrigin(0.5)
-        .setPosition(x, y - buttonHeight * (selected ? 0.07 : 0.05))
-        .setSize(buttonWidth * (selected ? 0.76 : 0.7), buttonHeight * (selected ? 0.68 : 0.62))
+        .setPosition(x, thumbnailY)
+        .setSize(thumbnailWidth, thumbnailHeight)
         .setFillStyle(toColorNumber(buttonTheme.colors.primary), selected ? 0.86 : 0.58)
-        .setAlpha(isVisible ? 1 : 0);
+        .setAlpha(isVisible && !button.thumbnailImage ? 1 : 0);
 
       button.thumbnailAccent
         .setOrigin(0.5)
-        .setPosition(x + buttonWidth * 0.14, y + buttonHeight * (selected ? 0.12 : 0.12))
-        .setSize(buttonWidth * (selected ? 0.26 : 0.2), buttonHeight * 0.05)
+        .setPosition(x, thumbnailY)
+        .setSize(thumbnailWidth, thumbnailHeight)
         .setFillStyle(toColorNumber(buttonTheme.colors.accent), selected ? 0.92 : 0.55)
-        .setAlpha(isVisible ? 1 : 0);
+        .setAlpha(isVisible && button.thumbnailImage ? 0.08 : isVisible ? 0.18 : 0);
+
+      button.thumbnailImage
+        ?.setOrigin(0.5)
+        .setPosition(x, thumbnailY)
+        .setAlpha(isVisible ? 1 : 0)
+        .setVisible(isVisible);
+      this.coverImageInBox(button.thumbnailImage, thumbnailWidth, thumbnailHeight);
 
       button.indexLabel
         .setPosition(x - buttonWidth * (selected ? 0.39 : 0.34), y - buttonHeight * (selected ? 0.4 : 0.34))
         .setFontSize(indexSize)
         .setText(indexText)
         .setColor(buttonTheme.colors.primary)
-        .setAlpha(isVisible ? 1 : 0);
+        .setAlpha(0);
 
       button.label
-        .setPosition(x - buttonWidth * (selected ? 0.3 : 0.29), y - buttonHeight * (selected ? 0.18 : 0.14))
-        .setOrigin(0, 0.5)
+        .setPosition(x, titleY)
+        .setOrigin(0.5)
         .setFontSize(titleSize)
         .setText(titleText)
         .setColor(textColor)
-        .setStroke("#fffaf0", selected ? 3 : 1)
+        .setStroke("#fffaf0", selected ? 2 : 1)
+        .setAlign("center")
+        .setLineSpacing(-6 * Math.max(screenScale, 0.9))
         .setAlpha(isVisible ? 1 : 0);
 
       button.metaLabel
         .setPosition(x - buttonWidth * (selected ? 0.36 : 0.32), y + buttonHeight * (selected ? 0.31 : 0.31))
         .setFontSize(metaSize)
-        .setText(`BPM ${Math.round(button.song.bpm)}`)
+        .setText("")
         .setColor(textColor)
-        .setAlpha(isVisible ? 0.92 : 0);
+        .setAlpha(0);
 
       button.starLabel
         .setPosition(x - buttonWidth * (selected ? 0.36 : 0.32), y + buttonHeight * (selected ? 0.41 : 0.39))
@@ -1591,7 +1720,7 @@ export class MainScene extends Phaser.Scene {
     }
 
     const words = title.split(" ");
-    if (words.length <= 2) {
+    if (words.length <= 3) {
       return title;
     }
 
@@ -1831,7 +1960,7 @@ export class MainScene extends Phaser.Scene {
         (this.menuStep === "start" && (button.action === "play" || button.action === "ranking" || button.action === "setting" || button.action === "help")) ||
         (this.menuStep === "song" && button.action === "setting") ||
         (this.menuStep === "difficulty" && (button.action === "play" || button.action === "back" || button.action === "setting")) ||
-        (this.menuStep === "ranking" && button.action === "back");
+        (this.menuStep === "ranking" && (button.action === "home" || button.action === "retry"));
 
       return isActive && button.background.getBounds().contains(x, y);
     });
@@ -1879,8 +2008,13 @@ export class MainScene extends Phaser.Scene {
       return true;
     }
 
-    if (this.menuStep === "ranking" && targetButton.action === "back") {
+    if (this.menuStep === "ranking" && targetButton.action === "home") {
       this.runAfterPressedAssetFeedback(targetButton, () => this.showStartScreen());
+      return true;
+    }
+
+    if (this.menuStep === "ranking" && targetButton.action === "retry") {
+      this.runAfterPressedAssetFeedback(targetButton, () => this.startRun());
       return true;
     }
 
@@ -1985,6 +2119,10 @@ export class MainScene extends Phaser.Scene {
     }
 
     const normalAlpha = button.assetImage.alpha;
+    if (normalAlpha <= 0 || !button.assetImage.visible) {
+      return false;
+    }
+
     this.tweens.killTweensOf([button.assetImage, button.pressedAssetImage]);
     button.assetImage.setAlpha(0);
     button.pressedAssetImage.setAlpha(normalAlpha > 0 ? normalAlpha : 0.95).setVisible(true);
@@ -2090,9 +2228,11 @@ export class MainScene extends Phaser.Scene {
       runner.isJumping = false;
       runner.container.y = 0;
     });
+    this.clearLaneInputHistory();
     this.lastMissEffectAt = 0;
     this.lastLayoutRefreshAt = 0;
     this.setFeverActive(false);
+    this.updateRunnerSpriteSheets();
     this.clearObstacles();
     this.clearItems();
   }
@@ -2149,7 +2289,6 @@ export class MainScene extends Phaser.Scene {
     this.drawBackdrop(graphics, track);
     this.drawLaneSurfaces(graphics, track);
     this.drawLaneCenterDashes(graphics, track);
-    this.drawLaneEdgeHighlights(graphics, track);
   }
 
   private drawBackdrop(graphics: Phaser.GameObjects.Graphics, track: TrackLayout) {
@@ -2176,9 +2315,18 @@ export class MainScene extends Phaser.Scene {
     const { width, height } = this.scale;
     const scale = this.screenScale;
     const pulse = this.feverPulse;
+    const edgeAlpha = 0.08 + pulse * 0.06;
 
     graphics.fillStyle(this.themeColor("line"), 0.12 + pulse * 0.08);
     graphics.fillRect(0, 0, width, height);
+    graphics.fillStyle(this.themeColor("rightLane"), edgeAlpha);
+    graphics.fillRect(0, 0, 10 * scale, height);
+    graphics.fillRect(width - 10 * scale, 0, 10 * scale, height);
+    graphics.fillStyle(this.themeColor("accent"), 0.06 + pulse * 0.05);
+    graphics.fillRect(0, 0, width, 8 * scale);
+    graphics.fillRect(0, height - 8 * scale, width, 8 * scale);
+    graphics.lineStyle(3 * scale, this.themeColor("accent"), 0.22 + pulse * 0.12);
+    graphics.strokeRoundedRect(10 * scale, 10 * scale, width - 20 * scale, height - 20 * scale, 18 * scale);
 
     for (let index = 0; index < 18; index += 1) {
       const x = ((index * 73 + this.time.now / 8) % (width + 80 * scale)) - 40 * scale;
@@ -2384,13 +2532,45 @@ export class MainScene extends Phaser.Scene {
       }
       runner.body.setFillStyle(this.runnerColor(runner.lane), 1);
       runner.face.setFillStyle(this.themeColor("background"), 1);
-      runner.shadow.setFillStyle(this.themeColor("shadow"), 0.32);
+      runner.shadow.setFillStyle(this.themeColor("shadow"), 0).setVisible(false);
       runner.face.setScale(runner.isJumping ? 1.08 : 1, runner.isJumping ? 0.92 : 1);
       runner.assetImage?.setDisplaySize(RUNNER_DISPLAY_WIDTH, RUNNER_DISPLAY_HEIGHT).setAlpha(1);
-      runner.shadow.setScale(runner.isJumping ? 0.72 : 1, runner.isJumping ? 0.7 : 1);
+      runner.shadow.setScale(runner.isJumping ? 0.72 : 1, runner.isJumping ? 0.7 : 1).setAlpha(0);
       if (!runner.isJumping) {
         this.startRunnerIdleAnimation(runner);
       }
+    });
+  }
+
+  private drawRunnerFeverLayer() {
+    const graphics = this.runnerFeverGraphics;
+    if (!graphics) {
+      return;
+    }
+
+    graphics.clear();
+    if (!this.feverActive || !this.gameStarted) {
+      return;
+    }
+
+    const pulse = this.feverPulse;
+    this.runners.forEach((runner) => {
+      if (runner.container.alpha <= 0) {
+        return;
+      }
+
+      const laneColor = this.runnerColor(runner.lane);
+      const x = runner.container.x;
+      const footY = runner.container.y + 58 * runner.container.scaleY;
+      const footWidth = 132 * runner.container.scaleX;
+      const footHeight = 32 * runner.container.scaleY;
+
+      graphics.fillStyle(laneColor, 0.2 + pulse * 0.08);
+      graphics.fillEllipse(x, footY, footWidth, footHeight);
+      graphics.lineStyle(3 * this.screenScale, this.themeColor("accent"), 0.24 + pulse * 0.16);
+      graphics.strokeEllipse(x, footY, footWidth * 1.1, footHeight * 1.24);
+      graphics.lineStyle(2 * this.screenScale, this.themeColor("secondary"), 0.18 + pulse * 0.12);
+      graphics.strokeEllipse(x, footY, footWidth * 0.78, footHeight * 0.88);
     });
   }
 
@@ -2401,11 +2581,13 @@ export class MainScene extends Phaser.Scene {
 
     this.gameStarted = true;
     this.gameEnded = false;
+    this.finishPending = false;
     this.rebuildDifficultyChart();
-    this.startTime = this.time.now;
+    this.startTime = this.time.now + RUN_START_DELAY_MS;
     this.nextChartIndex = 0;
     this.nextItemIndex = 0;
     this.judgedGroupIds.clear();
+    this.clearLaneInputHistory();
     this.score = 0;
     this.avoidCount = 0;
     this.combo = 0;
@@ -2414,6 +2596,7 @@ export class MainScene extends Phaser.Scene {
     this.runners.forEach((runner) => {
       runner.isJumping = false;
     });
+    this.clearLaneInputHistory();
     this.lastMissEffectAt = 0;
     this.lastLayoutRefreshAt = 0;
     this.setFeverActive(false);
@@ -2421,7 +2604,13 @@ export class MainScene extends Phaser.Scene {
     this.clearItems();
 
     this.bgm?.stop();
-    this.bgm?.play();
+    this.time.delayedCall(RUN_START_DELAY_MS, () => {
+      if (!this.gameStarted || this.finishPending) {
+        return;
+      }
+
+      this.bgm?.play();
+    });
 
     const result = this.resultLabel;
     if (result) {
@@ -2441,7 +2630,6 @@ export class MainScene extends Phaser.Scene {
       });
     }
 
-    this.popFeedback("GO", this.currentTheme.colors.accent);
     this.layout();
   }
 
@@ -2621,17 +2809,29 @@ export class MainScene extends Phaser.Scene {
       return false;
     }
 
-    this.finishRun();
+    this.beginFinishRun();
     return true;
   }
 
+  private beginFinishRun() {
+    if (this.finishPending || !this.gameStarted) {
+      return;
+    }
+
+    this.finishPending = true;
+    this.bgm?.stop();
+    this.popFeedback("FINISH!", this.currentTheme.colors.accent);
+    this.time.delayedCall(RUN_FINISH_DELAY_MS, () => this.finishRun());
+  }
+
   private finishRun() {
-    if (this.gameEnded) {
+    if (this.gameEnded || !this.finishPending) {
       return;
     }
 
     this.gameStarted = false;
     this.gameEnded = false;
+    this.finishPending = false;
     this.menuStep = "ranking";
     this.bgm?.stop();
     this.clearObstacles();
@@ -2829,7 +3029,7 @@ export class MainScene extends Phaser.Scene {
   private spawnItem(chartItem: ChartItem) {
     const itemType = this.getItemVisualType(chartItem);
     const glow = this.add.ellipse(0, 0, 48, 30, this.getItemColor(itemType), 0.34);
-    const body = this.add.star(0, 0, 5, 8, 18, this.getItemColor(itemType), 1);
+    const body = this.add.ellipse(0, 0, 30, 30, this.getItemColor(itemType), 1);
     const detail = this.createItemDetail(itemType);
     const assetImage = this.createThemeImage(this.currentThemeAssets.items[itemType], 0, 0, 1);
     const container = this.add.container(0, 0, assetImage ? [glow, body, detail, assetImage] : [glow, body, detail]);
@@ -2889,6 +3089,10 @@ export class MainScene extends Phaser.Scene {
 
       if (!this.isObstacleAlive(obstacle)) {
         return false;
+      }
+
+      if (obstacle.isPopping) {
+        return true;
       }
 
       if (z >= GAME_BALANCE.obstacleDespawnZ) {
@@ -3024,16 +3228,8 @@ export class MainScene extends Phaser.Scene {
     return "KEYS!";
   }
 
-  private getPerformanceCueVisualSize(lane: number) {
-    if (lane === 0) {
-      return { width: 1, height: 0.86 };
-    }
-
-    if (lane === 1) {
-      return { width: 1, height: 1 };
-    }
-
-    return { width: 1, height: 0.72 };
+  private getPerformanceCueVisualSize(_lane: number) {
+    return { width: 1, height: 1 };
   }
 
   private isObstacleAlive(obstacle: Obstacle) {
@@ -3127,55 +3323,32 @@ export class MainScene extends Phaser.Scene {
     }
 
     if (itemType === "toy_keyboard") {
-      return this.themeColor("secondary");
+      return this.themeColor("rightLane");
     }
 
     return this.themeColor("accent");
   }
 
   private judgeItem(item: CollectibleItem, z: number) {
-    if (item.collected || z < GAME_BALANCE.obstacleJudgeZ) {
+    if (item.collected || item.judged || z < GAME_BALANCE.obstacleJudgeZ) {
       return;
     }
 
-    if (!this.isRunnerJumping(item.lane)) {
+    const judgeText = this.getJudgeTextForTiming(item.hitTime, item.lane);
+    if (judgeText === "×") {
+      item.judged = true;
+      this.spawnItemMissEffects(item);
+      this.destroyItem(item);
+      this.layout();
       return;
     }
 
     item.collected = true;
     this.score += item.score;
     this.itemSe?.play();
-    this.popItemCollect(item);
-    this.spawnItemParticles(item);
-    this.popFeedback(`ITEM +${item.score}`, this.currentTheme.colors.accent);
-    this.cameras.main.shake(70, 0.0015);
+    this.spawnItemCollectEffects(item, judgeText);
+    this.destroyItem(item);
     this.layout();
-  }
-
-  private popItemCollect(item: CollectibleItem) {
-    const burst = this.add.star(item.container.x, item.container.y, 5, 8 * item.container.scaleX, 24 * item.container.scaleX, this.getItemColor(item.itemType), 0.95);
-    burst.setDepth(item.container.depth + 30);
-    this.tweens.add({
-      targets: burst,
-      scale: 1.8,
-      alpha: 0,
-      angle: 45,
-      duration: 300,
-      ease: "Sine.Out",
-      onComplete: () => burst.destroy()
-    });
-  }
-
-  private spawnItemParticles(item: CollectibleItem) {
-    const color = this.getItemColor(item.itemType);
-    const particleKind = item.itemType === "drum" ? "circle" : item.itemType === "music_note" ? "note" : "star";
-    this.spawnParticleBurst(item.container.x, item.container.y, {
-      color,
-      count: item.itemType === "toy_keyboard" ? 14 : 10,
-      distance: item.itemType === "drum" ? 54 : 42,
-      kind: particleKind,
-      duration: 420
-    });
   }
 
   private judgeObstacle(obstacle: Obstacle, z: number) {
@@ -3189,22 +3362,22 @@ export class MainScene extends Phaser.Scene {
     });
     this.judgedGroupIds.add(obstacle.groupId);
 
-    if (this.isRunnerJumping(obstacle.lane)) {
-      this.registerAvoid(groupObstacles, obstacle);
+    const judgeText = this.getJudgeTextForTiming(obstacle.hitTime, obstacle.lane);
+    if (judgeText !== "×") {
+      this.registerAvoid(groupObstacles, obstacle, judgeText);
       return;
     }
 
     this.registerMiss(groupObstacles);
   }
 
-  private registerAvoid(obstacles: Obstacle[], judgedObstacle: Obstacle) {
+  private registerAvoid(obstacles: Obstacle[], judgedObstacle: Obstacle, judgeText: string) {
     this.combo += 1;
     this.avoidCount += 1;
     const difficulty = DIFFICULTY_SETTINGS[this.selectedDifficulty];
     const scoreGain = Math.round((100 + Math.min(this.combo, 20) * 10) * difficulty.scoreMultiplier);
     this.score += scoreGain;
     this.maxCombo = Math.max(this.maxCombo, this.combo);
-    const judgeText = this.getJudgeText(judgedObstacle);
     obstacles.forEach((obstacle) => {
       if (!this.isObstacleAlive(obstacle)) {
         return;
@@ -3214,15 +3387,15 @@ export class MainScene extends Phaser.Scene {
       obstacle.shine.setFillStyle(this.themeColor("line"), 0.95);
       this.fadeOutPanel(obstacle);
     });
-    this.spawnSuccessEffects(judgedObstacle, judgeText);
-    this.playRunnerPerformance(judgedObstacle.lane);
-    this.playPerformanceSe(judgedObstacle.lane);
     const enteredFever = !this.feverActive && this.combo >= GAME_BALANCE.feverComboThreshold;
+    this.spawnSuccessEffects(judgedObstacle, judgeText);
     if (enteredFever) {
       this.setFeverActive(true);
-    } else {
-      this.popFeedback(judgeText, this.currentTheme.colors.secondary);
     }
+    if (this.feverActive) {
+      this.spawnRunnerFeverPulse(judgedObstacle.lane);
+    }
+    this.playRunnerPerformance(judgedObstacle.lane);
     this.triggerComboMilestone();
     this.pulseHudLabel(this.comboLabel);
     this.pulseHudLabel(this.scoreLabel);
@@ -3241,16 +3414,16 @@ export class MainScene extends Phaser.Scene {
 
       obstacle.body.setFillStyle(this.themeColor("primary"), 1);
       obstacle.shine.setFillStyle(this.themeColor("accent"), 0.95);
-      this.fadeOutPanel(obstacle);
+      obstacle.container.setAlpha(1);
     });
     if (this.time.now - this.lastMissEffectAt > 180) {
       this.lastMissEffectAt = this.time.now;
-      this.cameras.main.shake(90, 0.0025);
+      this.cameras.main.shake(70, 0.0017);
       this.flashRunner(obstacles[0]?.lane ?? 1);
       if (missPoint) {
         this.spawnMissEffects(missPoint);
       }
-      this.popFeedback("REST!", this.currentTheme.colors.primary);
+      this.popFeedback("×", this.currentTheme.colors.primary);
     }
     this.pulseHudLabel(this.missLabel);
     this.refreshHudLayout();
@@ -3267,21 +3440,88 @@ export class MainScene extends Phaser.Scene {
       targets: label,
       scale: 1,
       duration: 180,
-      ease: "Back.Out"
+      ease: "Back.Out",
     });
   }
 
-  private getJudgeText(obstacle: Obstacle) {
-    const z = this.getObstacleZ(obstacle);
-    if (z < GAME_BALANCE.obstacleJudgeZ + 0.045) {
-      return "PERFECT!!";
+  private clearLaneInputHistory() {
+    this.laneInputHistory.forEach((history) => {
+      history.length = 0;
+    });
+  }
+
+  private recordLaneInput(lane: number) {
+    const history = this.laneInputHistory[lane];
+    if (!history) {
+      return;
     }
 
-    if (z < GAME_BALANCE.obstacleJudgeZ + 0.11) {
-      return "COOL!!";
+    const now = this.songTimeSeconds;
+    history.push(now);
+    while (history.length > 8) {
+      history.shift();
+    }
+    this.pruneLaneInputHistory(lane, now - 1);
+  }
+
+  private pruneLaneInputHistory(lane: number, minTime: number) {
+    const history = this.laneInputHistory[lane];
+    if (!history) {
+      return;
     }
 
-    return "NICE!!";
+    while (history.length > 0 && (history[0] ?? 0) < minTime) {
+      history.shift();
+    }
+  }
+
+  private getJudgeTextForTiming(hitTime: number, lane: number) {
+    const targetTime = this.getJudgeTargetTime(hitTime);
+    const history = this.laneInputHistory[lane];
+    if (!history) {
+      return "×";
+    }
+
+    this.pruneLaneInputHistory(lane, targetTime - JUDGE_WINDOWS_SECONDS.nice);
+
+    let bestIndex = -1;
+    let bestDelta = Number.POSITIVE_INFINITY;
+    history.forEach((inputTime, index) => {
+      const delta = Math.abs(inputTime - targetTime);
+      if (delta <= JUDGE_WINDOWS_SECONDS.nice && delta < bestDelta) {
+        bestDelta = delta;
+        bestIndex = index;
+      }
+    });
+
+    if (bestIndex < 0) {
+      return "×";
+    }
+
+    history.splice(bestIndex, 1);
+    const delta = bestDelta;
+    if (delta <= JUDGE_WINDOWS_SECONDS.perfect) {
+      return "◎";
+    }
+
+    if (delta <= JUDGE_WINDOWS_SECONDS.good) {
+      return "○";
+    }
+
+    if (delta <= JUDGE_WINDOWS_SECONDS.nice) {
+      return "△";
+    }
+
+    return "×";
+  }
+
+  private getJudgeTargetTime(hitTime: number) {
+    const approachTime = this.chartApproachTime;
+    const spawnTime = hitTime - approachTime;
+    const judgeProgress =
+      (GAME_BALANCE.obstacleJudgeZ - GAME_BALANCE.obstacleSpawnZ) / Math.max(0.001, GAME_BALANCE.obstacleDespawnZ - GAME_BALANCE.obstacleSpawnZ);
+
+    return spawnTime + approachTime * judgeProgress;
   }
 
   private spawnSuccessEffects(obstacle: Obstacle, judgeText: string) {
@@ -3292,25 +3532,124 @@ export class MainScene extends Phaser.Scene {
     const cueType = this.getPerformanceCueItemType(obstacle.lane);
     const color = this.getItemColor(cueType);
     this.cameras.main.shake(this.feverActive ? 65 : 45, this.feverActive ? 0.002 : 0.0012);
-    this.spawnParticleBurst(obstacle.container.x, obstacle.container.y - 16 * obstacle.container.scaleY, {
-      color,
-      count: this.feverActive ? 14 : 8,
-      distance: this.feverActive ? 54 : 36,
-      kind: cueType === "drum" ? "circle" : cueType === "toy_keyboard" ? "note" : "star",
-      duration: 360
+    this.spawnSuccessDotPop(obstacle);
+    const inwardOffset = (1 - obstacle.lane) * 16 * this.screenScale;
+    const feedbackX = obstacle.container.x + inwardOffset;
+    this.spawnStickerText(this.getPerformanceCueText(obstacle.lane), feedbackX, obstacle.container.y - 72 * obstacle.container.scaleY, color, 0.82);
+    this.spawnStickerText(judgeText, feedbackX, obstacle.container.y - 118 * obstacle.container.scaleY, color, 1.42);
+  }
+
+  private spawnSuccessDotPop(obstacle: Obstacle) {
+    const color = this.runnerColor(obstacle.lane);
+    const originX = obstacle.container.x;
+    const originY = obstacle.container.y - 22 * obstacle.container.scaleY;
+
+    [-1, 1].forEach((direction) => {
+      const dot = this.add.ellipse(originX, originY, 10 * this.screenScale, 10 * this.screenScale, color, 0.95).setDepth(370);
+      this.tweens.add({
+        targets: dot,
+        x: originX + direction * Phaser.Math.FloatBetween(20, 30) * this.screenScale,
+        y: originY - Phaser.Math.FloatBetween(10, 18) * this.screenScale,
+        alpha: 0,
+        scale: 0.35,
+        duration: 260,
+        ease: "Sine.Out",
+        onComplete: () => dot.destroy()
+      });
     });
-    this.spawnStickerText(this.getPerformanceCueText(obstacle.lane), obstacle.container.x, obstacle.container.y - 58 * obstacle.container.scaleY, color);
-    this.spawnStickerText(judgeText, obstacle.container.x, obstacle.container.y - 96 * obstacle.container.scaleY, color, 0.78);
+  }
+
+  private spawnItemCollectEffects(item: CollectibleItem, judgeText: string) {
+    if (!this.isItemAlive(item)) {
+      return;
+    }
+
+    const color = this.getItemColor(item.itemType);
+    this.spawnStickerText(judgeText, item.container.x, item.container.y - 72 * item.container.scaleY, color, 1.28);
+    this.spawnSuccessDotPopAt(item.container.x, item.container.y - 18 * item.container.scaleY, color);
+    this.pulseHudLabel(this.scoreLabel);
+  }
+
+  private spawnItemMissEffects(item: CollectibleItem) {
+    if (!this.isItemAlive(item)) {
+      return;
+    }
+
+    this.spawnStickerText("×", item.container.x, item.container.y - 62 * item.container.scaleY, this.themeColor("primary"), 1.18);
+  }
+
+  private spawnSuccessDotPopAt(originX: number, originY: number, color: number) {
+    [-1, 1].forEach((direction) => {
+      const dot = this.add.ellipse(originX, originY, 10 * this.screenScale, 10 * this.screenScale, color, 0.95).setDepth(370);
+      this.tweens.add({
+        targets: dot,
+        x: originX + direction * Phaser.Math.FloatBetween(20, 30) * this.screenScale,
+        y: originY - Phaser.Math.FloatBetween(10, 18) * this.screenScale,
+        alpha: 0,
+        scale: 0.35,
+        duration: 260,
+        ease: "Sine.Out",
+        onComplete: () => dot.destroy()
+      });
+    });
+  }
+
+  private spawnRunnerFeverPulse(lane: number) {
+    const runner = this.runners[lane];
+    if (!runner) {
+      return;
+    }
+
+    const x = runner.container.x;
+    const y = runner.container.y + 4 * runner.container.scaleY;
+    const laneColor = this.runnerColor(lane);
+    const ring = this.add.ellipse(x, y, 138 * runner.container.scaleX, 150 * runner.container.scaleY, laneColor, 0);
+    ring.setDepth(runner.container.depth + 4).setStrokeStyle(5 * this.screenScale, this.themeColor("accent"), 0.76);
+    const ring2 = this.add.ellipse(x, y, 112 * runner.container.scaleX, 126 * runner.container.scaleY, laneColor, 0);
+    ring2.setDepth(runner.container.depth + 3).setStrokeStyle(3 * this.screenScale, this.themeColor("secondary"), 0.58);
+
+    this.tweens.add({
+      targets: [ring, ring2],
+      scaleX: 1.36,
+      scaleY: 1.28,
+      alpha: 0,
+      duration: 320,
+      ease: "Sine.Out",
+      onComplete: () => {
+        ring.destroy();
+        ring2.destroy();
+      }
+    });
+
   }
 
   private spawnMissEffects(obstacle: Obstacle) {
-    this.spawnStickerText("REST!", obstacle.container.x, obstacle.container.y - 48 * obstacle.container.scaleY, this.themeColor("primary"));
+    const inwardOffset = (1 - obstacle.lane) * 16 * this.screenScale;
+    this.spawnStickerText("×", obstacle.container.x + inwardOffset, obstacle.container.y - 72 * obstacle.container.scaleY, this.themeColor("primary"), 1.42);
+    const puff = this.add.ellipse(
+      obstacle.container.x,
+      obstacle.container.y,
+      54 * obstacle.container.scaleX,
+      32 * obstacle.container.scaleY,
+      this.themeColor("primary"),
+      0.18
+    );
+    puff.setDepth(obstacle.container.depth + 24);
+    this.tweens.add({
+      targets: puff,
+      alpha: 0,
+      scaleX: 1.45,
+      scaleY: 1.1,
+      duration: 260,
+      ease: "Sine.Out",
+      onComplete: () => puff.destroy()
+    });
     this.spawnParticleBurst(obstacle.container.x, obstacle.container.y, {
       color: this.themeColor("primary"),
-      count: 6,
-      distance: 26,
+      count: 8,
+      distance: 30,
       kind: "circle",
-      duration: 260
+      duration: 320
     });
   }
 
@@ -3327,7 +3666,7 @@ export class MainScene extends Phaser.Scene {
       color,
       count: this.combo >= 50 ? 22 : 12,
       distance: this.combo >= 50 ? 82 : 48,
-      kind: this.combo >= 30 ? "note" : "star",
+      kind: this.combo >= 30 ? "note" : "circle",
       duration: this.combo >= 50 ? 620 : 420
     });
 
@@ -3352,13 +3691,54 @@ export class MainScene extends Phaser.Scene {
       return;
     }
 
+    obstacle.isPopping = true;
+    this.tweens.killTweensOf(obstacle.container);
     this.tweens.add({
       targets: obstacle.container,
-      alpha: 0,
-      scaleX: obstacle.container.scaleX * 1.12,
-      scaleY: obstacle.container.scaleY * 0.82,
-      duration: 180,
-      ease: "Sine.Out"
+      alpha: 1,
+      duration: 1,
+      onComplete: () => {
+        this.tweens.add({
+          targets: obstacle.container,
+          scaleX: obstacle.container.scaleX * 1.08,
+          scaleY: obstacle.container.scaleY * 1.08,
+          duration: 90,
+          ease: "Back.Out",
+          onComplete: () => {
+            this.tweens.add({
+              targets: obstacle.container,
+              alpha: 0,
+              duration: 150,
+              ease: "Sine.Out",
+              onComplete: () => this.destroyObstacle(obstacle)
+            });
+          }
+        });
+      }
+    });
+
+    if (!obstacle.assetImage) {
+      return;
+    }
+
+    const baseScaleX = obstacle.assetImage.scaleX;
+    const baseScaleY = obstacle.assetImage.scaleY;
+    this.tweens.killTweensOf(obstacle.assetImage);
+    this.tweens.add({
+      targets: obstacle.assetImage,
+      scaleX: baseScaleX * 1.08,
+      scaleY: baseScaleY * 1.08,
+      duration: 90,
+      ease: "Back.Out",
+      onComplete: () => {
+        this.tweens.add({
+          targets: obstacle.assetImage,
+          scaleX: baseScaleX * 0.96,
+          scaleY: baseScaleY * 0.96,
+          duration: 150,
+          ease: "Sine.Out"
+        });
+      }
     });
   }
 
@@ -3369,59 +3749,73 @@ export class MainScene extends Phaser.Scene {
     }
 
     this.tweens.killTweensOf(label);
-    label.setText(text).setColor(color).setAlpha(1).setScale(0.9);
+    label
+      .setText(text)
+      .setColor(color)
+      .setStroke("#FFF7DC", Math.max(4, Math.round(6 * this.screenScale)))
+      .setShadow(0, Math.round(4 * this.screenScale), "rgba(107, 62, 36, 0.32)", 2, true, true)
+      .setAlpha(1)
+      .setScale(1)
+      .setAngle(Phaser.Math.Between(-4, 4));
 
     this.tweens.add({
       targets: label,
       alpha: 0,
-      scale: 1.16,
-      duration: 420,
-      ease: "Sine.Out"
+      scale: 1.42,
+      angle: label.angle * 0.45,
+      duration: 480,
+      ease: "Back.Out",
     });
   }
 
   private spawnStickerText(text: string, x: number, y: number, color: number, scale = 1) {
+    const fillColor = this.colorNumberToHex(color);
+    const isJudgeSymbol = text === "◎" || text === "○" || text === "△" || text === "×";
     const sticker = this.add.text(x, y, text, {
       fontFamily: UI_FONT,
       fontStyle: "900",
-      color: this.currentTheme.colors.text,
-      backgroundColor: this.currentTheme.colors.background,
+      color: fillColor,
       padding: {
-        x: Math.round(8 * this.screenScale),
-        y: Math.round(4 * this.screenScale)
+        x: Math.round(4 * this.screenScale),
+        y: Math.round(2 * this.screenScale)
       }
     });
 
     sticker
       .setOrigin(0.5)
       .setDepth(360)
-      .setFontSize(Math.round(18 * this.screenScale * scale))
-      .setAngle(Phaser.Math.Between(-8, 8))
-      .setStroke(this.currentTheme.colors.line, Math.max(2, Math.round(3 * this.screenScale)))
+      .setFontSize(Math.round(28 * this.screenScale * scale))
+      .setAngle(Phaser.Math.Between(-7, 7))
+      .setStroke("#FFF7DC", Math.max(4, Math.round(6 * this.screenScale * scale)))
+      .setShadow(0, Math.round(4 * this.screenScale), "rgba(107, 62, 36, 0.34)", 2, true, true)
       .setAlpha(0)
-      .setScale(0.65);
+      .setScale(0.58);
 
     this.tweens.add({
       targets: sticker,
       alpha: 1,
-      scale: 1,
-      y: y - 12 * this.screenScale,
-      duration: 120,
+      scale: 1.08,
+      y: y - 14 * this.screenScale,
+      duration: 135,
       ease: "Back.Out",
       onComplete: () => {
         this.tweens.add({
           targets: sticker,
           alpha: 0,
-          scale: 1.22,
-          y: y - 46 * this.screenScale,
-          duration: 340,
+          scale: 1.32,
+          y: y - 54 * this.screenScale,
+          duration: 380,
           ease: "Sine.Out",
           onComplete: () => sticker.destroy()
         });
       }
     });
 
-    const underline = this.add.rectangle(x, y + 15 * this.screenScale, 64 * this.screenScale * scale, 5 * this.screenScale, color, 0.95);
+    if (isJudgeSymbol) {
+      return;
+    }
+
+    const underline = this.add.rectangle(x, y + 20 * this.screenScale, 90 * this.screenScale * scale, 7 * this.screenScale, color, 0.82);
     underline.setDepth(359).setAngle(sticker.angle);
     this.tweens.add({
       targets: underline,
@@ -3439,6 +3833,7 @@ export class MainScene extends Phaser.Scene {
     y: number,
     options: {
       color: number;
+      colors?: number[];
       count: number;
       distance: number;
       kind: "star" | "circle" | "note";
@@ -3453,7 +3848,8 @@ export class MainScene extends Phaser.Scene {
       const distance = options.distance * scale * Phaser.Math.FloatBetween(0.55, 1.08);
       const targetX = x + Math.cos(angle) * distance;
       const targetY = y + Math.sin(angle) * distance;
-      const particle = this.createParticleShape(x, y, options.color, options.kind);
+      const color = options.colors?.[index % options.colors.length] ?? options.color;
+      const particle = this.createParticleShape(x, y, color, options.kind);
 
       particle.setDepth(355);
       this.tweens.add({
@@ -3472,32 +3868,27 @@ export class MainScene extends Phaser.Scene {
 
   private createParticleShape(x: number, y: number, color: number, kind: "star" | "circle" | "note") {
     if (kind === "note") {
-      const noteImage = this.createThemeImage(this.currentThemeAssets.effects.particleNote, x, y, 355);
-      if (noteImage) {
-        noteImage.setDisplaySize(22 * this.screenScale, 22 * this.screenScale).setTint(color);
-        return noteImage;
-      }
-    }
-
-    if (kind === "star") {
-      const starImage = this.createThemeImage(this.currentThemeAssets.effects.particleStar, x, y, 355);
-      if (starImage) {
-        starImage.setDisplaySize(20 * this.screenScale, 20 * this.screenScale).setTint(color);
-        return starImage;
-      }
-    }
-
-    if (kind === "note") {
-      const stem = this.add.rectangle(4 * this.screenScale, -8 * this.screenScale, 4 * this.screenScale, 18 * this.screenScale, color, 0.95);
-      const head = this.add.ellipse(-2 * this.screenScale, 6 * this.screenScale, 12 * this.screenScale, 9 * this.screenScale, color, 0.95);
-      return this.add.container(x, y, [stem, head]);
+      return this.createSolidNoteParticle(x, y, color);
     }
 
     if (kind === "circle") {
       return this.add.ellipse(x, y, 11 * this.screenScale, 11 * this.screenScale, color, 0.86);
     }
 
-    return this.add.star(x, y, 5, 4 * this.screenScale, 11 * this.screenScale, color, 0.92);
+    return this.add.ellipse(x, y, 8 * this.screenScale, 8 * this.screenScale, color, 0.92);
+  }
+
+  private createSolidNoteParticle(x: number, y: number, color: number) {
+    const scale = this.screenScale * 1.55;
+    const shadow = this.add.ellipse(1.5 * scale, 7 * scale, 12 * scale, 8 * scale, 0xffffff, 0.18);
+    const stem = this.add.rectangle(4 * scale, -8 * scale, 4.5 * scale, 22 * scale, color, 0.96);
+    const flag = this.add.rectangle(10 * scale, -18 * scale, 17 * scale, 5 * scale, color, 0.96);
+    const head = this.add.ellipse(-3 * scale, 7 * scale, 15 * scale, 11 * scale, color, 0.96);
+    const shine = this.add.ellipse(-6 * scale, 3 * scale, 5 * scale, 3 * scale, 0xffffff, 0.34);
+
+    stem.setOrigin(0.5, 0.5);
+    flag.setOrigin(0, 0.5);
+    return this.add.container(x, y, [shadow, stem, flag, head, shine]);
   }
 
   private popResult() {
@@ -3574,14 +3965,29 @@ export class MainScene extends Phaser.Scene {
     }
 
     this.feverActive = active;
+    this.updateRunnerSpriteSheets();
+    this.tweens.killTweensOf(this.feverBackgroundState);
+    this.tweens.add({
+      targets: this.feverBackgroundState,
+      alpha: active ? 0.92 : 0,
+      duration: active ? 260 : 180,
+      ease: "Sine.Out"
+    });
+    this.layout();
     const label = this.feverLabel;
 
     if (active) {
       this.cameras.main.flash(160, 255, 220, 115, false);
       this.cameras.main.shake(110, 0.003);
-      this.popFeedback("FEVER!", this.currentTheme.colors.accent);
       this.spawnParticleBurst(this.scale.width / 2, this.scale.height * 0.26, {
         color: this.themeColor("accent"),
+        colors: [
+          this.themeColor("leftLane"),
+          this.themeColor("centerLane"),
+          this.themeColor("rightLane"),
+          this.themeColor("accent"),
+          this.themeColor("secondary")
+        ],
         count: 26,
         distance: 120,
         kind: "note",
@@ -3592,17 +3998,36 @@ export class MainScene extends Phaser.Scene {
 
       if (label) {
         this.tweens.killTweensOf(label);
-        label.setAlpha(1).setScale(0.92);
+        label
+          .setText("FEVER!")
+          .setPosition(this.scale.width / 2, this.scale.height * (this.isPortrait ? 0.28 : 0.34))
+          .setFontSize(Math.round(Phaser.Math.Clamp(58 * this.screenScale, 46, 86)))
+          .setColor(this.currentTheme.colors.accent)
+          .setStroke(this.currentTheme.colors.line, Math.round(8 * this.screenScale))
+          .setAlpha(0)
+          .setScale(0.62)
+          .setDepth(362);
         this.tweens.add({
           targets: label,
-          scale: 1.08,
-          duration: 240,
-          yoyo: true,
-          repeat: -1,
-          ease: "Sine.InOut"
+          alpha: 1,
+          scale: 1.16,
+          duration: 180,
+          ease: "Back.Out",
+          onComplete: () => {
+            this.tweens.add({
+              targets: label,
+              alpha: 0,
+              scale: 1.34,
+              y: label.y - 18 * this.screenScale,
+              delay: 420,
+              duration: 360,
+              ease: "Sine.Out"
+            });
+          }
         });
       }
     } else if (label) {
+      this.feverGraphics?.clear();
       this.tweens.killTweensOf(label);
       this.tweens.add({
         targets: label,
@@ -3612,8 +4037,6 @@ export class MainScene extends Phaser.Scene {
         ease: "Sine.Out"
       });
     }
-
-    this.layout();
   }
 
   private updateFeverCameraBump() {
@@ -3660,15 +4083,39 @@ export class MainScene extends Phaser.Scene {
   }
 
   private get currentTheme(): ThemeConfig {
-    return THEMES[this.selectedSong.themeId] ?? DEFAULT_THEME;
+    if (this.gameStarted || this.gameEnded) {
+      return this.getThemeById(this.activeGameplayThemeId);
+    }
+
+    return this.getThemeById(this.selectedSong.themeId);
   }
 
   private get currentThemeAssets(): ThemeAssetConfig {
-    return THEME_ASSETS[this.selectedSong.themeId] ?? THEME_ASSETS["tiny-toy-sprint"];
+    if (this.gameStarted || this.gameEnded) {
+      return this.getThemeAssetsById(this.activeGameplayThemeId);
+    }
+
+    return this.getThemeAssetsById(this.selectedSong.themeId);
+  }
+
+  private get activeGameplayThemeId(): ThemeId {
+    return this.feverActive ? FEVER_GAMEPLAY_THEME_ID : NORMAL_GAMEPLAY_THEME_ID;
+  }
+
+  private getThemeById(themeId: ThemeId) {
+    return THEMES[themeId] ?? DEFAULT_THEME;
+  }
+
+  private getThemeAssetsById(themeId: ThemeId) {
+    return THEME_ASSETS[themeId] ?? THEME_ASSETS["tiny-toy-sprint"];
   }
 
   private themeColor(colorName: keyof ThemeConfig["colors"]) {
     return toColorNumber(this.currentTheme.colors[colorName]);
+  }
+
+  private colorNumberToHex(color: number) {
+    return `#${color.toString(16).padStart(6, "0").slice(-6)}`;
   }
 
   private createThemeImage(assetKey: string | undefined, x: number, y: number, depth: number) {
@@ -3688,6 +4135,19 @@ export class MainScene extends Phaser.Scene {
     const sourceWidth = source?.width || maxWidth;
     const sourceHeight = source?.height || maxHeight;
     const scale = Math.min(maxWidth / sourceWidth, maxHeight / sourceHeight);
+
+    image.setDisplaySize(sourceWidth * scale, sourceHeight * scale);
+  }
+
+  private coverImageInBox(image: Phaser.GameObjects.Image | undefined, boxWidth: number, boxHeight: number) {
+    if (!image || boxWidth <= 0 || boxHeight <= 0) {
+      return;
+    }
+
+    const source = image.texture.getSourceImage() as HTMLImageElement | HTMLCanvasElement | undefined;
+    const sourceWidth = source?.width || boxWidth;
+    const sourceHeight = source?.height || boxHeight;
+    const scale = Math.max(boxWidth / sourceWidth, boxHeight / sourceHeight);
 
     image.setDisplaySize(sourceWidth * scale, sourceHeight * scale);
   }
@@ -3741,7 +4201,7 @@ export class MainScene extends Phaser.Scene {
   }
 
   private createRunnerAssetImage(lane: number) {
-    const spriteSheetKey = this.getRunnerSpriteSheetKey(lane);
+    const spriteSheetKey = this.getRunnerSpriteSheetKey(lane, false);
     if (spriteSheetKey && this.textures.exists(spriteSheetKey)) {
       return this.add.sprite(0, 0, spriteSheetKey, RUNNER_IDLE_FRAME).setDepth(1).setDisplaySize(RUNNER_DISPLAY_WIDTH, RUNNER_DISPLAY_HEIGHT);
     }
@@ -3758,9 +4218,25 @@ export class MainScene extends Phaser.Scene {
     return image;
   }
 
-  private getRunnerSpriteSheetKey(lane: number) {
+  private getRunnerSpriteSheetKey(lane: number, fever = this.feverActive) {
     const laneKey = lane === 0 ? "left" : lane === 1 ? "center" : "right";
-    return this.currentThemeAssets.characters.spriteSheets[laneKey];
+    return fever ? this.currentThemeAssets.characters.feverSpriteSheets[laneKey] ?? this.currentThemeAssets.characters.spriteSheets[laneKey] : this.currentThemeAssets.characters.spriteSheets[laneKey];
+  }
+
+  private updateRunnerSpriteSheets() {
+    this.runners.forEach((runner) => {
+      if (!(runner.assetImage instanceof Phaser.GameObjects.Sprite)) {
+        return;
+      }
+
+      const spriteSheetKey = this.getRunnerSpriteSheetKey(runner.lane);
+      if (!spriteSheetKey || !this.textures.exists(spriteSheetKey) || runner.assetImage.texture.key === spriteSheetKey) {
+        return;
+      }
+
+      const frame = Number(runner.assetImage.frame.name);
+      runner.assetImage.setTexture(spriteSheetKey, Number.isFinite(frame) ? frame : RUNNER_IDLE_FRAME).setDisplaySize(RUNNER_DISPLAY_WIDTH, RUNNER_DISPLAY_HEIGHT);
+    });
   }
 
   private setRunnerVisualState(lane: number, state: RunnerVisualState) {
@@ -3829,6 +4305,9 @@ export class MainScene extends Phaser.Scene {
     const startAngle = lane === 0 ? -4 : lane === 2 ? 4 : 0;
 
     this.tweens.killTweensOf(runner.assetImage);
+    if (this.feverActive) {
+      this.spawnRunnerFeverAfterimage(runner);
+    }
     runner.assetImage.setFrame(1).setDisplaySize(RUNNER_DISPLAY_WIDTH, RUNNER_DISPLAY_HEIGHT).setAngle(startAngle);
     this.time.delayedCall(55, () => {
       runner.assetImage?.setFrame(2).setDisplaySize(RUNNER_DISPLAY_WIDTH, RUNNER_DISPLAY_HEIGHT);
@@ -3852,6 +4331,33 @@ export class MainScene extends Phaser.Scene {
           this.startRunnerIdleAnimation(runner);
         });
       }
+    });
+  }
+
+  private spawnRunnerFeverAfterimage(runner: Runner) {
+    if (!(runner.assetImage instanceof Phaser.GameObjects.Sprite)) {
+      return;
+    }
+
+    const frame = Number(runner.assetImage.frame.name);
+    const ghost = this.add
+      .sprite(runner.container.x, runner.container.y, runner.assetImage.texture.key, Number.isFinite(frame) ? frame : RUNNER_IDLE_FRAME)
+      .setDepth(runner.container.depth - 1)
+      .setAlpha(0.28)
+      .setTint(this.runnerColor(runner.lane))
+      .setAngle(runner.container.angle);
+    ghost.setDisplaySize(RUNNER_DISPLAY_WIDTH * runner.container.scaleX, RUNNER_DISPLAY_HEIGHT * runner.container.scaleY);
+
+    this.tweens.add({
+      targets: ghost,
+      x: ghost.x + (runner.lane - 1) * -18 * this.screenScale,
+      y: ghost.y + 10 * this.screenScale,
+      alpha: 0,
+      scaleX: 1.08,
+      scaleY: 1.08,
+      duration: 260,
+      ease: "Sine.Out",
+      onComplete: () => ghost.destroy()
     });
   }
 
@@ -3991,18 +4497,46 @@ export class MainScene extends Phaser.Scene {
       return;
     }
 
-    const laneWidth = this.scale.width / GAME_BALANCE.laneCount;
-    const lane = Phaser.Math.Clamp(Math.floor(x / laneWidth), 0, GAME_BALANCE.laneCount - 1);
-    this.jumpRunner(lane);
+    this.jumpRunner(this.getPointerLane(x, y));
+  }
+
+  private getPointerLane(x: number, y: number) {
+    const track = this.getTrackLayout();
+    const z = Phaser.Math.Clamp((y - track.topY) / Math.max(1, track.bottomY - track.topY), 0, 1);
+
+    for (let lane = 0; lane < GAME_BALANCE.laneCount; lane += 1) {
+      const left = this.getLaneBoundaryPoint(track, lane, z);
+      const right = this.getLaneBoundaryPoint(track, lane + 1, z);
+      const minX = Math.min(left.x, right.x);
+      const maxX = Math.max(left.x, right.x);
+      if (x >= minX && x <= maxX) {
+        return lane;
+      }
+    }
+
+    let nearestLane = 0;
+    let nearestDistance = Number.POSITIVE_INFINITY;
+    for (let lane = 0; lane < GAME_BALANCE.laneCount; lane += 1) {
+      const center = this.getLaneCenterPoint(track, lane, z);
+      const distance = Math.abs(x - center.x);
+      if (distance < nearestDistance) {
+        nearestLane = lane;
+        nearestDistance = distance;
+      }
+    }
+
+    return nearestLane;
   }
 
   private jumpRunner(lane: number) {
     const runner = this.runners[lane];
-    if (!runner || runner.isJumping) {
+    if (!runner) {
       return;
     }
 
+    this.recordLaneInput(lane);
     runner.isJumping = true;
+    this.playPerformanceSe(lane);
     this.setRunnerVisualState(lane, "jump");
     this.pulseJumpButton(lane);
     this.spawnJumpEffects(runner);
@@ -4012,13 +4546,16 @@ export class MainScene extends Phaser.Scene {
     if (runner.assetImage) {
       this.tweens.killTweensOf(runner.assetImage);
     }
+    this.layoutPlayers(this.getTrackLayout());
+    const baseScaleX = runner.container.scaleX;
+    const baseScaleY = runner.container.scaleY;
     runner.container.setAngle(0);
     runner.assetImage?.setDisplaySize(RUNNER_DISPLAY_WIDTH, RUNNER_DISPLAY_HEIGHT);
     this.tweens.add({
       targets: runner.container,
       angle: lane === 0 ? -3 : lane === 2 ? 3 : 0,
-      scaleX: runner.container.scaleX * 1.04,
-      scaleY: runner.container.scaleY * 0.96,
+      scaleX: baseScaleX * 1.04,
+      scaleY: baseScaleY * 0.96,
       duration: 95,
       ease: "Back.Out",
       yoyo: true,
@@ -4034,13 +4571,13 @@ export class MainScene extends Phaser.Scene {
       targets: runner.shadow,
       scaleX: 1.08,
       scaleY: 0.92,
-      alpha: 0.38,
+      alpha: 0,
       duration: 110,
       ease: "Sine.Out",
       yoyo: true,
       hold: 100,
       onComplete: () => {
-        runner.shadow.setAlpha(0.32).setScale(1);
+        runner.shadow.setAlpha(0).setScale(1).setVisible(false);
       }
     });
   }
@@ -4062,13 +4599,6 @@ export class MainScene extends Phaser.Scene {
       onComplete: () => ghost.destroy()
     });
 
-    this.spawnParticleBurst(x, y - 18 * runner.container.scaleY, {
-      color,
-      count: this.feverActive ? 9 : 5,
-      distance: this.feverActive ? 34 : 22,
-      kind: "star",
-      duration: 280
-    });
   }
 
   private playLandingSquash(runner: Runner) {
@@ -4084,12 +4614,12 @@ export class MainScene extends Phaser.Scene {
         this.setRunnerVisualState(runner.lane, "run");
       }
     });
-    runner.shadow.setScale(1.18, 1.12).setAlpha(0.5);
+    runner.shadow.setScale(1.18, 1.12).setAlpha(0).setVisible(false);
     this.tweens.add({
       targets: runner.shadow,
       scaleX: 1,
       scaleY: 1,
-      alpha: 0.32,
+      alpha: 0,
       duration: 150,
       ease: "Sine.Out"
     });
@@ -4117,10 +4647,6 @@ export class MainScene extends Phaser.Scene {
         button.assetImage?.setAlpha(this.gameStarted ? 0.95 : 0);
       }
     });
-  }
-
-  private isRunnerJumping(lane: number) {
-    return this.runners[lane]?.isJumping ?? false;
   }
 
   private playMoveSe() {

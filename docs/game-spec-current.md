@@ -491,9 +491,9 @@ public/assets/audio/
 
 | キャラ | ファイル |
 |---|---|
-| 赤 | `se_character_red.mp3` |
-| 黄 | `se_character_yellow.mp3` |
-| 青 | `se_character_blue.mp3` |
+| 赤 | `se_character_red.wav` |
+| 黄 | `se_character_yellow.wav` |
+| 青 | `se_character_blue.wav` |
 
 ### ブラウザ制約
 

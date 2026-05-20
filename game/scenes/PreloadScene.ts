@@ -1,5 +1,5 @@
 import * as Phaser from "phaser";
-import { AUDIO_ASSET_BASE, CHART_ASSET_BASE } from "@/game/config/assets";
+import { AUDIO_ASSET_BASE, CHART_ASSET_BASE, IMAGE_ASSET_BASE } from "@/game/config/assets";
 import { SONGS } from "@/game/config/songs";
 import { getThemeAssetEntries } from "@/game/config/themeAssets";
 import { gameEvents } from "@/game/systems/GameEvents";
@@ -31,6 +31,9 @@ export class PreloadScene extends Phaser.Scene {
     SONGS.forEach((song) => {
       this.load.audio(song.audioKey, [`${AUDIO_ASSET_BASE}/${song.audioFile}`]);
       this.load.json(song.chartKey, `${CHART_ASSET_BASE}/${song.chartFile}`);
+      if (song.thumbnailKey && song.thumbnailFile) {
+        this.load.image(song.thumbnailKey, `${IMAGE_ASSET_BASE}/${song.thumbnailFile}`);
+      }
     });
     getThemeAssetEntries().forEach((asset) => {
       if (asset.path.endsWith(".svg")) {
@@ -50,9 +53,9 @@ export class PreloadScene extends Phaser.Scene {
     });
     this.load.audio("se_move_beat", [`${AUDIO_ASSET_BASE}/se_move_beat.wav`]);
     this.load.audio("se_item_collect", [`${AUDIO_ASSET_BASE}/se_item_collect.wav`]);
-    this.load.audio("se_character_red", [`${AUDIO_ASSET_BASE}/se_character_red.mp3`]);
-    this.load.audio("se_character_yellow", [`${AUDIO_ASSET_BASE}/se_character_yellow.mp3`]);
-    this.load.audio("se_character_blue", [`${AUDIO_ASSET_BASE}/se_character_blue.mp3`]);
+    this.load.audio("se_character_red", [`${AUDIO_ASSET_BASE}/se_character_red.wav`]);
+    this.load.audio("se_character_yellow", [`${AUDIO_ASSET_BASE}/se_character_yellow.wav`]);
+    this.load.audio("se_character_blue", [`${AUDIO_ASSET_BASE}/se_character_blue.wav`]);
   }
 
   async create() {

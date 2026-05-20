@@ -45,9 +45,9 @@ bgm_sushi_techno.wav
 Each character has a lane-specific performance sound:
 
 ```txt
-se_character_red.mp3
-se_character_yellow.mp3
-se_character_blue.mp3
+se_character_red.wav
+se_character_yellow.wav
+se_character_blue.wav
 ```
 
 These are loaded in `PreloadScene` and played from `MainScene` when the matching character successfully performs.

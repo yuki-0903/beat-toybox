@@ -90,6 +90,14 @@ Each sheet uses 512x512 frames.
 
 ### UI
 
+Use this source sheet as the canonical style reference before creating or recutting UI parts:
+
+```txt
+public/assets/themes/tiny_toy_sprint/ui/parts/source/tinytoy_ui_full_asset_sheet_source_01.png
+```
+
+Cut runtime UI parts into separate transparent PNGs under `public/assets/themes/tiny_toy_sprint/ui/parts/`. Do not reference files under `source/` directly from gameplay code.
+
 Important UI parts:
 
 ```txt

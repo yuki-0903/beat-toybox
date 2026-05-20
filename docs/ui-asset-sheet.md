@@ -10,10 +10,12 @@ This document lists the UI elements currently used by BEAT RUNNER and proposes a
 - Asset key definitions: `game/config/themeAssets.ts`
 - Runtime UI assets: `public/assets/themes/tiny_toy_sprint/ui/`
 - Runtime UI parts: `public/assets/themes/tiny_toy_sprint/ui/parts/`
+- Canonical full UI reference sheet:
+  - `public/assets/themes/tiny_toy_sprint/ui/parts/source/tinytoy_ui_full_asset_sheet_source_01.png`
 - Existing generated sheet files:
-  - `public/assets/themes/tiny_toy_sprint/ui/tinytoy_ui_sheet_menu_controls_01.png`
-  - `public/assets/themes/tiny_toy_sprint/ui/tinytoy_ui_sheet_cards_difficulty_01.png`
-  - `public/assets/themes/tiny_toy_sprint/ui/tinytoy_ui_sheet_hud_ranking_01.png`
+  - `public/assets/themes/tiny_toy_sprint/ui/parts/source/tinytoy_ui_full_asset_sheet_source_01.png`
+  - `public/assets/themes/tiny_toy_sprint/ui/parts/source/tinytoy_ui_start_button_source_02.png`
+  - `public/assets/themes/tiny_toy_sprint/ui/parts/source/tinytoy_ui_jump_buttons_source_01.png`
 - Text such as screen titles, score values, ranking rows, and feedback words is currently drawn in Phaser.
 - Button, card, panel, HUD, and icon frames are loaded from image assets where available.
 - Name input UI assets are already defined, but the current runtime flow does not show a custom name input screen. Ranking names currently come from localStorage fallback.
@@ -94,6 +96,8 @@ Use transparent PNG sheets with consistent padding and no baked text unless expl
 
 ## Generation Rules
 
+- When adding, replacing, or recutting UI parts, use `public/assets/themes/tiny_toy_sprint/ui/parts/source/tinytoy_ui_full_asset_sheet_source_01.png` as the primary visual reference for style, colors, bevels, outlines, and spacing.
+- Cut runtime UI parts into separate transparent PNGs under `public/assets/themes/tiny_toy_sprint/ui/parts/`; do not load the full source sheet directly in gameplay.
 - Style: toy-like, miniature, rhythm runner, rounded plastic, soft bevels, readable on mobile.
 - Palette anchor: red `#FF6B6B`, yellow `#FFD166`, blue `#4D96FF`, cream/white highlights, warm toy shadows.
 - Keep text out of assets by default. Phaser should draw labels such as `START!`, `SELECT SONG`, `SCORE`, ranking names, and judgment text.
