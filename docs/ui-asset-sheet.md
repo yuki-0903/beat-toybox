@@ -10,12 +10,7 @@ This document lists the UI elements currently used by BEAT RUNNER and proposes a
 - Asset key definitions: `game/config/themeAssets.ts`
 - Runtime UI assets: `public/assets/themes/tiny_toy_sprint/ui/`
 - Runtime UI parts: `public/assets/themes/tiny_toy_sprint/ui/parts/`
-- Canonical full UI reference sheet:
-  - `public/assets/themes/tiny_toy_sprint/ui/parts/source/tinytoy_ui_full_asset_sheet_source_01.png`
-- Existing generated sheet files:
-  - `public/assets/themes/tiny_toy_sprint/ui/parts/source/tinytoy_ui_full_asset_sheet_source_01.png`
-  - `public/assets/themes/tiny_toy_sprint/ui/parts/source/tinytoy_ui_start_button_source_02.png`
-  - `public/assets/themes/tiny_toy_sprint/ui/parts/source/tinytoy_ui_jump_buttons_source_01.png`
+- Source sheet files are kept under `public/assets/themes/tiny_toy_sprint/ui/parts/source/`, but they are not loaded by the game runtime.
 - Text such as screen titles, score values, ranking rows, and feedback words is currently drawn in Phaser.
 - Button, card, panel, HUD, and icon frames are loaded from image assets where available.
 - Name input UI assets are already defined, but the current runtime flow does not show a custom name input screen. Ranking names currently come from localStorage fallback.
@@ -78,12 +73,10 @@ This document lists the UI elements currently used by BEAT RUNNER and proposes a
 | Panels | Title banner | `game/scenes/MainScene.ts` `songSelectTitleImage`, `layoutSongButtons` | `ui.parts.titleBanner` | `beat_ui_panel_title_banner_01.png` |
 | Panels | Ranking panel | `game/scenes/MainScene.ts` `layoutRankingLabels` | `ui.parts.rankingPanel` | `beat_ui_panel_ranking_01.png` |
 | Panels | Result panel | `game/scenes/MainScene.ts` `popResult` | currently text-only | `beat_ui_panel_result_01.png` |
-| Effects | Star particle | `game/scenes/MainScene.ts` `spawnParticleBurst` | `effects.particleStar` | `beat_ui_particle_star_01.png` |
-| Effects | Note particle | `game/scenes/MainScene.ts` `spawnParticleBurst` | `effects.particleNote` | `beat_ui_particle_note_01.png` |
 
 ## Proposed UI Asset Sheets
 
-Use transparent PNG sheets with consistent padding and no baked text unless explicitly listed.
+Use transparent source sheets with consistent padding and no baked text unless explicitly listed, then export runtime parts as WebP.
 
 | Sheet | Purpose | Assets to include | Suggested filename |
 |---|---|---|---|
@@ -92,17 +85,16 @@ Use transparent PNG sheets with consistent padding and no baked text unless expl
 | HUD sheet | In-game status UI | score badge, combo badge, miss badge, fever badge, fever star, small counter sticker base | `beat_ui_sheet_hud_01.png` |
 | Touch controls sheet | Smartphone performance buttons | red touch button, yellow touch button, blue touch button, pressed/highlight variants | `beat_ui_sheet_touch_controls_01.png` |
 | Feedback stickers sheet | Temporary judgment and pop feedback | judge sticker base, miss sticker base, fever sticker base, combo milestone sticker, item collect sticker | `beat_ui_sheet_feedback_stickers_01.png` |
-| Particles sheet | Small reusable UI effects | star particle, note particle, circle pop, sparkle, tiny confetti pieces | `beat_ui_sheet_particles_01.png` |
 
 ## Generation Rules
 
-- When adding, replacing, or recutting UI parts, use `public/assets/themes/tiny_toy_sprint/ui/parts/source/tinytoy_ui_full_asset_sheet_source_01.png` as the primary visual reference for style, colors, bevels, outlines, and spacing.
-- Cut runtime UI parts into separate transparent PNGs under `public/assets/themes/tiny_toy_sprint/ui/parts/`; do not load the full source sheet directly in gameplay.
+- When adding, replacing, or recutting UI parts, keep source sheets under `public/assets/themes/tiny_toy_sprint/ui/parts/source/` and export runtime-ready parts into `public/assets/themes/tiny_toy_sprint/ui/parts/`.
+- Cut runtime UI parts into separate transparent WebP files under `public/assets/themes/tiny_toy_sprint/ui/parts/`; do not load the full source sheet directly in gameplay.
 - Style: toy-like, miniature, rhythm runner, rounded plastic, soft bevels, readable on mobile.
 - Palette anchor: red `#FF6B6B`, yellow `#FFD166`, blue `#4D96FF`, cream/white highlights, warm toy shadows.
 - Keep text out of assets by default. Phaser should draw labels such as `START!`, `SELECT SONG`, `SCORE`, ranking names, and judgment text.
 - Exceptions where baked symbols are useful: trophy, gear, question mark, arrows, stars, music notes.
-- Export every UI part as a separate transparent PNG after generating sheets.
+- Export every UI part as a separate transparent WebP after generating sheets.
 - Keep each part centered with transparent padding so Phaser can fit it with `fitImageInBox`.
 - Use strong outer rims for buttons/cards because UI often sits on bright detailed backgrounds.
 - Provide normal and pressed/highlight variants for touch buttons and primary buttons.

@@ -1,6 +1,5 @@
 import * as Phaser from "phaser";
 import { GAME_BALANCE } from "@/game/config/balance";
-import { CHART_RECORDER_ENABLED } from "@/game/config/features";
 import { BACKGROUND_COLOR, BASE_GAME_HEIGHT, BASE_GAME_WIDTH } from "@/game/config/gameConfig";
 import { SONGS, type SongDefinition } from "@/game/config/songs";
 import { THEME_ASSETS, type ThemeAssetConfig } from "@/game/config/themeAssets";
@@ -102,77 +101,6 @@ interface BeatmapChart {
 
 type DifficultyId = "easy" | "normal" | "hard";
 type MenuStep = "start" | "ranking" | "result" | "song" | "difficulty" | "settings";
-type DebugAction =
-  | "densityDown"
-  | "densityUp"
-  | "speedDown"
-  | "speedUp"
-  | "laneWidthDown"
-  | "laneWidthUp"
-  | "depthDown"
-  | "depthUp"
-  | "characterSizeDown"
-  | "characterSizeUp"
-  | "characterXDown"
-  | "characterXUp"
-  | "characterYDown"
-  | "characterYUp"
-  | "buttonSizeDown"
-  | "buttonSizeUp"
-  | "buttonYDown"
-  | "buttonYUp"
-  | "itemSizeDown"
-  | "itemSizeUp"
-  | "laneAngleDown"
-  | "laneAngleUp"
-  | "bgXDown"
-  | "bgXUp"
-  | "feverModeDown"
-  | "feverModeUp"
-  | "trackYDown"
-  | "trackYUp"
-  | "farYDown"
-  | "farYUp"
-  | "farWDown"
-  | "farWUp"
-  | "nearWDown"
-  | "nearWUp"
-  | "bgYDown"
-  | "bgYUp"
-  | "bgScaleDown"
-  | "bgScaleUp"
-  | "resultLeftXDown"
-  | "resultLeftXUp"
-  | "resultRightXDown"
-  | "resultRightXUp"
-  | "resultLeftWDown"
-  | "resultLeftWUp"
-  | "resultTitleXDown"
-  | "resultTitleXUp"
-  | "resultTitleYDown"
-  | "resultTitleYUp"
-  | "resultTitleSDown"
-  | "resultTitleSUp"
-  | "resultSongYDown"
-  | "resultSongYUp"
-  | "resultSongSDown"
-  | "resultSongSUp"
-  | "resultScoreXDown"
-  | "resultScoreXUp"
-  | "resultScoreYDown"
-  | "resultScoreYUp"
-  | "resultScoreSDown"
-  | "resultScoreSUp"
-  | "resultScoreHDown"
-  | "resultScoreHUp"
-  | "resultStatYDown"
-  | "resultStatYUp"
-  | "resultStatGapDown"
-  | "resultStatGapUp"
-  | "resultStatHDown"
-  | "resultStatHUp"
-  | "resultBottomYDown"
-  | "resultBottomYUp";
 type MenuAction = "play" | "ranking" | "setting" | "help" | "back" | "home" | "retry";
 type AudioSettingKind = "bgm" | "se";
 type ResultStatKind = "score" | "perfect" | "nice" | "good" | "miss" | "maxCombo";
@@ -228,12 +156,6 @@ interface SongArrowButton {
   pressedAssetImage?: Phaser.GameObjects.Image;
 }
 
-interface DebugButton {
-  action: DebugAction;
-  background: Phaser.GameObjects.Rectangle;
-  label: Phaser.GameObjects.Text;
-}
-
 interface MenuActionButton {
   action: MenuAction;
   background: Phaser.GameObjects.Rectangle;
@@ -251,11 +173,6 @@ interface RankingEntry {
   maxCombo: number;
   missCount: number;
   createdAt: string;
-}
-
-interface RecordedChartTap {
-  time: number;
-  lane: number;
 }
 
 const DIFFICULTY_SETTINGS: Record<
@@ -289,7 +206,9 @@ const DIFFICULTY_SETTINGS: Record<
 
 const UI_FONT = '"Fredoka", Arial, Helvetica, sans-serif';
 const HUD_NUMBER_COLOR = "#5A3824";
-const HUD_NUMBER_Y_OFFSET = 6;
+const HUD_NUMBER_Y_OFFSET = 22;
+const HUD_LEFT_NUMBER_X_OFFSET = 10;
+const HUD_RIGHT_NUMBER_X_OFFSET = 10;
 const RUNNER_DISPLAY_WIDTH = 252;
 const RUNNER_DISPLAY_HEIGHT = 252;
 const RUNNER_IDLE_FRAME = 5;
@@ -306,15 +225,15 @@ const JUDGE_WINDOWS_SECONDS = {
 const RUN_START_DELAY_MS = 1800;
 const RUN_FINISH_DELAY_MS = 3000;
 const BGM_BASE_VOLUME = 0.55;
+const MENU_BGM_AUDIO_KEY = "bgm_toybox_moon_menu";
 const MOVE_SE_BASE_VOLUME = 0.68;
 const ITEM_SE_BASE_VOLUME = 0.76;
 const PERFORMANCE_SE_BASE_VOLUME = 0.86;
-const LAYOUT_DEBUG_STORAGE_KEY = "beat-runner-layout-debug-v8";
-const LAYOUT_DEBUG_BASE_NEAR_W = 11;
-const CHART_RECORDER_OFFSET_SECONDS = 0;
+const LAYOUT_TUNING_BASE_NEAR_W = 11;
+const RANKINGS_STORAGE_KEY = "beat-runner-rankings-v1";
 const toColorNumber = (hexColor: string) => Number.parseInt(hexColor.replace("#", ""), 16);
 
-type LayoutDebugState = {
+type LayoutTuningState = {
   trackY: number;
   farY: number;
   farW: number;
@@ -345,10 +264,17 @@ type LayoutDebugState = {
   resultStatY: number;
   resultStatGap: number;
   resultStatH: number;
+  resultStatS: number;
   resultBottomY: number;
+  resultBgX: number;
+  resultBgY: number;
+  resultBgScale: number;
+  resultDifficultyX: number;
+  resultDifficultyY: number;
+  resultDifficultyS: number;
 };
 
-const DEFAULT_LAYOUT_DEBUG: LayoutDebugState = {
+const DEFAULT_LAYOUT_TUNING: LayoutTuningState = {
   trackY: -10,
   farY: 15,
   farW: -24,
@@ -364,42 +290,42 @@ const DEFAULT_LAYOUT_DEBUG: LayoutDebugState = {
   bgX: -2,
   bgY: 1,
   bgScale: 2,
-  resultLeftX: 0,
-  resultRightX: -9,
-  resultLeftW: 0,
+  resultLeftX: 11,
+  resultRightX: -2,
+  resultLeftW: -6,
   resultTitleX: 0,
   resultTitleY: 0,
   resultTitleS: 0,
   resultSongY: -13,
-  resultSongS: 17,
-  resultScoreX: 3,
+  resultSongS: 24,
+  resultScoreX: 0,
   resultScoreY: -6,
-  resultScoreS: 13,
-  resultScoreH: 18,
-  resultStatY: -11,
+  resultScoreS: -3,
+  resultScoreH: 6,
+  resultStatY: -10,
   resultStatGap: 1,
-  resultStatH: 3,
-  resultBottomY: -4
+  resultStatH: 2,
+  resultStatS: -10,
+  resultBottomY: -1,
+  resultBgX: 0,
+  resultBgY: 0,
+  resultBgScale: 0,
+  resultDifficultyX: -17,
+  resultDifficultyY: 0,
+  resultDifficultyS: 17
 };
 
 export class MainScene extends Phaser.Scene {
   private readonly itemsEnabled = false;
   private inputController?: InputController;
   private background?: Phaser.GameObjects.Rectangle;
-  private skyImage?: Phaser.GameObjects.Image;
   private startBackgroundPortraitImage?: Phaser.GameObjects.Image;
   private startBackgroundLandscapeImage?: Phaser.GameObjects.Image;
-  private menuBackgroundPortraitImage?: Phaser.GameObjects.Image;
-  private menuBackgroundLandscapeImage?: Phaser.GameObjects.Image;
   private gameplayBackgroundImages: Phaser.GameObjects.Image[] = [];
   private feverBackgroundPortraitImage?: Phaser.GameObjects.Image;
   private feverBackgroundLandscapeImage?: Phaser.GameObjects.Image;
   private deskSurfaceImage?: Phaser.GameObjects.Image;
-  private toyRoadImage?: Phaser.GameObjects.Image;
-  private toyBlocksDecorImage?: Phaser.GameObjects.Image;
-  private blurredToysDecorImage?: Phaser.GameObjects.Image;
   private blurredBackgroundImages = new WeakSet<Phaser.GameObjects.Image>();
-  private laneOverlayImages: Phaser.GameObjects.Image[] = [];
   private comboBadgeImage?: Phaser.GameObjects.Image;
   private scoreStickerImage?: Phaser.GameObjects.Image;
   private missStickerImage?: Phaser.GameObjects.Image;
@@ -418,10 +344,12 @@ export class MainScene extends Phaser.Scene {
   private settingsPanelImage?: Phaser.GameObjects.Image;
   private resultBackgroundGraphics?: Phaser.GameObjects.Graphics;
   private trackGraphics?: Phaser.GameObjects.Graphics;
+  private hitboxGuideGraphics?: Phaser.GameObjects.Graphics;
   private runnerFeverGraphics?: Phaser.GameObjects.Graphics;
   private hudGraphics?: Phaser.GameObjects.Graphics;
   private feverGraphics?: Phaser.GameObjects.Graphics;
   private runners: Runner[] = [];
+  private hitboxMarkers: Phaser.GameObjects.Arc[] = [];
   private jumpButtons: JumpButton[] = [];
   private titleLabel?: Phaser.GameObjects.Text;
   private sizeLabel?: Phaser.GameObjects.Text;
@@ -440,25 +368,19 @@ export class MainScene extends Phaser.Scene {
   private settingsTitleLabel?: Phaser.GameObjects.Text;
   private settingsBgmLabel?: Phaser.GameObjects.Text;
   private settingsSeLabel?: Phaser.GameObjects.Text;
-  private recorderStatusLabel?: Phaser.GameObjects.Text;
-  private debugDensityLabel?: Phaser.GameObjects.Text;
-  private debugSpeedLabel?: Phaser.GameObjects.Text;
-  private debugLayoutPanel?: Phaser.GameObjects.Rectangle;
-  private debugFoldButton?: Omit<DebugButton, "action">;
-  private debugLayoutLabels: Phaser.GameObjects.Text[] = [];
   private songButtons: SongButton[] = [];
   private songSelectTitleImage?: Phaser.GameObjects.Image;
   private difficultyTitleImage?: Phaser.GameObjects.Image;
   private songSelectPaginationGraphics?: Phaser.GameObjects.Graphics;
   private songArrowButtons: SongArrowButton[] = [];
   private difficultyButtons: DifficultyButton[] = [];
-  private debugButtons: DebugButton[] = [];
   private audioSettingSliders: AudioSettingSlider[] = [];
   private resultStatParts: ResultStatPart[] = [];
   private menuButtons: MenuActionButton[] = [];
   private rankingLabels: Phaser.GameObjects.Text[] = [];
   private rankings: RankingEntry[] = [];
   private bgm?: Phaser.Sound.BaseSound;
+  private menuBgm?: Phaser.Sound.BaseSound;
   private moveSe?: Phaser.Sound.BaseSound;
   private itemSe?: Phaser.Sound.BaseSound;
   private redPerformanceSe?: Phaser.Sound.BaseSound;
@@ -489,23 +411,33 @@ export class MainScene extends Phaser.Scene {
   private menuStep: MenuStep = "start";
   private selectedSongIndex = 0;
   private selectedDifficulty: DifficultyId = "normal";
-  private debugDensityLevel = 0;
-  private debugSpeedLevel = 0;
-  private debugPanelCollapsed = false;
-  private layoutDebug: LayoutDebugState = { ...DEFAULT_LAYOUT_DEBUG };
+  private layoutTuning: LayoutTuningState = { ...DEFAULT_LAYOUT_TUNING };
+  private hitboxOverlayEnabled = false;
   private webglFxDisabled = false;
   private audioSettings: AudioSettings = loadAudioSettings();
+  private hasAudioGesture = false;
   private settingsReturnStep: SettingsReturnStep = "start";
   private activeAudioSlider?: AudioSettingKind;
   private readonly feverBackgroundState = { alpha: 0 };
-  private chartRecorderEnabled = false;
-  private recordedChartTaps: RecordedChartTap[] = [];
-  private recorderSavedPath = "";
+  private pageAudioPaused = false;
+  private htmlStartConfirmed = false;
+  private unsubscribeHtmlStart?: () => void;
   private lastMissEffectAt = 0;
   private lastLayoutRefreshAt = 0;
   private lastFeverCameraBumpAt = 0;
+  private readonly handleHtmlStart = () => {
+    if (this.gameStarted || this.gameEnded || this.menuStep !== "start") {
+      return;
+    }
+
+    this.htmlStartConfirmed = true;
+    this.hasAudioGesture = true;
+    this.playUiSe();
+    this.showSongSelect();
+  };
   private readonly handlePointerDown = (pointer: Phaser.Input.Pointer) => {
     if (!this.gameStarted) {
+      this.hasAudioGesture = true;
       if (this.gameEnded) {
         this.showStartScreen();
         return;
@@ -524,19 +456,11 @@ export class MainScene extends Phaser.Scene {
         return;
       }
 
-      if (this.menuStep === "result" && this.tryPressDebugButton(pointerPosition.x, pointerPosition.y)) {
-        return;
-      }
-
       if (this.menuStep === "settings" && this.tryPressAudioSettingSlider(pointerPosition.x, pointerPosition.y)) {
         return;
       }
 
       if (this.menuStep === "song" && this.trySelectSong(pointerPosition.x, pointerPosition.y)) {
-        return;
-      }
-
-      if (this.menuStep === "difficulty" && this.tryPressDebugButton(pointerPosition.x, pointerPosition.y)) {
         return;
       }
 
@@ -548,13 +472,6 @@ export class MainScene extends Phaser.Scene {
     }
 
     const pointerPosition = this.getPointerWorldPoint(pointer);
-    if (this.tryPressDebugButton(pointerPosition.x, pointerPosition.y)) {
-      return;
-    }
-    if (this.isDebugControlArea(pointerPosition.x, pointerPosition.y)) {
-      return;
-    }
-
     this.tryJumpFromPointer(pointerPosition.x, pointerPosition.y);
   };
 
@@ -570,13 +487,38 @@ export class MainScene extends Phaser.Scene {
   private readonly handlePointerUp = () => {
     this.activeAudioSlider = undefined;
   };
+  private readonly handlePageHidden = () => {
+    if (this.pageAudioPaused) {
+      return;
+    }
+
+    this.pageAudioPaused = true;
+    this.sound.pauseAll();
+  };
+  private readonly handlePageVisible = () => {
+    if (!this.pageAudioPaused) {
+      return;
+    }
+
+    this.pageAudioPaused = false;
+    this.sound.resumeAll();
+    this.applyAudioSettings(false);
+  };
+  private readonly handleVisibilityChange = () => {
+    if (typeof document !== "undefined" && document.hidden) {
+      this.handlePageHidden();
+      return;
+    }
+
+    this.handlePageVisible();
+  };
   private readonly handleKeyDown = (event: KeyboardEvent) => {
     if (event.repeat) {
       return;
     }
 
-    if ((this.gameStarted || (!this.gameEnded && this.menuStep === "difficulty")) && this.tryLayoutDebugHotkey(event)) {
-      return;
+    if (!this.gameStarted) {
+      this.hasAudioGesture = true;
     }
 
     if (event.code === "ArrowLeft" || event.code === "KeyA") {
@@ -629,6 +571,9 @@ export class MainScene extends Phaser.Scene {
 
     if (!this.gameStarted && !this.gameEnded && this.menuStep === "start" && (event.code === "Enter" || event.code === "Space")) {
       event.preventDefault();
+      if (!this.htmlStartConfirmed) {
+        return;
+      }
       this.playUiSe();
       this.showSongSelect();
       return;
@@ -720,17 +665,6 @@ export class MainScene extends Phaser.Scene {
         return;
       }
 
-      if (event.code === "BracketLeft" || event.code === "BracketRight") {
-        event.preventDefault();
-        this.playUiSe();
-        this.adjustDebugTuning(event.code === "BracketLeft" ? "densityDown" : "densityUp");
-        return;
-      }
-
-      if (event.code === "Minus" || event.code === "Equal") {
-        event.preventDefault();
-        this.adjustDebugTuning(event.code === "Minus" ? "speedDown" : "speedUp");
-      }
     }
   };
 
@@ -740,11 +674,12 @@ export class MainScene extends Phaser.Scene {
 
   create() {
     this.cameras.main.setBackgroundColor(BACKGROUND_COLOR);
-    this.chartRecorderEnabled = this.isChartRecorderMode();
+    this.hitboxOverlayEnabled = this.isHitboxOverlayMode();
     this.inputController = new InputController(this);
-    this.loadLayoutDebug();
+    this.sound.pauseOnBlur = true;
     this.createPrototypeView();
     this.loadRankings();
+    this.createMenuBgm();
     this.createSelectedBgm();
     this.moveSe = this.createSoundIfLoaded("se_move_beat", { volume: this.getSeVolume(MOVE_SE_BASE_VOLUME) });
     this.itemSe = this.createSoundIfLoaded("se_item_collect", { volume: this.getSeVolume(ITEM_SE_BASE_VOLUME) });
@@ -753,9 +688,6 @@ export class MainScene extends Phaser.Scene {
     this.bluePerformanceSe = this.createSoundIfLoaded("se_character_blue", { volume: this.getSeVolume(PERFORMANCE_SE_BASE_VOLUME) });
     this.applyAudioSettings(false);
     this.loadChart();
-    if (this.chartRecorderEnabled) {
-      this.popFeedback("CHART RECORDER", this.currentTheme.colors.accent);
-    }
     this.layout();
     this.input.addPointer(GAME_BALANCE.laneCount - 1);
     this.input.keyboard?.on("keydown", this.handleKeyDown);
@@ -764,6 +696,8 @@ export class MainScene extends Phaser.Scene {
     this.input.on("pointerup", this.handlePointerUp);
     this.input.on("pointerupoutside", this.handlePointerUp);
     this.scale.on(Phaser.Scale.Events.RESIZE, this.handleResize, this);
+    this.registerPageAudioHandlers();
+    this.unsubscribeHtmlStart = gameEvents.on("ui:start", this.handleHtmlStart);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.destroyScene, this);
     gameEvents.emit("scene:ready", { sceneKey: this.scene.key });
   }
@@ -787,6 +721,7 @@ export class MainScene extends Phaser.Scene {
     this.layoutBackgroundImages(track);
     this.drawTrack(track);
     this.layoutPlayers(track);
+    this.layoutHitboxOverlay(track);
     if (this.feverActive) {
       this.drawFeverLayer();
       this.updateFeverCameraBump();
@@ -797,11 +732,8 @@ export class MainScene extends Phaser.Scene {
   private createPrototypeView() {
     const theme = this.currentTheme;
     this.background = this.add.rectangle(0, 0, 1, 1, this.themeColor("background")).setOrigin(0).setDepth(-32);
-    this.skyImage = this.createThemeImage(this.currentThemeAssets.background.sky, 0, 0, -31);
     this.startBackgroundPortraitImage = this.createThemeImage(this.currentThemeAssets.background.start.portrait, 0, 0, -30);
     this.startBackgroundLandscapeImage = this.createThemeImage(this.currentThemeAssets.background.start.landscape, 0, 0, -30);
-    this.menuBackgroundPortraitImage = this.createThemeImage(this.currentThemeAssets.background.menu.portrait, 0, 0, -30);
-    this.menuBackgroundLandscapeImage = this.createThemeImage(this.currentThemeAssets.background.menu.landscape, 0, 0, -30);
     this.gameplayBackgroundImages = [0, 1].flatMap(() => {
       const normalAssets = this.getThemeAssetsById(NORMAL_GAMEPLAY_THEME_ID);
       const assetKey = this.isPortrait ? normalAssets.background.gameplay.portrait : normalAssets.background.gameplay.landscape;
@@ -810,18 +742,7 @@ export class MainScene extends Phaser.Scene {
     });
     this.feverBackgroundPortraitImage = this.createThemeImage(this.getThemeAssetsById(FEVER_GAMEPLAY_THEME_ID).background.fever.portrait, 0, 0, -27);
     this.feverBackgroundLandscapeImage = this.createThemeImage(this.getThemeAssetsById(FEVER_GAMEPLAY_THEME_ID).background.fever.landscape, 0, 0, -27);
-    this.deskSurfaceImage = this.createThemeImage(this.currentThemeAssets.background.decoration[1], 0, 0, -29);
-    this.toyBlocksDecorImage = this.createThemeImage(this.currentThemeAssets.background.decoration[0], 0, 0, -3);
-    this.blurredToysDecorImage = this.createThemeImage(this.currentThemeAssets.background.decoration[2], 0, 0, -4);
-    this.toyRoadImage = this.createThemeImage(this.currentThemeAssets.background.floor, 0, 0, -2);
-    this.laneOverlayImages = [
-      this.currentThemeAssets.lanes.left,
-      this.currentThemeAssets.lanes.center,
-      this.currentThemeAssets.lanes.right
-    ].flatMap((assetKey) => {
-      const image = this.createThemeImage(assetKey, 0, 0, 2);
-      return image ? [image] : [];
-    });
+    this.deskSurfaceImage = this.createThemeImage(this.currentThemeAssets.background.decoration[0], 0, 0, -29);
     this.comboBadgeImage = this.createThemeImage(this.currentThemeAssets.ui.parts.hudCombo, 0, 0, 299.5);
     this.scoreStickerImage = this.createThemeImage(this.currentThemeAssets.ui.parts.hudScore, 0, 0, 299.5);
     this.missStickerImage = this.createThemeImage(this.currentThemeAssets.ui.parts.hudMiss, 0, 0, 299.5);
@@ -861,6 +782,7 @@ export class MainScene extends Phaser.Scene {
     });
     this.settingsPanelImage = this.createThemeImage(this.currentThemeAssets.ui.parts.nameInputPanel, 0, 0, 314);
     this.trackGraphics = this.add.graphics().setDepth(1);
+    this.hitboxGuideGraphics = this.add.graphics().setDepth(388);
     this.runnerFeverGraphics = this.add.graphics().setDepth(151);
     this.hudGraphics = this.add.graphics().setDepth(299);
     this.feverGraphics = this.add.graphics().setDepth(298);
@@ -891,6 +813,10 @@ export class MainScene extends Phaser.Scene {
         assetImage
       };
     });
+
+    this.hitboxMarkers = Array.from({ length: GAME_BALANCE.laneCount }, (_, lane) =>
+      this.add.circle(0, 0, 1, this.runnerColor(lane), 0).setStrokeStyle(0, 0xffffff, 0).setDepth(389).setVisible(false)
+    );
 
     this.titleLabel = this.add
       .text(0, 0, "BEAT RUNNER", {
@@ -1073,74 +999,6 @@ export class MainScene extends Phaser.Scene {
       .setAlpha(0)
       .setDepth(330);
 
-    this.recorderStatusLabel = this.add
-      .text(0, 0, "", {
-        fontFamily: UI_FONT,
-        fontStyle: "900",
-        color: theme.colors.accent,
-        align: "center"
-      })
-      .setOrigin(0.5)
-      .setAlpha(0)
-      .setDepth(360)
-      .setLineSpacing(4);
-
-    this.debugDensityLabel = this.add
-      .text(0, 0, "", {
-        fontFamily: UI_FONT,
-        fontStyle: "900",
-        color: theme.colors.accent,
-        align: "center"
-      })
-      .setOrigin(0.5)
-      .setDepth(316);
-
-    this.debugSpeedLabel = this.add
-      .text(0, 0, "", {
-        fontFamily: UI_FONT,
-        fontStyle: "900",
-        color: theme.colors.secondary,
-        align: "center"
-      })
-      .setOrigin(0.5)
-      .setDepth(316);
-
-    this.debugLayoutPanel = this.add
-      .rectangle(0, 0, 1, 1, this.themeColor("surface"), 0.82)
-      .setOrigin(0.5)
-      .setAlpha(0)
-      .setDepth(314);
-    this.debugLayoutPanel.setStrokeStyle(2, this.themeColor("line"), 0.55);
-    const debugFoldBackground = this.add
-      .rectangle(0, 0, 1, 1, this.themeColor("surface"), 0.95)
-      .setOrigin(0.5)
-      .setAlpha(0)
-      .setDepth(316);
-    const debugFoldLabel = this.add
-      .text(0, 0, "", {
-        fontFamily: UI_FONT,
-        fontStyle: "900",
-        color: theme.colors.text,
-        align: "center"
-      })
-      .setOrigin(0.5)
-      .setAlpha(0)
-      .setDepth(317);
-    debugFoldBackground.setStrokeStyle(2, this.themeColor("primary"), 0.75);
-    this.debugFoldButton = { background: debugFoldBackground, label: debugFoldLabel };
-
-    this.debugLayoutLabels = Array.from({ length: 15 }, () =>
-      this.add
-        .text(0, 0, "", {
-          fontFamily: UI_FONT,
-          fontStyle: "900",
-          color: theme.colors.text,
-          align: "center"
-        })
-        .setOrigin(0.5)
-        .setDepth(316)
-    );
-
     this.songSelectTitleImage = this.createThemeImage(this.currentThemeAssets.ui.parts.titleBanner, 0, 0, 315);
     this.difficultyTitleImage = this.createThemeImage(this.currentThemeAssets.ui.parts.titleLevelBanner, 0, 0, 315);
     this.songSelectPaginationGraphics = this.add.graphics().setDepth(316);
@@ -1227,96 +1085,6 @@ export class MainScene extends Phaser.Scene {
       selectedAssetImage?.setAlpha(0);
 
       return { id, background, label, assetImage, selectedAssetImage };
-    });
-
-    this.debugButtons = (
-      [
-        "densityDown",
-        "densityUp",
-        "speedDown",
-        "speedUp",
-        "laneWidthDown",
-        "laneWidthUp",
-        "depthDown",
-        "depthUp",
-        "characterSizeDown",
-        "characterSizeUp",
-        "characterXDown",
-        "characterXUp",
-        "characterYDown",
-        "characterYUp",
-        "buttonSizeDown",
-        "buttonSizeUp",
-        "buttonYDown",
-        "buttonYUp",
-        "itemSizeDown",
-        "itemSizeUp",
-        "laneAngleDown",
-        "laneAngleUp",
-        "bgXDown",
-        "bgXUp",
-        "feverModeDown",
-        "feverModeUp",
-        "trackYDown",
-        "trackYUp",
-        "farYDown",
-        "farYUp",
-        "farWDown",
-        "farWUp",
-        "nearWDown",
-        "nearWUp",
-        "bgYDown",
-        "bgYUp",
-        "bgScaleDown",
-        "bgScaleUp",
-        "resultLeftXDown",
-        "resultLeftXUp",
-        "resultRightXDown",
-        "resultRightXUp",
-        "resultLeftWDown",
-        "resultLeftWUp",
-        "resultTitleXDown",
-        "resultTitleXUp",
-        "resultTitleYDown",
-        "resultTitleYUp",
-        "resultTitleSDown",
-        "resultTitleSUp",
-        "resultSongYDown",
-        "resultSongYUp",
-        "resultSongSDown",
-        "resultSongSUp",
-        "resultScoreXDown",
-        "resultScoreXUp",
-        "resultScoreYDown",
-        "resultScoreYUp",
-        "resultScoreSDown",
-        "resultScoreSUp",
-        "resultScoreHDown",
-        "resultScoreHUp",
-        "resultStatYDown",
-        "resultStatYUp",
-        "resultStatGapDown",
-        "resultStatGapUp",
-        "resultStatHDown",
-        "resultStatHUp",
-        "resultBottomYDown",
-        "resultBottomYUp"
-      ] as DebugAction[]
-    ).map((action) => {
-      const background = this.add.rectangle(0, 0, 1, 1, this.themeColor("surface"), 0.95).setDepth(315);
-      const label = this.add
-        .text(0, 0, action.endsWith("Down") ? "-" : "+", {
-          fontFamily: UI_FONT,
-          fontStyle: "900",
-          color: theme.colors.text,
-          align: "center"
-        })
-        .setOrigin(0.5)
-        .setDepth(316);
-
-      background.setStrokeStyle(2, this.themeColor("line"), 0.65);
-
-      return { action, background, label };
     });
 
     this.audioSettingSliders = (["bgm", "se"] as AudioSettingKind[]).map((kind) => {
@@ -1424,10 +1192,10 @@ export class MainScene extends Phaser.Scene {
     if (this.gameStarted || this.gameEnded) {
       this.drawTrack(track);
       this.trackGraphics?.setAlpha(1);
-      this.layoutLaneOverlays(track);
       this.drawFeverLayer();
       this.layoutPlayers(track);
       this.drawRunnerFeverLayer();
+      this.layoutHitboxOverlay(track);
       this.setRunnersVisible(true);
       this.layoutObstacles(track);
       if (this.itemsEnabled) {
@@ -1436,9 +1204,9 @@ export class MainScene extends Phaser.Scene {
     } else {
       this.drawMenuBackground();
       this.trackGraphics?.setAlpha(1);
-      this.layoutLaneOverlays(track);
       this.feverGraphics?.clear();
       this.runnerFeverGraphics?.clear();
+      this.layoutHitboxOverlay(track);
       this.setRunnersVisible(false);
     }
     this.layoutJumpButtons();
@@ -1470,7 +1238,7 @@ export class MainScene extends Phaser.Scene {
 
     this.comboLabel
       ?.setOrigin(0.5)
-      .setPosition(88 * Math.max(screenScale, 0.94), (181 + HUD_NUMBER_Y_OFFSET) * Math.max(screenScale, 0.94))
+      .setPosition((88 + HUD_LEFT_NUMBER_X_OFFSET) * Math.max(screenScale, 0.94), (181 + HUD_NUMBER_Y_OFFSET) * Math.max(screenScale, 0.94))
       .setFontSize(Math.round(Phaser.Math.Clamp(29 * Math.max(screenScale, 0.94), 24, 36)))
       .setAlign("center")
       .setColor(HUD_NUMBER_COLOR)
@@ -1481,7 +1249,7 @@ export class MainScene extends Phaser.Scene {
       .setAlpha(this.gameStarted || this.gameEnded ? 1 : 0);
 
     this.comboMilestoneLabel
-      ?.setPosition(88 * Math.max(screenScale, 0.94), (226 + HUD_NUMBER_Y_OFFSET) * Math.max(screenScale, 0.94))
+      ?.setPosition((88 + HUD_LEFT_NUMBER_X_OFFSET) * Math.max(screenScale, 0.94), (226 + HUD_NUMBER_Y_OFFSET) * Math.max(screenScale, 0.94))
       .setFontSize(Math.round(Phaser.Math.Clamp(14 * Math.max(screenScale, 0.94), 12, 18)))
       .setColor(this.combo >= 50 ? theme.colors.accent : theme.colors.primary)
       .setStroke(theme.colors.line, Math.round(3 * Math.max(screenScale, 0.94)))
@@ -1489,7 +1257,7 @@ export class MainScene extends Phaser.Scene {
 
     this.scoreLabel
       ?.setOrigin(0.5)
-      .setPosition(86 * Math.max(screenScale, 0.94), (64 + HUD_NUMBER_Y_OFFSET) * Math.max(screenScale, 0.94))
+      .setPosition((86 + HUD_LEFT_NUMBER_X_OFFSET) * Math.max(screenScale, 0.94), (64 + HUD_NUMBER_Y_OFFSET) * Math.max(screenScale, 0.94))
       .setFontSize(Math.round(Phaser.Math.Clamp(27 * Math.max(screenScale, 0.94), 23, 34)))
       .setAlign("center")
       .setColor(HUD_NUMBER_COLOR)
@@ -1501,7 +1269,7 @@ export class MainScene extends Phaser.Scene {
 
     this.missLabel
       ?.setOrigin(0.5)
-      .setPosition(width - 82 * Math.max(screenScale, 0.94), (64 + HUD_NUMBER_Y_OFFSET) * Math.max(screenScale, 0.94))
+      .setPosition(width - (82 + HUD_RIGHT_NUMBER_X_OFFSET) * Math.max(screenScale, 0.94), (64 + HUD_NUMBER_Y_OFFSET) * Math.max(screenScale, 0.94))
       .setFontSize(Math.round(Phaser.Math.Clamp(27 * Math.max(screenScale, 0.94), 23, 34)))
       .setAlign("center")
       .setColor(HUD_NUMBER_COLOR)
@@ -1531,16 +1299,8 @@ export class MainScene extends Phaser.Scene {
       ?.setPosition(width / 2, height * 0.46)
       .setFontSize(Math.round(24 * screenScale));
 
-    this.recorderStatusLabel
-      ?.setPosition(width / 2, height - 74 * Math.max(screenScale, 0.9))
-      .setFontSize(Math.round(Phaser.Math.Clamp(16 * Math.max(screenScale, 0.9), 13, 22)))
-      .setColor(theme.colors.accent)
-      .setText(this.getRecorderStatusText())
-      .setAlpha(this.chartRecorderEnabled ? 1 : 0);
-
     this.layoutSongButtons();
     this.layoutDifficultyButtons();
-    this.layoutDebugButtons();
     this.layoutRankingLabels();
     this.layoutResultPage();
     this.layoutSettingsPage();
@@ -1581,45 +1341,14 @@ export class MainScene extends Phaser.Scene {
     return "SELECT LEVEL";
   }
 
-  private getRecorderStatusText() {
-    if (!this.chartRecorderEnabled) {
-      return "";
-    }
-
-    if (this.gameStarted) {
-      return `REC ${this.recordedChartTaps.length} taps  A/S/D`;
-    }
-
-    if (this.recorderSavedPath) {
-      return `Saved ${this.recorderSavedPath}`;
-    }
-
-    if (this.gameEnded) {
-      return `Recorded ${this.recordedChartTaps.length} taps`;
-    }
-
-    return "RECORDER MODE - choose a song, start, then play A/S/D";
-  }
-
   private layoutBackgroundImages(track: TrackLayout) {
     const { width, height } = this.scale;
     const isSimpleStartScreen = !this.gameStarted && !this.gameEnded && this.menuStep === "start";
     const isMenuScreen = !this.gameStarted && !this.gameEnded && this.menuStep !== "start";
     const shouldBlurMenuBackground = isMenuScreen && (this.menuStep === "song" || this.menuStep === "difficulty" || this.menuStep === "result");
     const showGameBackground = !isSimpleStartScreen;
-    const roadHeight = Math.max(track.bottomY - track.topY + 130 * this.screenScale, height * 0.68);
-    const roadWidth = Math.max(track.bottomWidth * 1.42, width * 0.52);
-
-    this.skyImage
-      ?.setPosition(width / 2, height / 2)
-      .setDisplaySize(width, height)
-      .setAlpha(showGameBackground ? 0.52 : 0)
-      .setVisible(showGameBackground);
-
     this.layoutCoverBackgroundImage(this.startBackgroundPortraitImage, isSimpleStartScreen && this.isPortrait);
     this.layoutCoverBackgroundImage(this.startBackgroundLandscapeImage, isSimpleStartScreen && !this.isPortrait);
-    this.layoutCoverBackgroundImage(this.menuBackgroundPortraitImage, false);
-    this.layoutCoverBackgroundImage(this.menuBackgroundLandscapeImage, false);
     this.layoutGameplayScrollingBackground(showGameBackground);
     this.layoutFeverBackgroundImage(this.feverBackgroundPortraitImage, showGameBackground && this.isPortrait);
     this.layoutFeverBackgroundImage(this.feverBackgroundLandscapeImage, showGameBackground && !this.isPortrait);
@@ -1627,37 +1356,15 @@ export class MainScene extends Phaser.Scene {
     this.deskSurfaceImage
       ?.setPosition(width / 2, height / 2)
       .setDisplaySize(width, height)
-      .setAlpha(showGameBackground ? (this.gameStarted ? 0.16 : this.skyImage ? 0.42 : 0.78) : 0)
+      .setAlpha(showGameBackground ? (this.gameStarted ? 0.16 : 0.42) : 0)
       .setVisible(showGameBackground);
-
-    const decorScale = this.screenScale;
-    this.toyBlocksDecorImage
-      ?.setPosition(width * (this.isPortrait ? 0.13 : 0.2), track.bottomY - 40 * decorScale)
-      .setDisplaySize(150 * decorScale, 118 * decorScale)
-      .setAlpha(showGameBackground && !this.gameStarted ? 0.72 : 0)
-      .setVisible(showGameBackground && !this.gameStarted);
-
-    this.blurredToysDecorImage
-      ?.setPosition(width * (this.isPortrait ? 0.88 : 0.82), height * 0.24)
-      .setDisplaySize(190 * decorScale, 130 * decorScale)
-      .setAlpha(showGameBackground && !this.gameStarted ? 0.48 : 0)
-      .setVisible(showGameBackground && !this.gameStarted);
-
-    this.toyRoadImage
-      ?.setPosition(track.centerX, (track.topY + track.bottomY) / 2 + 18 * this.screenScale)
-      .setDisplaySize(roadWidth, roadHeight)
-      .setAlpha(this.gameEnded ? 0.16 : 0)
-      .setVisible(this.gameEnded);
 
     this.applyMenuBackgroundBlur(shouldBlurMenuBackground);
   }
 
   private applyMenuBackgroundBlur(shouldBlur: boolean) {
     [
-      this.skyImage,
       this.deskSurfaceImage,
-      this.toyBlocksDecorImage,
-      this.blurredToysDecorImage,
       ...this.gameplayBackgroundImages
     ].forEach((image) => this.setBackgroundImageBlur(image, shouldBlur));
   }
@@ -1753,22 +1460,16 @@ export class MainScene extends Phaser.Scene {
     const texture = image.texture.getSourceImage() as HTMLImageElement | HTMLCanvasElement;
     const sourceWidth = texture.width || width;
     const sourceHeight = texture.height || height;
-    const scale = Math.max(width / sourceWidth, height / sourceHeight) * (1 + this.layoutDebug.bgScale * 0.035);
+    const scale = Math.max(width / sourceWidth, height / sourceHeight) * (1 + this.layoutTuning.bgScale * 0.035);
     const alpha = isActiveOrientation ? this.feverBackgroundState.alpha : 0;
-    const x = width / 2 + width * this.layoutDebug.bgX * 0.01;
-    const y = height / 2 + height * this.layoutDebug.bgY * 0.01;
+    const x = width / 2 + width * this.layoutTuning.bgX * 0.01;
+    const y = height / 2 + height * this.layoutTuning.bgY * 0.01;
 
     image
       .setPosition(x, y)
       .setDisplaySize(sourceWidth * scale, sourceHeight * scale)
       .setAlpha(alpha)
       .setVisible(alpha > 0.01);
-  }
-
-  private layoutLaneOverlays(track: TrackLayout) {
-    this.laneOverlayImages.forEach((image, lane) => {
-      image.setAlpha(0).setVisible(false);
-    });
   }
 
   private getMenuSubTitle() {
@@ -1865,7 +1566,7 @@ export class MainScene extends Phaser.Scene {
       const rankingPanelBottom = this.rankingPanelImage
         ? this.rankingPanelImage.y + this.rankingPanelImage.displayHeight / 2
         : height * (this.isPortrait ? 0.675 : 0.655);
-      const resultUtilityGap = rankingUtilityButtonSize * 1.34;
+      const resultUtilityGap = rankingUtilityButtonSize * (isDesktopLandscape ? 1.72 : 1.42);
       const settingsPanelLeft = this.settingsPanelImage ? this.settingsPanelImage.x - this.settingsPanelImage.displayWidth / 2 : width * 0.12;
       const x = isResultUtilityButton
         ? centerX + (button.action === "home" ? -resultUtilityGap / 2 : resultUtilityGap / 2)
@@ -1888,7 +1589,7 @@ export class MainScene extends Phaser.Scene {
           : isDifficultyBackButton
             ? startY
           : isResultUtilityButton
-            ? height * (this.isPortrait ? 0.915 : 0.89) + (this.isDesktopLandscape ? this.layoutDebug.resultBottomY * 3 * screenScale : 0)
+            ? height * (this.isPortrait ? 0.915 : 0.89) + (this.isDesktopLandscape ? this.layoutTuning.resultBottomY * 3 * screenScale : 0)
           : isRankingUtilityButton
             ? rankingPanelBottom + 18 * Math.max(screenScale, 0.9) + rankingUtilityButtonSize / 2
             : isTopLeftSettingButton
@@ -2014,49 +1715,59 @@ export class MainScene extends Phaser.Scene {
     const screenScale = Math.max(this.screenScale, 0.9);
     const isVisible = !this.gameStarted && !this.gameEnded && this.menuStep === "result";
     const isDesktopResult = this.isDesktopLandscape;
-    const panelWidth = isDesktopResult
+    const basePanelWidth = isDesktopResult
       ? Math.min(width * 0.92, 900 * screenScale)
       : Math.min(width * (this.isPortrait ? 0.96 : 0.54), this.isPortrait ? 430 * screenScale : 500 * screenScale);
-    const panelHeight = isDesktopResult ? Math.min(height * 0.72, 392 * screenScale) : Math.min(height * (this.isPortrait ? 0.965 : 0.92), panelWidth * 1.98);
-    const panelX = width / 2;
-    const panelY = isDesktopResult ? height * 0.61 : height / 2;
+    const resultBackgroundScale = isDesktopResult ? Phaser.Math.Clamp(1 + this.layoutTuning.resultBgScale * 0.012, 0.74, 1.28) : 1;
+    const panelWidth = basePanelWidth * resultBackgroundScale;
+    const panelHeight =
+      (isDesktopResult ? Math.min(height * 0.72, 392 * screenScale) : Math.min(height * (this.isPortrait ? 0.965 : 0.92), basePanelWidth * 1.98)) *
+      resultBackgroundScale;
+    const panelX = width / 2 + (isDesktopResult ? this.layoutTuning.resultBgX * 3 * screenScale : 0);
+    const panelY = (isDesktopResult ? height * 0.61 : height / 2) + (isDesktopResult ? this.layoutTuning.resultBgY * 3 * screenScale : 0);
     const panelTop = panelY - panelHeight / 2;
     const contentWidth = panelWidth * (isDesktopResult ? 0.84 : 0.82);
-    const leftColumnX = isDesktopResult ? panelX - panelWidth * 0.235 + this.layoutDebug.resultLeftX * 3 * screenScale : panelX;
-    const rightColumnX = isDesktopResult ? panelX + panelWidth * 0.215 + this.layoutDebug.resultRightX * 3 * screenScale : panelX;
-    const leftColumnWidth = isDesktopResult ? panelWidth * Phaser.Math.Clamp(0.5 + this.layoutDebug.resultLeftW * 0.012, 0.36, 0.64) : contentWidth;
+    const leftColumnX = isDesktopResult ? panelX - panelWidth * 0.235 + this.layoutTuning.resultLeftX * 3 * screenScale : panelX;
+    const rightColumnX = isDesktopResult ? panelX + panelWidth * 0.215 + this.layoutTuning.resultRightX * 3 * screenScale : panelX;
+    const leftColumnWidth = isDesktopResult ? panelWidth * Phaser.Math.Clamp(0.5 + this.layoutTuning.resultLeftW * 0.012, 0.36, 0.64) : contentWidth;
     const rightColumnWidth = isDesktopResult ? panelWidth * 0.37 : contentWidth;
     const logoY = isDesktopResult ? panelTop - panelHeight * 0.22 : panelTop + panelHeight * 0.07;
     const titleY = isDesktopResult ? panelTop - panelHeight * 0.08 : panelTop + panelHeight * 0.155;
-    const resultTitleX = isDesktopResult ? panelX + this.layoutDebug.resultTitleX * 3 * screenScale : panelX;
-    const resultTitleY = isDesktopResult ? titleY + this.layoutDebug.resultTitleY * 3 * screenScale : titleY;
-    const songY = isDesktopResult ? panelTop + panelHeight * 0.30 + this.layoutDebug.resultSongY * 3 * screenScale : panelTop + panelHeight * 0.275;
-    const songScale = isDesktopResult ? Phaser.Math.Clamp(1 + this.layoutDebug.resultSongS * 0.012, 0.75, 1.32) : 1;
-    const scoreY = isDesktopResult ? panelTop + panelHeight * 0.595 + this.layoutDebug.resultScoreY * 3 * screenScale : panelTop + panelHeight * 0.425;
-    const scoreX = isDesktopResult ? leftColumnX + this.layoutDebug.resultScoreX * 3 * screenScale : leftColumnX;
-    const scoreScale = isDesktopResult ? Phaser.Math.Clamp(1 + this.layoutDebug.resultScoreS * 0.012, 0.72, 1.32) : 1;
+    const resultTitleX = isDesktopResult ? panelX + this.layoutTuning.resultTitleX * 3 * screenScale : panelX;
+    const resultTitleY = isDesktopResult ? titleY + this.layoutTuning.resultTitleY * 3 * screenScale : titleY;
+    const songY = isDesktopResult ? panelTop + panelHeight * 0.30 + this.layoutTuning.resultSongY * 3 * screenScale : panelTop + panelHeight * 0.275;
+    const songScale = isDesktopResult ? Phaser.Math.Clamp(1 + this.layoutTuning.resultSongS * 0.012, 0.75, 1.32) : 1;
+    const difficultyX = leftColumnX + leftColumnWidth * songScale * 0.39 + (isDesktopResult ? this.layoutTuning.resultDifficultyX * 3 * screenScale : 0);
+    const difficultyY = songY + (isDesktopResult ? this.layoutTuning.resultDifficultyY * 3 * screenScale : 0);
+    const difficultyScale = isDesktopResult ? Phaser.Math.Clamp(1 + this.layoutTuning.resultDifficultyS * 0.012, 0.68, 1.42) : 1;
+    const scoreY = isDesktopResult ? panelTop + panelHeight * 0.595 + this.layoutTuning.resultScoreY * 3 * screenScale : panelTop + panelHeight * 0.425;
+    const scoreX = isDesktopResult ? leftColumnX + this.layoutTuning.resultScoreX * 3 * screenScale : leftColumnX;
+    const scoreScale = isDesktopResult ? Phaser.Math.Clamp(1 + this.layoutTuning.resultScoreS * 0.012, 0.72, 1.32) : 1;
     const scoreWidth = isDesktopResult ? leftColumnWidth * scoreScale : leftColumnWidth;
-    const statsY = isDesktopResult ? panelTop + panelHeight * 0.475 + this.layoutDebug.resultStatY * 3 * screenScale : panelTop + panelHeight * 0.64;
-    const dividerY = isDesktopResult ? panelTop + panelHeight * 0.82 + this.layoutDebug.resultBottomY * 3 * screenScale : panelTop + panelHeight * 0.872;
-    const dividerLeft = isDesktopResult ? leftColumnX - leftColumnWidth / 2 : panelX - contentWidth * 0.48;
-    const dividerRight = isDesktopResult ? rightColumnX + rightColumnWidth / 2 : panelX + contentWidth * 0.48;
+    const statsY = isDesktopResult ? panelTop + panelHeight * 0.475 + this.layoutTuning.resultStatY * 3 * screenScale : panelTop + panelHeight * 0.64;
+    const dividerY = isDesktopResult ? panelTop + panelHeight * 0.82 + this.layoutTuning.resultBottomY * 3 * screenScale : panelTop + panelHeight * 0.872;
+    const dividerLeft = panelX - contentWidth * 0.5;
+    const dividerRight = panelX + contentWidth * 0.5;
     const dividerWidth = dividerRight - dividerLeft;
     const dividerX = (dividerLeft + dividerRight) / 2;
     const panelRadius = Math.round(28 * screenScale);
     const panelLeft = panelX - panelWidth / 2;
     const panelTopY = panelY - panelHeight / 2;
+    const panelTopExtension = isDesktopResult ? 24 * screenScale : 0;
+    const visualPanelTopY = panelTopY - panelTopExtension;
+    const visualPanelHeight = panelHeight + panelTopExtension;
 
     this.resultBackgroundGraphics?.clear();
     if (isVisible && this.resultBackgroundGraphics) {
       this.resultBackgroundGraphics
         .fillStyle(0x7d4d24, 0.18)
-        .fillRoundedRect(panelLeft + 5 * screenScale, panelTopY + 7 * screenScale, panelWidth, panelHeight, panelRadius)
+        .fillRoundedRect(panelLeft + 5 * screenScale, visualPanelTopY + 7 * screenScale, panelWidth, visualPanelHeight, panelRadius)
         .fillStyle(0xfff1cf, 0.93)
-        .fillRoundedRect(panelLeft, panelTopY, panelWidth, panelHeight, panelRadius)
+        .fillRoundedRect(panelLeft, visualPanelTopY, panelWidth, visualPanelHeight, panelRadius)
         .lineStyle(Math.max(2, 4 * screenScale), 0xffffff, 0.95)
-        .strokeRoundedRect(panelLeft + 4 * screenScale, panelTopY + 4 * screenScale, panelWidth - 8 * screenScale, panelHeight - 8 * screenScale, panelRadius - 4 * screenScale)
+        .strokeRoundedRect(panelLeft + 4 * screenScale, visualPanelTopY + 4 * screenScale, panelWidth - 8 * screenScale, visualPanelHeight - 8 * screenScale, panelRadius - 4 * screenScale)
         .lineStyle(Math.max(2, 3 * screenScale), 0xd8a951, 0.82)
-        .strokeRoundedRect(panelLeft + 10 * screenScale, panelTopY + 10 * screenScale, panelWidth - 20 * screenScale, panelHeight - 20 * screenScale, panelRadius - 10 * screenScale);
+        .strokeRoundedRect(panelLeft + 10 * screenScale, visualPanelTopY + 10 * screenScale, panelWidth - 20 * screenScale, visualPanelHeight - 20 * screenScale, panelRadius - 10 * screenScale);
     }
 
     this.resultOuterPanelImage
@@ -2077,8 +1788,8 @@ export class MainScene extends Phaser.Scene {
       .setVisible(isVisible);
     this.fitImageInBox(
       this.resultTitleImage,
-      panelWidth * (isDesktopResult ? Phaser.Math.Clamp(0.47 + this.layoutDebug.resultTitleS * 0.012, 0.3, 0.68) : 0.82),
-      panelHeight * (isDesktopResult ? Phaser.Math.Clamp(0.28 + this.layoutDebug.resultTitleS * 0.008, 0.18, 0.4) : 0.16)
+      panelWidth * (isDesktopResult ? Phaser.Math.Clamp(0.47 + this.layoutTuning.resultTitleS * 0.012, 0.3, 0.68) : 0.82),
+      panelHeight * (isDesktopResult ? Phaser.Math.Clamp(0.28 + this.layoutTuning.resultTitleS * 0.008, 0.18, 0.4) : 0.16)
     );
 
     this.resultSongPlateImage
@@ -2090,16 +1801,20 @@ export class MainScene extends Phaser.Scene {
     const difficultyAssetKey = this.getResultDifficultyAssetKey();
     this.resultDifficultyImage?.setTexture(difficultyAssetKey);
     this.resultDifficultyImage
-      ?.setPosition(leftColumnX + leftColumnWidth * songScale * 0.39, songY)
+      ?.setPosition(difficultyX, difficultyY)
       .setAlpha(isVisible ? 1 : 0)
       .setVisible(isVisible);
-    this.fitImageInBox(this.resultDifficultyImage, panelWidth * (isDesktopResult ? 0.08 : 0.18), panelHeight * (isDesktopResult ? 0.2 : 0.112));
+    this.fitImageInBox(
+      this.resultDifficultyImage,
+      panelWidth * (isDesktopResult ? 0.08 * difficultyScale : 0.18),
+      panelHeight * (isDesktopResult ? 0.2 * difficultyScale : 0.112)
+    );
 
     this.resultScoreFrameImage
       ?.setPosition(scoreX, scoreY - panelHeight * (isDesktopResult ? 0.02 : 0.012))
       .setAlpha(isVisible ? 1 : 0)
       .setVisible(isVisible);
-    this.fitImageInBox(this.resultScoreFrameImage, scoreWidth, panelHeight * (isDesktopResult ? Phaser.Math.Clamp(0.5 + this.layoutDebug.resultScoreH * 0.012, 0.34, 0.66) : 0.18));
+    this.fitImageInBox(this.resultScoreFrameImage, scoreWidth, panelHeight * (isDesktopResult ? Phaser.Math.Clamp(0.5 + this.layoutTuning.resultScoreH * 0.012, 0.34, 0.66) : 0.18));
 
     this.resultStatsPanelImage
       ?.setPosition(panelX, statsY)
@@ -2159,7 +1874,7 @@ export class MainScene extends Phaser.Scene {
       .setDepth(330);
 
     this.resultSongLabel
-      ?.setPosition(leftColumnX - leftColumnWidth * songScale * (isDesktopResult ? 0.23 : 0.25), songY)
+      ?.setPosition(leftColumnX - leftColumnWidth * songScale * (isDesktopResult ? 0.18 : 0.25), songY)
       .setOrigin(0, 0.5)
       .setFontSize(Math.round(Phaser.Math.Clamp((isDesktopResult ? 21 * songScale : 18) * screenScale, isDesktopResult ? 16 : 15, isDesktopResult ? 36 : 26)))
       .setColor("#5A3824")
@@ -2190,17 +1905,19 @@ export class MainScene extends Phaser.Scene {
       const statOrder: ResultStatKind[] = ["maxCombo", "perfect", "good", "nice", "miss"];
       const rowIndex = statOrder.indexOf(part.kind);
       const isScore = part.kind === "score";
-      const rowGap = panelHeight * (isDesktopResult ? Phaser.Math.Clamp(0.122 + this.layoutDebug.resultStatGap * 0.006, 0.08, 0.18) : 0.068);
+      const rowGap = panelHeight * (isDesktopResult ? Phaser.Math.Clamp(0.122 + this.layoutTuning.resultStatGap * 0.006, 0.08, 0.18) : 0.068);
       const rowY = statsY - panelHeight * (isDesktopResult ? 0.225 : 0.105) + rowIndex * rowGap;
       const x = isScore ? scoreX : rightColumnX;
       const y = isScore ? scoreY : rowY;
-      const cardWidth = isScore ? 0 : rightColumnWidth;
-      const cardHeight = isScore ? 0 : panelHeight * (isDesktopResult ? Phaser.Math.Clamp(0.175 + this.layoutDebug.resultStatH * 0.006, 0.1, 0.24) : 0.076);
+      const statScale = isDesktopResult ? Phaser.Math.Clamp(1 + this.layoutTuning.resultStatS * 0.012, 0.72, 1.34) : 1;
+      const cardWidth = isScore ? 0 : rightColumnWidth * statScale;
+      const cardHeight = isScore ? 0 : panelHeight * (isDesktopResult ? Phaser.Math.Clamp(0.175 + this.layoutTuning.resultStatH * 0.006, 0.1, 0.24) : 0.076) * statScale;
       const labelY = isScore ? scoreY - panelHeight * 0.006 : y;
       const labelX = isScore ? scoreX : rightColumnX + rightColumnWidth * 0.28;
-      const scoreNumberScale = isDesktopResult ? Phaser.Math.Clamp(1 + this.layoutDebug.resultScoreS * 0.018, 0.72, 1.42) : 1;
+      const scoreNumberScale = isDesktopResult ? Phaser.Math.Clamp(1 + this.layoutTuning.resultScoreS * 0.018, 0.72, 1.42) : 1;
+      const statNumberScale = isDesktopResult ? statScale : 1;
       const fontSize = Math.round(
-        Phaser.Math.Clamp((isScore ? 46 * scoreNumberScale : isDesktopResult ? 20 : 24) * screenScale, isScore ? 32 : 18, isScore ? 78 : isDesktopResult ? 27 : 31)
+        Phaser.Math.Clamp((isScore ? 46 * scoreNumberScale : isDesktopResult ? 20 * statNumberScale : 24) * screenScale, isScore ? 32 : 18, isScore ? 78 : isDesktopResult ? 36 : 31)
       );
 
       part.image
@@ -2386,12 +2103,13 @@ export class MainScene extends Phaser.Scene {
     const { width } = this.scale;
     const scale = Math.max(this.screenScale, 0.94);
     const isHudVisible = this.gameStarted || this.gameEnded;
-    const scoreWidth = 156 * scale;
-    const scoreHeight = 104 * scale;
-    const comboWidth = 152 * scale;
-    const comboHeight = 104 * scale;
-    const missWidth = 140 * scale;
-    const missHeight = 104 * scale;
+    const hudAssetScale = 1.12;
+    const scoreWidth = 156 * scale * hudAssetScale;
+    const scoreHeight = 104 * scale * hudAssetScale;
+    const comboWidth = 152 * scale * hudAssetScale;
+    const comboHeight = 104 * scale * hudAssetScale;
+    const missWidth = 140 * scale * hudAssetScale;
+    const missHeight = 104 * scale * hudAssetScale;
 
     this.comboBadgeImage
       ?.setPosition(12 * scale + comboWidth / 2, 120 * scale + comboHeight / 2)
@@ -2745,146 +2463,6 @@ export class MainScene extends Phaser.Scene {
     }
   }
 
-  private layoutDebugButtons() {
-    const { width, height } = this.scale;
-    const screenScale = this.screenScale;
-    const isResultDebugVisible = !this.gameStarted && !this.gameEnded && this.menuStep === "result" && this.isDesktopLandscape;
-    const isVisible = (this.gameStarted && this.isPortrait) || isResultDebugVisible;
-    const buttonSize = 30 * Math.max(screenScale, 0.82);
-    const labelWidth = isResultDebugVisible ? 126 * Math.max(screenScale, 0.82) : Math.min(width * 0.34, 132 * Math.max(screenScale, 0.82));
-    const gap = 5 * Math.max(screenScale, 0.82);
-    const panelWidth = labelWidth + buttonSize * 2 + gap * 4;
-    const centerX = isResultDebugVisible ? panelWidth / 2 + 8 * Math.max(screenScale, 0.82) : width - panelWidth / 2 - 8 * Math.max(screenScale, 0.82);
-    const rowGap = (isResultDebugVisible ? 28 : 31) * Math.max(screenScale, 0.82);
-    const startY = isResultDebugVisible ? 76 * Math.max(screenScale, 0.82) : height * 0.26;
-    const textSize = Math.round(Phaser.Math.Clamp(11 * Math.max(screenScale, 0.82), 9, 15));
-    const toggleWidth = Math.max(78 * Math.max(screenScale, 0.82), buttonSize * 2.55);
-    const toggleY = Math.max(buttonSize / 2 + gap, startY - rowGap * 0.9);
-    const rows: Array<{ actions: [DebugAction, DebugAction]; label: string; y: number; labelObject?: Phaser.GameObjects.Text; buttonText?: [string, string] }> = isResultDebugVisible
-      ? [
-          { actions: ["resultLeftXDown", "resultLeftXUp"], label: `LEFT X ${this.layoutDebug.resultLeftX}`, y: startY, labelObject: this.debugLayoutLabels[0] },
-          { actions: ["resultRightXDown", "resultRightXUp"], label: `RIGHT X ${this.layoutDebug.resultRightX}`, y: startY + rowGap, labelObject: this.debugLayoutLabels[1] },
-          { actions: ["resultLeftWDown", "resultLeftWUp"], label: `LEFT W ${this.layoutDebug.resultLeftW}`, y: startY + rowGap * 2, labelObject: this.debugLayoutLabels[2] },
-          { actions: ["resultTitleXDown", "resultTitleXUp"], label: `TITLE X ${this.layoutDebug.resultTitleX}`, y: startY + rowGap * 3, labelObject: this.debugLayoutLabels[3] },
-          { actions: ["resultTitleYDown", "resultTitleYUp"], label: `TITLE Y ${this.layoutDebug.resultTitleY}`, y: startY + rowGap * 4, labelObject: this.debugLayoutLabels[4] },
-          { actions: ["resultTitleSDown", "resultTitleSUp"], label: `TITLE S ${this.layoutDebug.resultTitleS}`, y: startY + rowGap * 5, labelObject: this.debugLayoutLabels[5] },
-          { actions: ["resultSongYDown", "resultSongYUp"], label: `SONG Y ${this.layoutDebug.resultSongY}`, y: startY + rowGap * 6, labelObject: this.debugLayoutLabels[6] },
-          { actions: ["resultSongSDown", "resultSongSUp"], label: `SONG S ${this.layoutDebug.resultSongS}`, y: startY + rowGap * 7, labelObject: this.debugLayoutLabels[7] },
-          { actions: ["resultScoreXDown", "resultScoreXUp"], label: `SCORE X ${this.layoutDebug.resultScoreX}`, y: startY + rowGap * 8, labelObject: this.debugLayoutLabels[8] },
-          { actions: ["resultScoreYDown", "resultScoreYUp"], label: `SCORE Y ${this.layoutDebug.resultScoreY}`, y: startY + rowGap * 9, labelObject: this.debugLayoutLabels[9] },
-          { actions: ["resultScoreSDown", "resultScoreSUp"], label: `SCORE S ${this.layoutDebug.resultScoreS}`, y: startY + rowGap * 10, labelObject: this.debugLayoutLabels[10] },
-          { actions: ["resultScoreHDown", "resultScoreHUp"], label: `SCORE H ${this.layoutDebug.resultScoreH}`, y: startY + rowGap * 11, labelObject: this.debugLayoutLabels[11] },
-          { actions: ["resultBottomYDown", "resultBottomYUp"], label: `BOTTOM ${this.layoutDebug.resultBottomY}`, y: startY + rowGap * 12, labelObject: this.debugLayoutLabels[12] }
-        ]
-      : [
-      {
-        actions: ["characterXDown", "characterXUp"],
-        label: `CHAR X ${this.layoutDebug.characterX}`,
-        y: startY,
-        labelObject: this.debugLayoutLabels[0]
-      },
-      {
-        actions: ["characterYDown", "characterYUp"],
-        label: `CHAR Y ${this.layoutDebug.characterY}`,
-        y: startY + rowGap,
-        labelObject: this.debugLayoutLabels[1]
-      },
-      {
-        actions: ["characterSizeDown", "characterSizeUp"],
-        label: `CHAR ${Math.round(this.portraitCharacterDebugScale * 100)}%`,
-        y: startY + rowGap * 2,
-        labelObject: this.debugLayoutLabels[2]
-      }
-    ];
-
-    this.debugButtons.forEach((button) => {
-      button.background.setAlpha(0);
-      button.label.setAlpha(0);
-    });
-    this.debugDensityLabel?.setAlpha(0);
-    this.debugSpeedLabel?.setAlpha(0);
-    this.debugLayoutLabels.forEach((label) => label.setAlpha(0));
-    this.layoutDebugFoldButton(centerX, toggleY, toggleWidth, buttonSize, textSize, isVisible);
-
-    this.debugLayoutPanel
-      ?.setPosition(centerX, startY + (rowGap * (rows.length - 1)) / 2)
-      .setSize(panelWidth, rowGap * rows.length + 24 * Math.max(screenScale, 0.82))
-      .setAlpha(isVisible && !this.debugPanelCollapsed ? 1 : 0);
-
-    if (!isVisible || this.debugPanelCollapsed) {
-      return;
-    }
-
-    rows.forEach((row) => {
-      const [downAction, upAction] = row.actions;
-      const downButton = this.debugButtons.find((button) => button.action === downAction);
-      const upButton = this.debugButtons.find((button) => button.action === upAction);
-      const downX = centerX - labelWidth / 2 - buttonSize / 2 - gap;
-      const upX = centerX + labelWidth / 2 + buttonSize / 2 + gap;
-
-      this.layoutDebugButton(downButton, downX, row.y, buttonSize, textSize, isVisible, row.buttonText?.[0] ?? "-");
-      this.layoutDebugButton(upButton, upX, row.y, buttonSize, textSize, isVisible, row.buttonText?.[1] ?? "+");
-
-      if (!downButton || !upButton) {
-        return;
-      }
-
-      downButton.label.setText(row.buttonText?.[0] ?? "-");
-      upButton.label.setText(row.buttonText?.[1] ?? "+");
-      row.labelObject
-        ?.setPosition(centerX, row.y)
-        .setFontSize(textSize)
-        .setText(row.label)
-        .setAlpha(isVisible ? 1 : 0);
-    });
-
-  }
-
-  private layoutDebugFoldButton(x: number, y: number, width: number, height: number, textSize: number, isVisible: boolean) {
-    const button = this.debugFoldButton;
-    if (!button) {
-      return;
-    }
-
-    button.background
-      .setPosition(x, y)
-      .setSize(width, height)
-      .setFillStyle(this.themeColor("surface"), 0.95)
-      .setStrokeStyle(2 * this.screenScale, this.themeColor("primary"), 0.75)
-      .setAlpha(isVisible ? 1 : 0);
-    button.label
-      .setPosition(x, y)
-      .setText(this.debugPanelCollapsed ? "DEBUG +" : "DEBUG -")
-      .setFontSize(textSize)
-      .setAlpha(isVisible ? 1 : 0);
-  }
-
-  private layoutDebugButton(
-    button: DebugButton | undefined,
-    x: number,
-    y: number,
-    size: number,
-    textSize: number,
-    isVisible: boolean,
-    text: string
-  ) {
-    if (!button) {
-      return;
-    }
-
-    button.background
-      .setPosition(x, y)
-      .setSize(size, size)
-      .setFillStyle(this.themeColor("surface"), 0.95)
-      .setStrokeStyle(2 * this.screenScale, this.themeColor("primary"), 0.75)
-      .setAlpha(isVisible ? 1 : 0);
-    button.label
-      .setPosition(x, y)
-      .setText(text)
-      .setFontSize(textSize)
-      .setAlpha(isVisible ? 1 : 0);
-  }
-
   private drawMenuBackground() {
     const graphics = this.trackGraphics;
     if (!graphics) {
@@ -2911,7 +2489,7 @@ export class MainScene extends Phaser.Scene {
     graphics.fillStyle(isSongMenu ? 0xfff3d8 : this.themeColor("surface"), isSongMenu ? 0.34 : this.deskSurfaceImage ? 0.72 : 1);
     graphics.fillEllipse(width / 2, shelfY, width * (this.isPortrait ? 1.25 : 0.78), height * 0.18);
 
-    graphics.fillStyle(isSongMenu ? 0xf7dfac : this.themeColor("track"), isSongMenu ? 0.38 : this.toyRoadImage ? 0.72 : 1);
+    graphics.fillStyle(isSongMenu ? 0xf7dfac : this.themeColor("track"), isSongMenu ? 0.38 : 1);
     graphics.fillRoundedRect(width * 0.18, roadY - 36 * toyScale, width * 0.64, 72 * toyScale, 18 * toyScale);
     graphics.fillStyle(isSongMenu ? 0xffffff : this.themeColor("line"), isSongMenu ? 0.48 : 0.78);
     graphics.fillRect(width * 0.24, roadY - 4 * toyScale, width * 0.52, 8 * toyScale);
@@ -2960,7 +2538,7 @@ export class MainScene extends Phaser.Scene {
     const track = this.getTrackLayout();
     const laneResponsiveScale = this.getLaneResponsiveScale(track);
     const buttonScale = Phaser.Math.Clamp(laneResponsiveScale * (this.isPortrait ? 1.04 : 0.78), 0.48, this.isPortrait ? 1.04 : 0.78);
-    const portraitButtonSizeScale = this.isPortrait && this.gameStarted ? this.portraitButtonDebugScale : 1;
+    const portraitButtonSizeScale = this.isPortrait && this.gameStarted ? this.portraitButtonScale : 1;
     const portraitButtonSize = Phaser.Math.Clamp(width * 0.27 * portraitButtonSizeScale, 92 * screenScale, 126 * screenScale);
     const buttonSize =
       this.isPortrait && this.gameStarted
@@ -2971,7 +2549,7 @@ export class MainScene extends Phaser.Scene {
       Phaser.Math.Linear(0.45, 1.16, GAME_BALANCE.playerZ) *
       runnerScreenScale *
       laneResponsiveScale *
-      (this.isPortrait && this.gameStarted ? this.portraitCharacterDebugScale : 1);
+      (this.isPortrait && this.gameStarted ? this.portraitCharacterScale : 1);
     const runnerBottomOffset = (RUNNER_DISPLAY_HEIGHT * playerScale) / 2;
     const maxButtonY = height - buttonSize * 0.52;
     const isVisible = this.gameStarted && !this.isDesktopLandscape;
@@ -2980,8 +2558,8 @@ export class MainScene extends Phaser.Scene {
       const playerPoint = this.getPlayerLaneCenterPoint(track, index);
       const x = playerPoint.x;
       const portraitButtonLift = this.isPortrait ? 14 * screenScale : 0;
-      const portraitButtonDebugY = this.isPortrait && this.gameStarted ? this.layoutDebug.buttonY * 4 * screenScale : 0;
-      const centerY = Math.min(playerPoint.y + runnerBottomOffset + buttonSize * 0.5 + 8 * screenScale - portraitButtonLift + portraitButtonDebugY, maxButtonY);
+      const portraitButtonY = this.isPortrait && this.gameStarted ? this.layoutTuning.buttonY * 4 * screenScale : 0;
+      const centerY = Math.min(playerPoint.y + runnerBottomOffset + buttonSize * 0.5 + 8 * screenScale - portraitButtonLift + portraitButtonY, maxButtonY);
 
       button.background
         .setPosition(x, centerY)
@@ -3028,6 +2606,10 @@ export class MainScene extends Phaser.Scene {
     }
 
     if (this.menuStep === "start" && targetButton.action === "play") {
+      if (!this.htmlStartConfirmed) {
+        return true;
+      }
+
       this.runAfterPressedAssetFeedback(targetButton, () => this.showSongSelect());
       return true;
     }
@@ -3093,24 +2675,6 @@ export class MainScene extends Phaser.Scene {
 
     this.playUiSe();
     this.selectDifficulty(targetButton.id);
-    return true;
-  }
-
-  private tryPressDebugButton(x: number, y: number) {
-    if (this.debugFoldButton?.background.alpha && this.debugFoldButton.background.getBounds().contains(x, y)) {
-      this.playUiSe();
-      this.debugPanelCollapsed = !this.debugPanelCollapsed;
-      this.layout();
-      return true;
-    }
-
-    const targetButton = this.debugButtons.find((button) => button.background.alpha > 0 && button.background.getBounds().contains(x, y));
-    if (!targetButton) {
-      return false;
-    }
-
-    this.playUiSe();
-    this.adjustDebugTuning(targetButton.action);
     return true;
   }
 
@@ -3191,150 +2755,6 @@ export class MainScene extends Phaser.Scene {
         ease: "Back.Out"
       });
     });
-  }
-
-  private isDebugControlArea(x: number, y: number) {
-    return Boolean(this.debugLayoutPanel?.alpha && this.debugLayoutPanel.getBounds().contains(x, y));
-  }
-
-  private adjustDebugTuning(action: DebugAction) {
-    if (action === "densityDown" || action === "densityUp") {
-      const delta = action === "densityDown" ? -1 : 1;
-      this.debugDensityLevel = Phaser.Math.Clamp(this.debugDensityLevel + delta, -4, 8);
-      this.rebuildDifficultyChart();
-      this.popFeedback(`DENSITY ${Math.round(this.debugDensityFactor * 100)}%`, this.currentTheme.colors.accent);
-      this.layout();
-      return;
-    }
-
-    if (action === "speedDown" || action === "speedUp") {
-      const delta = action === "speedDown" ? -1 : 1;
-      this.debugSpeedLevel = Phaser.Math.Clamp(this.debugSpeedLevel + delta, -4, 8);
-      this.popFeedback(`SPEED ${Math.round(this.debugSpeedFactor * 100)}%`, this.currentTheme.colors.secondary);
-      this.layout();
-      return;
-    }
-
-    this.adjustLayoutDebug(action);
-  }
-
-  private adjustLayoutDebug(action: DebugAction) {
-    const delta = action.endsWith("Down") ? -1 : 1;
-
-    if (action === "laneWidthDown" || action === "laneWidthUp") {
-      const key = this.isPortrait ? "portraitNearW" : "nearW";
-      this.layoutDebug[key] = Phaser.Math.Clamp(this.layoutDebug[key] + delta, -24, 42);
-    }
-
-    if (action === "depthDown" || action === "depthUp") {
-      const key = this.isPortrait ? "portraitFarY" : "farY";
-      this.layoutDebug[key] = Phaser.Math.Clamp(this.layoutDebug[key] + delta, -24, 16);
-    }
-
-    if (action === "characterSizeDown" || action === "characterSizeUp") {
-      this.layoutDebug.characterSize = Phaser.Math.Clamp(this.layoutDebug.characterSize + delta, -8, 18);
-    }
-
-    if (action === "characterXDown" || action === "characterXUp") {
-      this.layoutDebug.characterX = Phaser.Math.Clamp(this.layoutDebug.characterX + delta, -24, 24);
-    }
-
-    if (action === "characterYDown" || action === "characterYUp") {
-      this.layoutDebug.characterY = Phaser.Math.Clamp(this.layoutDebug.characterY + delta, -10, 36);
-    }
-
-    if (action === "buttonSizeDown" || action === "buttonSizeUp") {
-      this.layoutDebug.buttonSize = Phaser.Math.Clamp(this.layoutDebug.buttonSize + delta, -8, 20);
-    }
-
-    if (action === "buttonYDown" || action === "buttonYUp") {
-      this.layoutDebug.buttonY = Phaser.Math.Clamp(this.layoutDebug.buttonY + delta, -12, 12);
-    }
-
-    if (action === "itemSizeDown" || action === "itemSizeUp") {
-      this.layoutDebug.itemSize = Phaser.Math.Clamp(this.layoutDebug.itemSize + delta, -16, 10);
-    }
-
-    if (action === "bgXDown" || action === "bgXUp") {
-      this.layoutDebug.bgX = Phaser.Math.Clamp(this.layoutDebug.bgX + delta, -18, 18);
-    }
-
-    if (action === "feverModeDown" || action === "feverModeUp") {
-      this.setFeverActive(action === "feverModeUp", true);
-    }
-
-    if (action === "laneAngleDown" || action === "laneAngleUp") {
-      this.layoutDebug.farW = Phaser.Math.Clamp(this.layoutDebug.farW + delta, -100, 18);
-    }
-
-    if (action === "trackYDown" || action === "trackYUp") {
-      this.layoutDebug.trackY = Phaser.Math.Clamp(this.layoutDebug.trackY + delta, -16, 16);
-    }
-
-    if (action === "farYDown" || action === "farYUp") {
-      const key = this.isPortrait ? "portraitFarY" : "farY";
-      this.layoutDebug[key] = Phaser.Math.Clamp(this.layoutDebug[key] + delta, -24, 16);
-    }
-
-    if (action === "farWDown" || action === "farWUp") {
-      this.layoutDebug.farW = Phaser.Math.Clamp(this.layoutDebug.farW + delta, -100, 18);
-    }
-
-    if (action === "nearWDown" || action === "nearWUp") {
-      const key = this.isPortrait ? "portraitNearW" : "nearW";
-      this.layoutDebug[key] = Phaser.Math.Clamp(this.layoutDebug[key] + delta, -24, 42);
-    }
-
-    if (action === "bgYDown" || action === "bgYUp") {
-      this.layoutDebug.bgY = Phaser.Math.Clamp(this.layoutDebug.bgY + delta, -18, 18);
-    }
-
-    if (action === "bgScaleDown" || action === "bgScaleUp") {
-      this.layoutDebug.bgScale = Phaser.Math.Clamp(this.layoutDebug.bgScale + delta, -10, 20);
-    }
-
-    const resultDebugActionMap: Partial<Record<DebugAction, keyof LayoutDebugState>> = {
-      resultLeftXDown: "resultLeftX",
-      resultLeftXUp: "resultLeftX",
-      resultRightXDown: "resultRightX",
-      resultRightXUp: "resultRightX",
-      resultLeftWDown: "resultLeftW",
-      resultLeftWUp: "resultLeftW",
-      resultTitleXDown: "resultTitleX",
-      resultTitleXUp: "resultTitleX",
-      resultTitleYDown: "resultTitleY",
-      resultTitleYUp: "resultTitleY",
-      resultTitleSDown: "resultTitleS",
-      resultTitleSUp: "resultTitleS",
-      resultSongYDown: "resultSongY",
-      resultSongYUp: "resultSongY",
-      resultSongSDown: "resultSongS",
-      resultSongSUp: "resultSongS",
-      resultScoreXDown: "resultScoreX",
-      resultScoreXUp: "resultScoreX",
-      resultScoreYDown: "resultScoreY",
-      resultScoreYUp: "resultScoreY",
-      resultScoreSDown: "resultScoreS",
-      resultScoreSUp: "resultScoreS",
-      resultScoreHDown: "resultScoreH",
-      resultScoreHUp: "resultScoreH",
-      resultStatYDown: "resultStatY",
-      resultStatYUp: "resultStatY",
-      resultStatGapDown: "resultStatGap",
-      resultStatGapUp: "resultStatGap",
-      resultStatHDown: "resultStatH",
-      resultStatHUp: "resultStatH",
-      resultBottomYDown: "resultBottomY",
-      resultBottomYUp: "resultBottomY"
-    };
-    const resultDebugKey = resultDebugActionMap[action];
-    if (resultDebugKey) {
-      this.layoutDebug[resultDebugKey] = Phaser.Math.Clamp(this.layoutDebug[resultDebugKey] + delta, -24, 24);
-    }
-
-    this.saveLayoutDebug();
-    this.popFeedback(this.getLayoutDebugSummary(), this.currentTheme.colors.accent);
-    this.layout();
   }
 
   private selectDifficulty(difficulty: DifficultyId) {
@@ -3549,6 +2969,10 @@ export class MainScene extends Phaser.Scene {
       return;
     }
 
+    this.animateMenuTargetsIn(this.getSongSelectTargets(), 14 * this.screenScale, 16);
+  }
+
+  private getSongSelectTargets() {
     const cardTargets = this.songButtons.flatMap((button) => [
       button.background,
       button.thumbnail,
@@ -3557,10 +2981,23 @@ export class MainScene extends Phaser.Scene {
       button.thumbnailImage,
       button.assetImage,
       button.sideAssetImage,
-      button.label
+      button.label,
+      button.metaLabel,
+      button.indexLabel,
+      button.starLabel
     ]);
-    const arrowTargets = this.songArrowButtons.flatMap((button) => [button.assetImage, button.background]);
-    this.animateMenuTargetsIn([this.songSelectTitleImage, this.songSelectPaginationGraphics, ...cardTargets, ...arrowTargets], 14 * this.screenScale, 16);
+    const arrowTargets = this.songArrowButtons.flatMap((button) => [button.assetImage, button.pressedAssetImage, button.background]);
+
+    return [this.songSelectTitleImage, this.songSelectPaginationGraphics, ...cardTargets, ...arrowTargets];
+  }
+
+  private hideSongSelectTargets() {
+    this.getSongSelectTargets()
+      .filter((target): target is Phaser.GameObjects.Rectangle | Phaser.GameObjects.Image | Phaser.GameObjects.Text | Phaser.GameObjects.Graphics => Boolean(target))
+      .forEach((target) => {
+        this.tweens.killTweensOf(target);
+        target.setAlpha(0);
+      });
   }
 
   private animateDifficultyScreenIn() {
@@ -3616,6 +3053,8 @@ export class MainScene extends Phaser.Scene {
   private showDifficultySelect() {
     this.gameEnded = false;
     this.menuStep = "difficulty";
+    this.stopMenuBgm();
+    this.hideSongSelectTargets();
     this.hideResultLabels();
     this.startLabel?.setAlpha(1).setScale(1);
   }
@@ -3623,6 +3062,7 @@ export class MainScene extends Phaser.Scene {
   private showStartScreen() {
     this.gameEnded = false;
     this.menuStep = "start";
+    this.stopMenuBgm();
     this.resetRunState();
     this.hideResultLabels();
     this.startLabel?.setAlpha(1).setScale(1);
@@ -3632,6 +3072,7 @@ export class MainScene extends Phaser.Scene {
   private showRankingScreen() {
     this.gameEnded = false;
     this.menuStep = "ranking";
+    this.stopMenuBgm();
     this.hideResultLabels();
     this.startLabel?.setAlpha(1).setScale(1);
     this.layout();
@@ -3640,6 +3081,7 @@ export class MainScene extends Phaser.Scene {
   private showResultScreen() {
     this.gameEnded = false;
     this.menuStep = "result";
+    this.playMenuBgm();
     this.startLabel?.setAlpha(0);
     this.layout();
     this.playResultSe();
@@ -3650,6 +3092,7 @@ export class MainScene extends Phaser.Scene {
     this.gameEnded = false;
     this.settingsReturnStep = returnStep;
     this.menuStep = "settings";
+    this.stopMenuBgm();
     this.hideResultLabels();
     this.startLabel?.setAlpha(0);
     this.layout();
@@ -3658,12 +3101,18 @@ export class MainScene extends Phaser.Scene {
 
   private closeSettingsScreen() {
     this.menuStep = this.settingsReturnStep;
+    if (this.menuStep === "result") {
+      this.playMenuBgm();
+    } else {
+      this.stopMenuBgm();
+    }
     this.layout();
   }
 
   private showSongSelect() {
     this.gameEnded = false;
     this.menuStep = "song";
+    this.stopMenuBgm();
     this.resetRunState();
     this.hideResultLabels();
     this.startLabel?.setAlpha(1).setScale(1);
@@ -3719,6 +3168,27 @@ export class MainScene extends Phaser.Scene {
     });
   }
 
+  private createMenuBgm() {
+    this.menuBgm?.stop();
+    this.menuBgm?.destroy();
+    this.menuBgm = this.createSoundIfLoaded(MENU_BGM_AUDIO_KEY, {
+      loop: true,
+      volume: this.getBgmVolume()
+    });
+  }
+
+  private playMenuBgm() {
+    if (!this.hasAudioGesture || this.gameStarted || this.finishPending || !this.audioSettings.bgmEnabled || !this.menuBgm || this.menuBgm.isPlaying) {
+      return;
+    }
+
+    this.menuBgm.play();
+  }
+
+  private stopMenuBgm() {
+    this.menuBgm?.stop();
+  }
+
   private get screenScale() {
     return Phaser.Math.Clamp(
       Math.min(this.scale.width / BASE_GAME_WIDTH, this.scale.height / BASE_GAME_HEIGHT),
@@ -3735,6 +3205,39 @@ export class MainScene extends Phaser.Scene {
     return !this.isPortrait && this.scale.width >= 768;
   }
 
+  private isHitboxOverlayMode() {
+    if (typeof window === "undefined") {
+      return false;
+    }
+
+    const value = new URLSearchParams(window.location.search).get("hitbox");
+    return value === "1" || value === "true";
+  }
+
+  private registerPageAudioHandlers() {
+    if (typeof window === "undefined" || typeof document === "undefined") {
+      return;
+    }
+
+    document.addEventListener("visibilitychange", this.handleVisibilityChange);
+    window.addEventListener("pagehide", this.handlePageHidden);
+    window.addEventListener("pageshow", this.handlePageVisible);
+    window.addEventListener("blur", this.handlePageHidden);
+    window.addEventListener("focus", this.handlePageVisible);
+  }
+
+  private unregisterPageAudioHandlers() {
+    if (typeof window === "undefined" || typeof document === "undefined") {
+      return;
+    }
+
+    document.removeEventListener("visibilitychange", this.handleVisibilityChange);
+    window.removeEventListener("pagehide", this.handlePageHidden);
+    window.removeEventListener("pageshow", this.handlePageVisible);
+    window.removeEventListener("blur", this.handlePageHidden);
+    window.removeEventListener("focus", this.handlePageVisible);
+  }
+
   private get judgeZ() {
     if (this.isPortrait && this.gameStarted) {
       return this.portraitVisualJudgeZ;
@@ -3746,7 +3249,7 @@ export class MainScene extends Phaser.Scene {
   private get portraitVisualJudgeZ() {
     const track = this.getTrackLayout();
     const basePoint = this.getLaneCenterPoint(track, 1, GAME_BALANCE.playerZ);
-    const visualCenterY = basePoint.y + (56 + this.layoutDebug.characterY * 4) * this.screenScale;
+    const visualCenterY = basePoint.y + (56 + this.layoutTuning.characterY * 4) * this.screenScale;
     const visualZ = (visualCenterY - track.topY) / Math.max(1, track.bottomY - track.topY);
     return Phaser.Math.Clamp(visualZ, 0.62, 0.94);
   }
@@ -3754,17 +3257,17 @@ export class MainScene extends Phaser.Scene {
   private getTrackLayout(): TrackLayout {
     const { width, height } = this.scale;
     const mode = this.isPortrait ? "portrait" : "landscape";
-    const layoutDebug = this.effectiveLayoutDebug;
-    const trackYOffset = height * layoutDebug.trackY * 0.01;
-    const farYOffset = height * layoutDebug.farY * 0.01;
-    const farWidthScale = 1 + layoutDebug.farW * 0.035;
-    const nearWidthScale = Phaser.Math.Clamp(1 + layoutDebug.nearW * 0.035, 0.16, 2.5) * (this.gameStarted ? (this.isPortrait ? 1.38 : 1.22) : 1);
+    const layoutTuning = this.effectiveLayoutTuning;
+    const trackYOffset = height * layoutTuning.trackY * 0.01;
+    const farYOffset = height * layoutTuning.farY * 0.01;
+    const farWidthScale = 1 + layoutTuning.farW * 0.035;
+    const nearWidthScale = Phaser.Math.Clamp(1 + layoutTuning.nearW * 0.035, 0.16, 2.5) * (this.gameStarted ? (this.isPortrait ? 1.38 : 1.22) : 1);
 
     const topY = height * (this.isDesktopLandscape && this.gameStarted ? 0.19 : GAME_BALANCE.trackTopYRatio[mode]) + trackYOffset + farYOffset;
     const baseBottomY = height * (this.isDesktopLandscape && this.gameStarted ? 0.96 : GAME_BALANCE.trackBottomYRatio[mode]) + trackYOffset;
     const bottomY = this.gameStarted ? Math.max(baseBottomY, height * (this.isPortrait ? 1.06 : 1.04)) : baseBottomY;
     const desktopGameTrackWidthRatio = 0.38;
-    const desktopGameTrackWidthScale = 1 + (layoutDebug.nearW - LAYOUT_DEBUG_BASE_NEAR_W) * 0.025;
+    const desktopGameTrackWidthScale = 1 + (layoutTuning.nearW - LAYOUT_TUNING_BASE_NEAR_W) * 0.025;
     const desktopGameTrackBottomWidth = width * desktopGameTrackWidthRatio * desktopGameTrackWidthScale;
     const desktopGameTrackTopWidth = desktopGameTrackBottomWidth * 0.18;
     const desktopGameTrackTopMinWidth = width * 0.012;
@@ -4052,26 +3555,70 @@ export class MainScene extends Phaser.Scene {
     }
   }
 
+  private layoutHitboxOverlay(track: TrackLayout) {
+    const graphics = this.hitboxGuideGraphics;
+    const visible = this.hitboxOverlayEnabled && this.gameStarted;
+
+    graphics?.clear();
+    this.hitboxMarkers.forEach((marker) => {
+      marker.setVisible(false).setAlpha(0);
+    });
+
+    if (!graphics || !visible) {
+      return;
+    }
+
+    const z = this.judgeZ;
+    const scale = this.screenScale;
+    const left = this.getLaneBoundaryPoint(track, 0, z);
+    const right = this.getLaneBoundaryPoint(track, GAME_BALANCE.laneCount, z);
+    const lineWidth = Phaser.Math.Clamp(4 * scale, 3, 7);
+    const markerRadius = Phaser.Math.Clamp(26 * scale, 18, 38);
+
+    graphics.lineStyle(lineWidth + 4, 0x1a1a1a, 0.72);
+    graphics.beginPath();
+    graphics.moveTo(left.x, left.y);
+    graphics.lineTo(right.x, right.y);
+    graphics.strokePath();
+
+    graphics.lineStyle(lineWidth, 0xffffff, 0.92);
+    graphics.beginPath();
+    graphics.moveTo(left.x, left.y);
+    graphics.lineTo(right.x, right.y);
+    graphics.strokePath();
+
+    this.hitboxMarkers.forEach((marker, lane) => {
+      const point = this.getLaneCenterPoint(track, lane, z);
+      marker
+        .setPosition(point.x, point.y)
+        .setRadius(markerRadius)
+        .setFillStyle(this.runnerColor(lane), 0.42)
+        .setStrokeStyle(Math.max(2, lineWidth * 0.7), 0xffffff, 0.96)
+        .setAlpha(1)
+        .setVisible(true);
+    });
+  }
+
   private layoutPlayers(track: TrackLayout) {
     const runnerScreenScale = Math.max(this.screenScale, this.isPortrait ? RUNNER_MIN_SCREEN_SCALE : this.screenScale);
     const playerScale =
       Phaser.Math.Linear(0.45, 1.16, GAME_BALANCE.playerZ) *
       runnerScreenScale *
       this.getLaneResponsiveScale(track) *
-      (this.isPortrait && this.gameStarted ? this.portraitCharacterDebugScale : 1) *
+      (this.isPortrait && this.gameStarted ? this.portraitCharacterScale : 1) *
       (this.isPortrait && this.gameStarted ? 0.88 : 1);
 
     this.runners.forEach((runner) => {
       const playerPoint = this.getPlayerLaneCenterPoint(track, runner.lane);
-      const portraitPlayerX = this.isPortrait && this.gameStarted ? this.layoutDebug.characterX * 4 * this.screenScale : 0;
-      const portraitPlayerDrop = this.isPortrait && this.gameStarted ? (56 + this.layoutDebug.characterY * 4) * this.screenScale : 0;
+      const portraitPlayerX = this.isPortrait && this.gameStarted ? this.layoutTuning.characterX * 4 * this.screenScale : 0;
+      const portraitPlayerDrop = this.isPortrait && this.gameStarted ? (56 + this.layoutTuning.characterY * 4) * this.screenScale : 0;
       const playerY = playerPoint.y + (this.isDesktopLandscape && this.gameStarted ? 58 * this.screenScale : portraitPlayerDrop);
 
       runner.container.setX(playerPoint.x + portraitPlayerX).setScale(playerScale).setAngle(runner.isJumping ? runner.container.angle : 0);
       if (!runner.isJumping) {
         runner.container.setY(playerY);
       }
-      runner.body.setFillStyle(this.runnerColor(runner.lane), 1);
+      runner.body.setAlpha(0).setFillStyle(this.runnerColor(runner.lane), 1);
       runner.face.setFillStyle(this.themeColor("background"), 1);
       runner.shadow.setFillStyle(this.themeColor("shadow"), 0).setVisible(false);
       runner.face.setScale(runner.isJumping ? 1.08 : 1, runner.isJumping ? 0.92 : 1);
@@ -4146,8 +3693,6 @@ export class MainScene extends Phaser.Scene {
     this.gameStarted = true;
     this.gameEnded = false;
     this.finishPending = false;
-    this.recordedChartTaps = [];
-    this.recorderSavedPath = "";
     this.rebuildDifficultyChart();
     const runStartDelayMs = RUN_START_DELAY_MS;
     this.startTime = this.time.now + runStartDelayMs;
@@ -4172,11 +3717,7 @@ export class MainScene extends Phaser.Scene {
     this.setFeverActive(false);
     this.clearObstacles();
     this.clearItems();
-    if (this.chartRecorderEnabled) {
-      this.chartObstacles = [];
-      this.chartItems = [];
-    }
-
+    this.stopMenuBgm();
     this.bgm?.stop();
     this.time.delayedCall(runStartDelayMs, () => {
       if (!this.gameStarted || this.finishPending) {
@@ -4240,7 +3781,7 @@ export class MainScene extends Phaser.Scene {
     }
 
     const baseRatio = 1 / DIFFICULTY_SETTINGS[this.selectedDifficulty].authoredStep;
-    const targetRatio = Phaser.Math.Clamp(baseRatio * this.debugDensityFactor, 0.08, 0.75);
+    const targetRatio = Phaser.Math.Clamp(baseRatio, 0.08, 0.75);
     let accumulator = 0;
 
     return chart.obstacles
@@ -4274,7 +3815,7 @@ export class MainScene extends Phaser.Scene {
 
   private createSteadyDifficultyObstacles(chart: BeatmapChart) {
     const difficulty = DIFFICULTY_SETTINGS[this.selectedDifficulty];
-    const intervalSeconds = difficulty.intervalSeconds / this.debugDensityFactor;
+      const intervalSeconds = difficulty.intervalSeconds;
     const startTime = 2.25;
     const endTime = Math.max(startTime, chart.duration - 1.2);
     const laneOrder = [1, 2, 0, 2, 1, 0];
@@ -4340,10 +3881,6 @@ export class MainScene extends Phaser.Scene {
   }
 
   private updateChartSpawns() {
-    if (this.chartRecorderEnabled) {
-      return;
-    }
-
     const chart = this.chart;
     if (!chart) {
       return;
@@ -4410,20 +3947,6 @@ export class MainScene extends Phaser.Scene {
       return;
     }
 
-    if (this.chartRecorderEnabled) {
-      this.gameStarted = false;
-      this.gameEnded = true;
-      this.finishPending = false;
-      this.bgm?.stop();
-      this.clearObstacles();
-      this.clearItems();
-      this.setFeverActive(false);
-      this.showRecordedChartResult("SAVING...");
-      this.layout();
-      void this.saveRecordedChart();
-      return;
-    }
-
     this.gameStarted = false;
     this.gameEnded = false;
     this.finishPending = false;
@@ -4434,19 +3957,15 @@ export class MainScene extends Phaser.Scene {
     this.showResultScreen();
   }
 
-  private async loadRankings() {
+  private loadRankings() {
     if (typeof window === "undefined") {
       return;
     }
 
     try {
-      const response = await fetch(this.rankingApiPath, { cache: "no-store" });
-      if (!response.ok) {
-        return;
-      }
-
-      const payload = (await response.json()) as { rankings?: RankingEntry[] };
-      this.setRankings(payload.rankings);
+      const rawRankings = window.localStorage.getItem(RANKINGS_STORAGE_KEY);
+      const rankings = rawRankings ? (JSON.parse(rawRankings) as RankingEntry[]) : [];
+      this.setRankings(rankings);
       this.layout();
     } catch {
       this.rankings = [];
@@ -4466,91 +3985,19 @@ export class MainScene extends Phaser.Scene {
     };
 
     this.setRankings([...this.rankings, entry]);
+    this.saveRankingsToStorage();
     this.layout();
-
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    try {
-      const response = await fetch(this.rankingApiPath, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(entry)
-      });
-
-      if (!response.ok) {
-        return;
-      }
-
-      const payload = (await response.json()) as { rankings?: RankingEntry[] };
-      this.setRankings(payload.rankings);
-      this.layout();
-    } catch {
-      // Ranking is optimistic locally; gameplay should never fail if the server is unavailable.
-    }
   }
 
-  private async saveRecordedChart() {
+  private saveRankingsToStorage() {
     if (typeof window === "undefined") {
       return;
     }
 
-    const chartId = `${this.selectedSong.id}-played`;
-    const laneTypes = ["music_note_red", "music_note_yellow", "music_note_blue"];
-    const duration = this.roundChartTime(this.chart?.duration ?? this.songTimeSeconds);
-    const chart = {
-      id: chartId,
-      title: this.selectedSong.title,
-      bpm: this.selectedSong.bpm,
-      lanes: GAME_BALANCE.laneCount,
-      duration,
-      approachTime: this.chart?.approachTime ?? 1.6,
-      chartMode: "performance",
-      difficulty: this.selectedDifficulty,
-      globalOffsetSeconds: CHART_RECORDER_OFFSET_SECONDS,
-      notes: "Recorded in gameplay recorder mode.",
-      obstacles: this.recordedChartTaps
-        .map((tap) => ({
-          time: this.roundChartTime(Math.max(0, tap.time + CHART_RECORDER_OFFSET_SECONDS)),
-          lane: tap.lane,
-          type: laneTypes[tap.lane] ?? "music_note_yellow",
-          pattern: "single",
-          energy: 0.55,
-          soundOnDodge: "note"
-        }))
-        .sort((a, b) => a.time - b.time || a.lane - b.lane),
-      items: []
-    };
-
     try {
-      const response = await fetch(this.chartRecorderApiPath, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          chartId,
-          difficulty: this.selectedDifficulty,
-          chart
-        })
-      });
-      const payload = (await response.json().catch(() => null)) as { path?: string; error?: string } | null;
-
-      if (!response.ok) {
-        this.showRecordedChartResult(payload?.error ?? "SAVE FAILED");
-        this.layout();
-        return;
-      }
-
-      this.recorderSavedPath = payload?.path ?? "Saved";
-      this.showRecordedChartResult(this.recorderSavedPath);
-      this.layout();
+      window.localStorage.setItem(RANKINGS_STORAGE_KEY, JSON.stringify(this.rankings));
     } catch {
-      this.showRecordedChartResult("SAVE FAILED");
-      this.layout();
+      // Ranking persistence is best-effort; gameplay should never fail if storage is unavailable.
     }
   }
 
@@ -4811,7 +4258,7 @@ export class MainScene extends Phaser.Scene {
     const scale = Phaser.Math.Linear(0.24, 1.22, z) * this.screenScale * (1 + nearPulse);
     const baseSize = this.getPerformanceCueVisualSize(obstacle.lane);
     const laneWidth = right.x - left.x;
-    const obstacleSizeScale = this.isDesktopLandscape ? 0.58 : this.isPortrait ? 0.64 * this.portraitItemDebugScale : 1;
+    const obstacleSizeScale = this.isDesktopLandscape ? 0.58 : this.isPortrait ? 0.64 * this.portraitItemScale : 1;
     const visualWidth = Phaser.Math.Clamp((laneWidth / scale) * 1.08 * obstacleSizeScale, this.isPortrait ? 38 : 64, 176);
     const size = {
       width: visualWidth,
@@ -4841,7 +4288,7 @@ export class MainScene extends Phaser.Scene {
     const right = this.getLaneBoundaryPoint(track, item.lane + 1, z);
     const scale = Phaser.Math.Linear(0.28, 1.18, z) * this.screenScale;
     const laneWidth = right.x - left.x;
-    const itemSizeScale = this.isDesktopLandscape ? 0.56 : this.isPortrait ? 0.64 * this.portraitItemDebugScale : 1;
+    const itemSizeScale = this.isDesktopLandscape ? 0.56 : this.isPortrait ? 0.64 * this.portraitItemScale : 1;
     const imageSize = Phaser.Math.Clamp((laneWidth / scale) * 1.34 * itemSizeScale, this.isPortrait ? 42 : 78, 228);
     const runPhase = this.time.now / 82 + item.hitTime * 5 + item.lane * 0.7;
     const pulse = 1 + Math.sin(runPhase) * Phaser.Math.Linear(0.045, 0.1, z);
@@ -5072,13 +4519,13 @@ export class MainScene extends Phaser.Scene {
       return;
     }
 
+    const judgeText = this.getJudgeTextForTiming(obstacle.hitTime, obstacle.lane);
     const groupObstacles = this.obstacles.filter((candidate) => candidate.groupId === obstacle.groupId);
     groupObstacles.forEach((candidate) => {
       candidate.judged = true;
     });
     this.judgedGroupIds.add(obstacle.groupId);
 
-    const judgeText = this.getJudgeTextForTiming(obstacle.hitTime, obstacle.lane);
     if (judgeText !== "×") {
       this.registerAvoid(groupObstacles, obstacle, judgeText);
       return;
@@ -5192,20 +4639,6 @@ export class MainScene extends Phaser.Scene {
       history.shift();
     }
     this.pruneLaneInputHistory(lane, now - 1);
-  }
-
-  private recordChartTap(lane: number) {
-    if (!this.chartRecorderEnabled || !this.gameStarted || this.finishPending) {
-      return;
-    }
-
-    const time = this.roundChartTime(this.songTimeSeconds);
-    if (time < 0) {
-      return;
-    }
-
-    this.recordedChartTaps.push({ time, lane });
-    this.recorderStatusLabel?.setText(this.getRecorderStatusText());
   }
 
   private pruneLaneInputHistory(lane: number, minTime: number) {
@@ -5415,15 +4848,16 @@ export class MainScene extends Phaser.Scene {
   private spawnMissEffects(obstacle: Obstacle) {
     const inwardOffset = (1 - obstacle.lane) * 16 * this.screenScale;
     const color = this.getJudgeColor("×");
-    const feedbackX = obstacle.container.x + inwardOffset;
-    const feedbackY = obstacle.container.y - 66 * obstacle.container.scaleY;
-    this.spawnSuccessDotPopAt(feedbackX, feedbackY + 38 * obstacle.container.scaleY, color);
+    const missPoint = this.getVisibleJudgePoint(obstacle.lane);
+    const feedbackX = missPoint.x + inwardOffset;
+    const feedbackY = missPoint.y - 68 * this.screenScale;
+    this.spawnSuccessDotPopAt(feedbackX, feedbackY + 34 * this.screenScale, color);
     this.spawnStickerText("MISS", feedbackX, feedbackY, color, this.getJudgeFeedbackScale("×"));
     const puff = this.add.ellipse(
-      obstacle.container.x,
-      obstacle.container.y,
-      54 * obstacle.container.scaleX,
-      32 * obstacle.container.scaleY,
+      missPoint.x,
+      missPoint.y,
+      58 * this.screenScale,
+      34 * this.screenScale,
       this.themeColor("primary"),
       0.18
     );
@@ -5437,13 +4871,18 @@ export class MainScene extends Phaser.Scene {
       ease: "Sine.Out",
       onComplete: () => puff.destroy()
     });
-    this.spawnParticleBurst(obstacle.container.x, obstacle.container.y, {
+    this.spawnParticleBurst(missPoint.x, missPoint.y, {
       color: this.themeColor("primary"),
       count: 8,
       distance: 30,
       kind: "circle",
       duration: 320
     });
+  }
+
+  private getVisibleJudgePoint(lane: number) {
+    const track = this.getTrackLayout();
+    return this.getLaneCenterPoint(track, lane, this.judgeZ);
   }
 
   private triggerComboMilestone() {
@@ -5673,18 +5112,6 @@ export class MainScene extends Phaser.Scene {
         });
       }
     });
-
-    const underline = this.add.rectangle(x, y + 20 * this.screenScale, 90 * this.screenScale * scale, 7 * this.screenScale, color, 0.82);
-    underline.setDepth(359).setAngle(sticker.angle);
-    this.tweens.add({
-      targets: underline,
-      alpha: 0,
-      scaleX: 1.4,
-      y: y - 24 * this.screenScale,
-      duration: 420,
-      ease: "Sine.Out",
-      onComplete: () => underline.destroy()
-    });
   }
 
   private spawnParticleBurst(
@@ -5871,48 +5298,17 @@ export class MainScene extends Phaser.Scene {
     return `${this.maxCombo}`;
   }
 
-  private showRecordedChartResult(status: string) {
-    const label = this.resultLabel;
-    if (!label) {
-      return;
-    }
-
-    this.tweens.killTweensOf(label);
-    label
-      .setText(["REC FINISH", this.selectedSong.shortTitle, `${this.recordedChartTaps.length} TAPS`, status, "TAP TO MENU"].join("\n"))
-      .setAlpha(0)
-      .setScale(0.92);
-
-    this.tweens.add({
-      targets: label,
-      alpha: 1,
-      scale: 1,
-      duration: 260,
-      ease: "Back.Out"
-    });
-  }
-
   private flashRunner(lane: number) {
     const runner = this.runners[lane];
     if (!runner) {
       return;
     }
 
-    this.tweens.killTweensOf(runner.body);
     this.tweens.killTweensOf(runner.container);
-    runner.body.setFillStyle(this.themeColor("primary"), 1);
+    this.tweens.killTweensOf(runner.body);
+    runner.body.setAlpha(0).setFillStyle(this.runnerColor(lane), 1);
     this.setRunnerVisualState(lane, "miss");
     runner.container.setAngle(lane === 0 ? -5 : lane === 2 ? 5 : 0);
-    this.tweens.add({
-      targets: runner.body,
-      duration: 160,
-      yoyo: true,
-      repeat: 1,
-      alpha: 0.55,
-      onComplete: () => {
-        runner.body.setAlpha(1).setFillStyle(this.runnerColor(lane), 1);
-      }
-    });
     this.tweens.add({
       targets: runner.container,
       angle: 0,
@@ -6352,174 +5748,29 @@ export class MainScene extends Phaser.Scene {
   }
 
   private get chartApproachTime() {
-    return ((this.chart?.approachTime ?? 1.6) * GAME_BALANCE.chartApproachTimeScale) / this.debugSpeedFactor;
+    return (this.chart?.approachTime ?? 1.6) * GAME_BALANCE.chartApproachTimeScale;
   }
 
-  private get debugDensityFactor() {
-    return Phaser.Math.Clamp(1 + this.debugDensityLevel * 0.15, 0.45, 2.2);
+  private get portraitCharacterScale() {
+    return Phaser.Math.Clamp(1 + this.layoutTuning.characterSize * 0.04, 0.68, 1.72);
   }
 
-  private get debugSpeedFactor() {
-    return Phaser.Math.Clamp(1 + this.debugSpeedLevel * 0.12, 0.6, 1.9);
+  private get portraitButtonScale() {
+    return Phaser.Math.Clamp(1 + this.layoutTuning.buttonSize * 0.04, 0.72, 1.8);
   }
 
-  private get portraitCharacterDebugScale() {
-    return Phaser.Math.Clamp(1 + this.layoutDebug.characterSize * 0.04, 0.68, 1.72);
+  private get portraitItemScale() {
+    return Phaser.Math.Clamp(1 + this.layoutTuning.itemSize * 0.04, 0.36, 1.4);
   }
 
-  private get portraitButtonDebugScale() {
-    return Phaser.Math.Clamp(1 + this.layoutDebug.buttonSize * 0.04, 0.72, 1.8);
-  }
-
-  private get portraitItemDebugScale() {
-    return Phaser.Math.Clamp(1 + this.layoutDebug.itemSize * 0.04, 0.36, 1.4);
-  }
-
-  private get effectiveLayoutDebug(): LayoutDebugState {
+  private get effectiveLayoutTuning(): LayoutTuningState {
     return this.isPortrait
       ? {
-          ...this.layoutDebug,
-          farY: this.layoutDebug.portraitFarY,
-          nearW: this.layoutDebug.portraitNearW
+          ...this.layoutTuning,
+          farY: this.layoutTuning.portraitFarY,
+          nearW: this.layoutTuning.portraitNearW
         }
-      : this.layoutDebug;
-  }
-
-  private loadLayoutDebug() {
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    try {
-      const raw = window.localStorage.getItem(LAYOUT_DEBUG_STORAGE_KEY);
-      if (!raw) {
-        return;
-      }
-
-      const parsed = JSON.parse(raw) as Partial<LayoutDebugState>;
-      this.layoutDebug = {
-        trackY: this.clampLayoutDebugValue(parsed.trackY, -16, 16),
-        farY: this.clampLayoutDebugValue(parsed.farY, -16, 16),
-        farW: this.clampLayoutDebugValue(parsed.farW, -100, 18),
-        nearW: this.clampLayoutDebugValue(parsed.nearW, -24, 42),
-        portraitFarY: this.clampLayoutDebugValue(parsed.portraitFarY, -24, 16, DEFAULT_LAYOUT_DEBUG.portraitFarY),
-        portraitNearW: this.clampLayoutDebugValue(parsed.portraitNearW, -24, 42, DEFAULT_LAYOUT_DEBUG.portraitNearW),
-        characterSize: this.clampLayoutDebugValue(parsed.characterSize, -8, 18),
-        characterX: this.clampLayoutDebugValue(parsed.characterX, -24, 24),
-        characterY: this.clampLayoutDebugValue(parsed.characterY, -10, 36),
-        buttonSize: this.clampLayoutDebugValue(parsed.buttonSize, -8, 20),
-        buttonY: this.clampLayoutDebugValue(parsed.buttonY, -12, 12),
-        itemSize: this.clampLayoutDebugValue(parsed.itemSize, -16, 10),
-        bgX: this.clampLayoutDebugValue(parsed.bgX, -18, 18),
-        bgY: this.clampLayoutDebugValue(parsed.bgY, -18, 18),
-        bgScale: this.clampLayoutDebugValue(parsed.bgScale, -10, 20),
-        resultLeftX: this.clampLayoutDebugValue(parsed.resultLeftX, -24, 24),
-        resultRightX: this.clampLayoutDebugValue(parsed.resultRightX, -24, 24),
-        resultLeftW: this.clampLayoutDebugValue(parsed.resultLeftW, -24, 24),
-        resultTitleX: this.clampLayoutDebugValue(parsed.resultTitleX, -24, 24),
-        resultTitleY: this.clampLayoutDebugValue(parsed.resultTitleY, -24, 24),
-        resultTitleS: this.clampLayoutDebugValue(parsed.resultTitleS, -24, 24),
-        resultSongY: this.clampLayoutDebugValue(parsed.resultSongY, -24, 24),
-        resultSongS: this.clampLayoutDebugValue(parsed.resultSongS, -24, 24),
-        resultScoreX: this.clampLayoutDebugValue(parsed.resultScoreX, -24, 24),
-        resultScoreY: this.clampLayoutDebugValue(parsed.resultScoreY, -24, 24),
-        resultScoreS: this.clampLayoutDebugValue(parsed.resultScoreS, -24, 24),
-        resultScoreH: this.clampLayoutDebugValue(parsed.resultScoreH, -24, 24),
-        resultStatY: this.clampLayoutDebugValue(parsed.resultStatY, -24, 24),
-        resultStatGap: this.clampLayoutDebugValue(parsed.resultStatGap, -24, 24),
-        resultStatH: this.clampLayoutDebugValue(parsed.resultStatH, -24, 24),
-        resultBottomY: this.clampLayoutDebugValue(parsed.resultBottomY, -24, 24)
-      };
-    } catch {
-      this.layoutDebug = { ...DEFAULT_LAYOUT_DEBUG };
-    }
-  }
-
-  private saveLayoutDebug() {
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    window.localStorage.setItem(LAYOUT_DEBUG_STORAGE_KEY, JSON.stringify(this.layoutDebug));
-  }
-
-  private clampLayoutDebugValue(value: unknown, min: number, max: number, fallback = 0) {
-    return Phaser.Math.Clamp(Number.isFinite(value) ? Number(value) : fallback, min, max);
-  }
-
-  private resetLayoutDebug() {
-    this.layoutDebug = { ...DEFAULT_LAYOUT_DEBUG };
-    this.saveLayoutDebug();
-    this.popFeedback("LAYOUT RESET", this.currentTheme.colors.accent);
-    this.layout();
-  }
-
-  private getLayoutDebugSummary() {
-    const laneWidthPercent = Math.round((1 + (this.effectiveLayoutDebug.nearW - LAYOUT_DEBUG_BASE_NEAR_W) * 0.025) * 100);
-    return `LANE ${laneWidthPercent}% DEPTH ${this.effectiveLayoutDebug.farY} CHAR ${Math.round(this.portraitCharacterDebugScale * 100)}% BTN ${Math.round(this.portraitButtonDebugScale * 100)}% ITEM ${Math.round(this.portraitItemDebugScale * 100)}%`;
-  }
-
-  private tryLayoutDebugHotkey(event: KeyboardEvent) {
-    const hotkeys: Partial<Record<string, DebugAction>> = {
-      BracketLeft: "laneWidthDown",
-      BracketRight: "laneWidthUp",
-      Minus: "depthDown",
-      Equal: "depthUp",
-      Comma: "characterSizeDown",
-      Period: "characterSizeUp",
-      Slash: "laneAngleDown",
-      Quote: "laneAngleUp",
-      KeyZ: "bgXDown",
-      KeyX: "bgXUp",
-      KeyI: "trackYDown",
-      KeyK: "trackYUp",
-      KeyU: "farYDown",
-      KeyJ: "farYUp",
-      KeyO: "farWDown",
-      KeyL: "farWUp",
-      KeyP: "nearWDown",
-      Semicolon: "nearWUp",
-      KeyY: "bgYDown",
-      KeyH: "bgYUp",
-      KeyT: "bgScaleDown",
-      KeyG: "bgScaleUp"
-    };
-
-    if (event.code === "Digit0") {
-      event.preventDefault();
-      this.resetLayoutDebug();
-      return true;
-    }
-
-    const action = hotkeys[event.code];
-    if (!action) {
-      return false;
-    }
-
-    event.preventDefault();
-    this.adjustLayoutDebug(action);
-    return true;
-  }
-
-  private get rankingApiPath() {
-    return `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/rankings`;
-  }
-
-  private get chartRecorderApiPath() {
-    return `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/chart-recorder`;
-  }
-
-  private isChartRecorderMode() {
-    if (!CHART_RECORDER_ENABLED) {
-      return false;
-    }
-
-    if (typeof window === "undefined") {
-      return false;
-    }
-
-    const params = new URLSearchParams(window.location.search);
-    return params.get("record") === "1";
+      : this.layoutTuning;
   }
 
   private roundChartTime(value: number) {
@@ -6602,7 +5853,6 @@ export class MainScene extends Phaser.Scene {
     }
 
     this.recordLaneInput(lane);
-    this.recordChartTap(lane);
     runner.isJumping = true;
     this.playPerformanceSe(lane);
     this.setRunnerVisualState(lane, "jump");
@@ -6739,6 +5989,7 @@ export class MainScene extends Phaser.Scene {
       seVolume: Phaser.Math.Clamp(this.audioSettings.seVolume, 0, 1)
     };
     this.setSoundVolume(this.bgm, this.getBgmVolume());
+    this.setSoundVolume(this.menuBgm, this.getBgmVolume());
     this.setSoundVolume(this.moveSe, this.getSeVolume(MOVE_SE_BASE_VOLUME));
     this.setSoundVolume(this.itemSe, this.getSeVolume(ITEM_SE_BASE_VOLUME));
     this.setSoundVolume(this.redPerformanceSe, this.getSeVolume(PERFORMANCE_SE_BASE_VOLUME));
@@ -6751,6 +6002,18 @@ export class MainScene extends Phaser.Scene {
         bgmEnabled: this.audioSettings.bgmEnabled,
         seEnabled: this.audioSettings.seEnabled
       });
+    }
+
+    if (!this.audioSettings.bgmEnabled) {
+      this.bgm?.stop();
+      this.stopMenuBgm();
+      return;
+    }
+
+    if (!this.gameStarted && this.menuStep === "result") {
+      this.playMenuBgm();
+    } else {
+      this.stopMenuBgm();
     }
   }
 
@@ -6833,9 +6096,15 @@ export class MainScene extends Phaser.Scene {
   }
 
   private destroyScene() {
+    this.unregisterPageAudioHandlers();
+    this.unsubscribeHtmlStart?.();
+    this.unsubscribeHtmlStart = undefined;
     this.bgm?.stop();
     this.bgm?.destroy();
     this.bgm = undefined;
+    this.menuBgm?.stop();
+    this.menuBgm?.destroy();
+    this.menuBgm = undefined;
     this.moveSe?.destroy();
     this.moveSe = undefined;
     this.itemSe?.destroy();

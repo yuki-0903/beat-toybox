@@ -592,9 +592,7 @@ public/assets/themes/tiny_toy_sprint/
 
 - `background`
 - `characters`
-- `effects`
 - `items`
-- `lanes`
 - `obstacles`
 - `ui`
 
@@ -615,7 +613,7 @@ theme_category_name_variant.png
 ```txt
 tinytoy_character_runner_red_01.png
 tinytoy_ui_start_button_01.png
-tinytoy_obstacle_mini_car_01.png
+tinytoy_obstacle_mini_car_01.webp
 ```
 
 ### 検証

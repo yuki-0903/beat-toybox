@@ -16,6 +16,7 @@ type AssetStatus = {
 };
 
 const priorityOrder = ["P0", "P1", "P2"] as const;
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 export default function AssetsPage() {
   const assets = getTinyToyAssetManifest().map((asset): AssetStatus => {
@@ -44,17 +45,17 @@ export default function AssetsPage() {
           <p className="asset-dashboard__eyebrow">Tiny Toy Sprint</p>
           <h1>Asset Readiness</h1>
           <p className="asset-dashboard__lead">
-            生成PNGを置いたら、この画面で差し替え状況を確認できます。
+            生成した本番アセットを置いたら、この画面で差し替え状況を確認できます。
           </p>
         </div>
-        <a className="asset-dashboard__game-link" href="/">
+        <a className="asset-dashboard__game-link" href={`${basePath || "/"}`}>
           Game
         </a>
       </header>
 
       <section className="asset-dashboard__summary" aria-label="Asset summary">
         <SummaryStat label="Placeholder" value={`${placeholderReady}/${assets.length}`} tone="mint" />
-        <SummaryStat label="Production PNG" value={`${productionReady}/${productionTargets.length}`} tone="orange" />
+        <SummaryStat label="Production Asset" value={`${productionReady}/${productionTargets.length}`} tone="orange" />
         {priorityOrder.map((priority) => {
           const targets = productionTargets.filter((asset) => asset.priority === priority);
           const ready = targets.filter((asset) => asset.productionReady).length;

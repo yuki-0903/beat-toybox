@@ -20,9 +20,7 @@ Tiny Toy Sprint assets live under:
 public/assets/themes/tiny_toy_sprint/
   background/
   characters/
-  effects/
   items/
-  lanes/
   obstacles/
   ui/
 ```
@@ -67,7 +65,7 @@ Examples:
 
 ```txt
 tinytoy_character_runner_red_front_sheet_01.png
-tinytoy_ui_button_primary_red_01.png
+tinytoy_ui_button_primary_red_01.webp
 tinytoy_item_keyboard_car_01.png
 tinytoy_bg_start_sp_musicband_01.png
 ```
@@ -90,24 +88,18 @@ Each sheet uses 512x512 frames.
 
 ### UI
 
-Use this source sheet as the canonical style reference before creating or recutting UI parts:
-
-```txt
-public/assets/themes/tiny_toy_sprint/ui/parts/source/tinytoy_ui_full_asset_sheet_source_01.png
-```
-
-Cut runtime UI parts into separate transparent PNGs under `public/assets/themes/tiny_toy_sprint/ui/parts/`. Do not reference files under `source/` directly from gameplay code.
+Keep UI source sheets under `public/assets/themes/tiny_toy_sprint/ui/parts/source/`. Cut runtime UI parts into separate transparent WebP files under `public/assets/themes/tiny_toy_sprint/ui/parts/`.
 
 Important UI parts:
 
 ```txt
-public/assets/themes/tiny_toy_sprint/ui/parts/tinytoy_ui_button_primary_red_01.png
-public/assets/themes/tiny_toy_sprint/ui/parts/tinytoy_ui_song_card_large_01.png
-public/assets/themes/tiny_toy_sprint/ui/parts/tinytoy_ui_difficulty_easy_01.png
-public/assets/themes/tiny_toy_sprint/ui/parts/tinytoy_ui_difficulty_normal_01.png
-public/assets/themes/tiny_toy_sprint/ui/parts/tinytoy_ui_difficulty_hard_01.png
-public/assets/themes/tiny_toy_sprint/ui/parts/tinytoy_ui_arrow_left_toy_gray_01.svg
-public/assets/themes/tiny_toy_sprint/ui/parts/tinytoy_ui_icon_gear_01.png
+public/assets/themes/tiny_toy_sprint/ui/parts/tinytoy_ui_button_primary_red_01.webp
+public/assets/themes/tiny_toy_sprint/ui/parts/tinytoy_ui_song_card_large_01.webp
+public/assets/themes/tiny_toy_sprint/ui/parts/tinytoy_ui_difficulty_easy_01.webp
+public/assets/themes/tiny_toy_sprint/ui/parts/tinytoy_ui_difficulty_normal_01.webp
+public/assets/themes/tiny_toy_sprint/ui/parts/tinytoy_ui_difficulty_hard_01.webp
+public/assets/themes/tiny_toy_sprint/ui/parts/tinytoy_ui_arrow_left_01.webp
+public/assets/themes/tiny_toy_sprint/ui/parts/tinytoy_ui_icon_gear_01.webp
 ```
 
 ### Fonts
