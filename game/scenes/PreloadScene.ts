@@ -5,6 +5,7 @@ import { getThemeAssetEntries } from "@/game/config/themeAssets";
 import { gameEvents } from "@/game/systems/GameEvents";
 
 const UI_FONT = '"Fredoka", Arial, Helvetica, sans-serif';
+const LOADING_FONT = '-apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif';
 
 export class PreloadScene extends Phaser.Scene {
   constructor() {
@@ -14,9 +15,10 @@ export class PreloadScene extends Phaser.Scene {
   preload() {
     const { width, height } = this.scale;
     const loadingText = this.add
-      .text(width / 2, height / 2, "LOADING", {
-        fontFamily: UI_FONT,
+      .text(width / 2, height / 2, "LOADING 0%", {
+        fontFamily: LOADING_FONT,
         fontSize: "24px",
+        fontStyle: "700",
         color: "#f7fbff"
       })
       .setOrigin(0.5);

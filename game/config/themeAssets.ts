@@ -50,6 +50,13 @@ export type ThemeAssetConfig = {
       titleBanner: string;
       titleLevelBanner: string;
       rankingTitle: string;
+      resultTitle: string;
+      resultScore: string;
+      resultPerfect: string;
+      resultNice: string;
+      resultGood: string;
+      resultMiss: string;
+      resultMaxCombo: string;
       difficultyEasy: string;
       difficultyNormal: string;
       difficultyHard: string;
@@ -149,6 +156,7 @@ const tinyToyThemeAssets: ThemeAssetConfig = {
   items: {
     star: "tinytoy_item_star_01",
     music_note: "tinytoy_item_music_note_01",
+    music_note_fever: "tinytoy_item_music_note_fever_01",
     drum: "tinytoy_item_note_red_source_04",
     bell: "tinytoy_item_note_yellow_source_04",
     toy_keyboard: "tinytoy_item_note_blue_source_04"
@@ -168,6 +176,13 @@ const tinyToyThemeAssets: ThemeAssetConfig = {
       titleBanner: "tinytoy_ui_part_title_banner_01",
       titleLevelBanner: "tinytoy_ui_part_title_level_banner_01",
       rankingTitle: "tinytoy_ui_part_ranking_title_01",
+      resultTitle: "tinytoy_ui_part_result_title_01",
+      resultScore: "tinytoy_ui_part_result_score_01",
+      resultPerfect: "tinytoy_ui_part_result_perfect_round_01",
+      resultNice: "tinytoy_ui_part_result_nice_round_01",
+      resultGood: "tinytoy_ui_part_result_good_round_01",
+      resultMiss: "tinytoy_ui_part_result_miss_round_01",
+      resultMaxCombo: "tinytoy_ui_part_result_max_combo_round_01",
       difficultyEasy: "tinytoy_ui_part_difficulty_easy_01",
       difficultyNormal: "tinytoy_ui_part_difficulty_normal_01",
       difficultyHard: "tinytoy_ui_part_difficulty_hard_01",
@@ -299,6 +314,13 @@ const tinyToyFiles: ThemeAssetFile[] = [
   { key: "tinytoy_obstacle_robot_toy_01", category: "obstacles", placeholderFile: "tinytoy_obstacle_robot_toy_01.png", productionFile: "tinytoy_obstacle_robot_toy_01.png", priority: "P1" },
   { key: "tinytoy_item_star_01", category: "items", placeholderFile: "tinytoy_item_star_runner_01.png", productionFile: "tinytoy_item_star_runner_01.png", priority: "P0" },
   { key: "tinytoy_item_music_note_01", category: "items", placeholderFile: "tinytoy_item_music_note_scooter_01.png", productionFile: "tinytoy_item_music_note_scooter_01.png", priority: "P0" },
+  {
+    key: "tinytoy_item_music_note_fever_01",
+    category: "items",
+    placeholderFile: "tinytoy_item_music_note_scooter_fever_neon_01.png",
+    productionFile: "tinytoy_item_music_note_scooter_fever_neon_01.png",
+    priority: "P0"
+  },
   { key: "tinytoy_item_note_red_source_04", category: "items", placeholderFile: "tinytoy_item_note_red_source_04.png", productionFile: "tinytoy_item_note_red_source_04.png", priority: "P0" },
   {
     key: "tinytoy_item_note_yellow_source_04",
@@ -333,6 +355,35 @@ const tinyToyFiles: ThemeAssetFile[] = [
   { key: "tinytoy_ui_part_title_banner_01", category: "ui", placeholderFile: "parts/tinytoy_ui_title_banner_01.png", productionFile: "parts/tinytoy_ui_title_banner_01.png", priority: "P1" },
   { key: "tinytoy_ui_part_title_level_banner_01", category: "ui", placeholderFile: "parts/tinytoy_ui_title_level_banner_01.png", productionFile: "parts/tinytoy_ui_title_level_banner_01.png", priority: "P1" },
   { key: "tinytoy_ui_part_ranking_title_01", category: "ui", placeholderFile: "parts/tinytoy_ui_ranking_title_01.png", productionFile: "parts/tinytoy_ui_ranking_title_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_title_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_title_01.png", productionFile: "parts/tinytoy_ui_result_title_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_score_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_score_01.png", productionFile: "parts/tinytoy_ui_result_score_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_perfect_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_perfect_01.png", productionFile: "parts/tinytoy_ui_result_perfect_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_nice_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_nice_01.png", productionFile: "parts/tinytoy_ui_result_nice_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_good_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_good_01.png", productionFile: "parts/tinytoy_ui_result_good_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_miss_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_miss_01.png", productionFile: "parts/tinytoy_ui_result_miss_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_max_combo_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_max_combo_01.png", productionFile: "parts/tinytoy_ui_result_max_combo_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_perfect_round_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_perfect_round_01.png", productionFile: "parts/tinytoy_ui_result_perfect_round_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_nice_round_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_nice_round_01.png", productionFile: "parts/tinytoy_ui_result_nice_round_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_good_round_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_good_round_01.png", productionFile: "parts/tinytoy_ui_result_good_round_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_miss_round_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_miss_round_01.png", productionFile: "parts/tinytoy_ui_result_miss_round_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_max_combo_round_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_max_combo_round_01.png", productionFile: "parts/tinytoy_ui_result_max_combo_round_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_minimal_outer_panel_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_minimal_outer_panel_01.png", productionFile: "parts/tinytoy_ui_result_minimal_outer_panel_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_minimal_logo_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_minimal_logo_01.png", productionFile: "parts/tinytoy_ui_result_minimal_logo_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_minimal_title_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_minimal_title_01.png", productionFile: "parts/tinytoy_ui_result_minimal_title_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_minimal_song_plate_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_minimal_song_plate_01.png", productionFile: "parts/tinytoy_ui_result_minimal_song_plate_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_minimal_difficulty_easy_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_minimal_difficulty_easy_01.png", productionFile: "parts/tinytoy_ui_result_minimal_difficulty_easy_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_minimal_difficulty_normal_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_minimal_difficulty_normal_01.png", productionFile: "parts/tinytoy_ui_result_minimal_difficulty_normal_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_minimal_difficulty_hard_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_minimal_difficulty_hard_01.png", productionFile: "parts/tinytoy_ui_result_minimal_difficulty_hard_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_minimal_score_frame_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_minimal_score_frame_01.png", productionFile: "parts/tinytoy_ui_result_minimal_score_frame_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_minimal_stats_panel_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_minimal_stats_panel_01.png", productionFile: "parts/tinytoy_ui_result_minimal_stats_panel_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_minimal_stat_max_combo_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_minimal_stat_max_combo_01.png", productionFile: "parts/tinytoy_ui_result_minimal_stat_max_combo_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_minimal_stat_perfect_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_minimal_stat_perfect_01.png", productionFile: "parts/tinytoy_ui_result_minimal_stat_perfect_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_minimal_stat_good_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_minimal_stat_good_01.png", productionFile: "parts/tinytoy_ui_result_minimal_stat_good_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_minimal_stat_nice_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_minimal_stat_nice_01.png", productionFile: "parts/tinytoy_ui_result_minimal_stat_nice_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_minimal_stat_miss_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_minimal_stat_miss_01.png", productionFile: "parts/tinytoy_ui_result_minimal_stat_miss_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_minimal_dot_divider_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_minimal_dot_divider_01.png", productionFile: "parts/tinytoy_ui_result_minimal_dot_divider_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_minimal_button_home_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_minimal_button_home_01.png", productionFile: "parts/tinytoy_ui_result_minimal_button_home_01.png", priority: "P1" },
+  { key: "tinytoy_ui_part_result_minimal_button_retry_01", category: "ui", placeholderFile: "parts/tinytoy_ui_result_minimal_button_retry_01.png", productionFile: "parts/tinytoy_ui_result_minimal_button_retry_01.png", priority: "P1" },
   { key: "tinytoy_ui_part_difficulty_easy_01", category: "ui", placeholderFile: "parts/tinytoy_ui_difficulty_easy_01.png", productionFile: "parts/tinytoy_ui_difficulty_easy_01.png", priority: "P0" },
   { key: "tinytoy_ui_part_difficulty_normal_01", category: "ui", placeholderFile: "parts/tinytoy_ui_difficulty_normal_01.png", productionFile: "parts/tinytoy_ui_difficulty_normal_01.png", priority: "P0" },
   { key: "tinytoy_ui_part_difficulty_hard_01", category: "ui", placeholderFile: "parts/tinytoy_ui_difficulty_hard_01.png", productionFile: "parts/tinytoy_ui_difficulty_hard_01.png", priority: "P0" },

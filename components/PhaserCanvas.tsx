@@ -9,7 +9,11 @@ const PhaserGame = dynamic(
   },
   {
     ssr: false,
-    loading: () => <div className="game-canvas" />
+    loading: () => (
+      <div className="game-canvas">
+        <div className="game-loading">LOADING 0%</div>
+      </div>
+    )
   }
 );
 
