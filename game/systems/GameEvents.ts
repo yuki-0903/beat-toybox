@@ -7,9 +7,15 @@ export interface AudioSettingsPayload {
   seEnabled: boolean;
 }
 
+export interface AssetsProgressPayload {
+  progress: number;
+}
+
 type GameEventMap = {
+  "assets:progress": AssetsProgressPayload;
   "assets:ready": undefined;
   "scene:ready": SceneReadyPayload;
+  "ui:start": undefined;
   "game:pause": undefined;
   "game:resume": undefined;
   "audio:settings-changed": AudioSettingsPayload;

@@ -7,15 +7,20 @@ import { PreloadScene } from "@/game/scenes/PreloadScene";
 export async function createGame(parent: HTMLElement): Promise<Phaser.Game> {
   const PhaserRuntime = await import("phaser");
   const { width, height } = getGameSize(parent);
+  const isAndroid = typeof navigator !== "undefined" && /Android/i.test(navigator.userAgent);
 
   return new PhaserRuntime.Game({
-    type: PhaserRuntime.AUTO,
+    type: isAndroid ? PhaserRuntime.CANVAS : PhaserRuntime.AUTO,
     parent,
     width,
     height,
     backgroundColor: BACKGROUND_COLOR,
     pixelArt: false,
-    antialias: true,
+    antialias: !isAndroid,
+    antialiasGL: !isAndroid,
+    disablePreFX: isAndroid,
+    disablePostFX: isAndroid,
+    powerPreference: isAndroid ? "low-power" : "default",
     scale: {
       mode: PhaserRuntime.Scale.RESIZE,
       autoCenter: PhaserRuntime.Scale.CENTER_BOTH,

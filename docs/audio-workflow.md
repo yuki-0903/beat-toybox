@@ -26,18 +26,27 @@ game/scenes/PreloadScene.ts
 
 ## Current Audio Types
 
-### BGM
+### Menu / Result BGM
 
-BGM files are referenced by each `SongDefinition` in `game/config/songs.ts`.
+The global non-gameplay BGM is loaded directly in `PreloadScene` and plays on menu, settings, ranking, song select, difficulty, and result screens.
 
-Current examples:
+Current global BGM:
 
 ```txt
-bgm_main.mp3
+toybox-moon-menu.mp3
+```
+
+### Gameplay BGM
+
+Gameplay BGM is selected per song through each `SongDefinition` in `game/config/songs.ts`.
+
+Current runtime song files:
+
+```txt
+coin-pop-parade.mp3
 tiny-parade-loop.mp3
 sugar-tap-loop.mp3
-bgm_midnight_mini_mart.wav
-bgm_sushi_techno.wav
+candy-gear-loop.mp3
 ```
 
 ### Character Performance SE

@@ -5,6 +5,8 @@ import { getThemeAssetEntries } from "@/game/config/themeAssets";
 import { gameEvents } from "@/game/systems/GameEvents";
 
 const UI_FONT = '"Fredoka", Arial, Helvetica, sans-serif';
+const MENU_BGM_AUDIO_KEY = "bgm_toybox_moon_menu";
+const MENU_BGM_AUDIO_FILE = "toybox-moon-menu.mp3";
 
 export class PreloadScene extends Phaser.Scene {
   constructor() {
@@ -12,24 +14,21 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   preload() {
-    const { width, height } = this.scale;
-    const loadingText = this.add
-      .text(width / 2, height / 2, "LOADING", {
-        fontFamily: UI_FONT,
-        fontSize: "24px",
-        color: "#f7fbff"
-      })
-      .setOrigin(0.5);
-
+    gameEvents.emit("assets:progress", { progress: 0 });
     this.load.on(Phaser.Loader.Events.PROGRESS, (progress: number) => {
-      loadingText.setText(`LOADING ${Math.round(progress * 100)}%`);
+      gameEvents.emit("assets:progress", { progress });
     });
     this.load.on(Phaser.Loader.Events.FILE_LOAD_ERROR, (file: Phaser.Loader.File) => {
       console.warn(`[BEAT RUNNER] Failed to load asset: ${file.key} (${file.url})`);
     });
 
+    this.load.audio(MENU_BGM_AUDIO_KEY, [`${AUDIO_ASSET_BASE}/${MENU_BGM_AUDIO_FILE}`]);
+    const loadedAudioKeys = new Set<string>();
     SONGS.forEach((song) => {
-      this.load.audio(song.audioKey, [`${AUDIO_ASSET_BASE}/${song.audioFile}`]);
+      if (!loadedAudioKeys.has(song.audioKey)) {
+        loadedAudioKeys.add(song.audioKey);
+        this.load.audio(song.audioKey, [`${AUDIO_ASSET_BASE}/${song.audioFile}`]);
+      }
       if (song.chartFiles) {
         (Object.entries(song.chartFiles) as Array<[SongDifficulty, string]>).forEach(([difficulty, chartFile]) => {
           this.load.json(`${song.chartKey}_${difficulty}`, `${CHART_ASSET_BASE}/${chartFile}`);
@@ -66,6 +65,7 @@ export class PreloadScene extends Phaser.Scene {
 
   async create() {
     await this.waitForUiFont();
+    gameEvents.emit("assets:progress", { progress: 1 });
     gameEvents.emit("assets:ready");
     this.scene.start("MainScene");
   }

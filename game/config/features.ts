@@ -1,1 +1,0 @@
-export const CHART_RECORDER_ENABLED = process.env.NEXT_PUBLIC_ENABLE_CHART_RECORDER === "1";

@@ -1,12 +1,16 @@
 export interface AudioSettings {
   bgmEnabled: boolean;
   seEnabled: boolean;
+  bgmVolume: number;
+  seVolume: number;
 }
 
 const STORAGE_KEY = "phaser-next-template-audio";
 const DEFAULT_AUDIO_SETTINGS: AudioSettings = {
   bgmEnabled: true,
-  seEnabled: true
+  seEnabled: true,
+  bgmVolume: 0.8,
+  seVolume: 0.85
 };
 
 export function loadAudioSettings(): AudioSettings {

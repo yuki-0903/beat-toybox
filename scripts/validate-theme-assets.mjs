@@ -91,11 +91,11 @@ console.log(`Theme placeholders OK: ${checkedCount} files checked.`);
 
 if (productionCount > 0) {
   const readyCount = productionCount - missingProductionFiles.length;
-  console.log(`Production PNGs: ${readyCount}/${productionCount} present.`);
+  console.log(`Production assets: ${readyCount}/${productionCount} present.`);
 }
 
 if (missingProductionFiles.length > 0) {
-  console.log("Missing optional production PNGs:");
+  console.log("Missing optional production assets:");
   missingProductionFiles.forEach((asset) => {
     console.log(`- ${asset.key}: ${asset.path}`);
   });
@@ -111,7 +111,7 @@ function printMarkdownReport() {
   console.log("## Summary");
   console.log("");
   console.log(`- Placeholder assets: ${checkedCount - missingRequiredFiles.length}/${checkedCount} ready`);
-  console.log(`- Production PNG targets: ${readyCount}/${productionCount} ready`);
+  console.log(`- Production asset targets: ${readyCount}/${productionCount} ready`);
   console.log(`- Duplicate keys: ${duplicateKeys.length}`);
   console.log("");
   console.log("## Priority Summary");
