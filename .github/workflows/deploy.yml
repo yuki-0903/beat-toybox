@@ -34,6 +34,8 @@ jobs:
         run: npm run build
         env:
           NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+          NEXT_PUBLIC_SITE_URL: https://${{ github.repository_owner }}.github.io
+          NEXT_OUTPUT: export
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
